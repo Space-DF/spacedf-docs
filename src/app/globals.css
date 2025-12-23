@@ -1,0 +1,38 @@
+/* SpaceDF Theme Color Configuration */
+:root {
+  --nextra-primary-hue: 255deg;
+  --nextra-primary-saturation: 84%;
+  --nextra-primary-lightness: 80%;
+}
+
+.dark {
+  --nextra-primary-lightness: 80%;
+}
+
+/* Custom SpaceDF primary color #4006AA overrides */
+.nextra-sidebar-container .nextra-sidebar ul li.active > a {
+  background-color: #4006AA !important;
+  color: white !important;
+}
+
+.nextra-sidebar-container .nextra-sidebar ul li > a:hover {
+  background-color: rgba(64, 6, 170, 0.1) !important;
+}
+
+/* Override specific classes to use 80% lightness instead of 45% */
+.nx-text-primary-600 {
+  color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% / var(--tw-text-opacity)) !important;
+}
+
+html[class~=dark] .dark\:nx-text-primary-600 {
+  color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% / var(--tw-text-opacity)) !important;
+}
+
+/* SpaceDF Logo Theme Styles */
+.spacedf-logo {
+  filter: brightness(0);
+}
+
+.dark .spacedf-logo {
+  filter: brightness(0) invert(1);
+}

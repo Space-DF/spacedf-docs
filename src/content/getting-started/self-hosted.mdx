@@ -1,0 +1,262 @@
+import { Callout } from 'nextra/components'
+
+# Self-Hosted Installation
+
+Deploy SpaceDF on your own infrastructure for complete control and customization. This guide will walk you through setting up SpaceDF using Docker and configuring all required services.
+
+## Prerequisites
+
+Before installing SpaceDF, ensure you have the following components:
+
+### Required Software
+- **Docker** (version 20.0 or higher)
+- **Docker Compose** (version 2.0 or higher)
+- **Git** for repository cloning
+
+### Required Services
+- **PostgreSQL** (version 13 or higher) - Main database
+- **RabbitMQ** (version 3.8 or higher) - Message broker
+- **Redis** (version 6.0 or higher) - Cache and session storage
+
+### System Requirements
+- **RAM**: Minimum 4GB (8GB recommended)
+- **Storage**: At least 20GB available space
+- **Network**: Open ports 80, 443, and any custom ports for your setup
+
+## Installation Steps
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Space-DF/spacedf-backend.git
+cd spacedf-backend
+```
+
+### 2. Configure Environment
+
+Copy the example environment file and customize it for your setup:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file with your configuration:
+
+```bash
+nano .env
+```
+
+### 3. Configure Database Settings
+
+Update your database configuration in the `.env` file:
+
+```env
+# Database Configuration
+DATABASE_URL=postgresql://username:password@localhost:5432/spacedf
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=spacedf
+DATABASE_USER=spacedf_user
+DATABASE_PASSWORD=your_secure_password
+```
+
+### 4. Configure Message Broker
+
+Set up RabbitMQ connection details:
+
+```env
+# RabbitMQ Configuration
+RABBITMQ_URL=amqp://username:password@localhost:5672/
+RABBITMQ_HOST=localhost
+RABBITMQ_PORT=5672
+RABBITMQ_USER=spacedf_rabbit
+RABBITMQ_PASSWORD=your_rabbit_password
+```
+
+### 5. Configure Redis Cache
+
+Add Redis configuration:
+
+```env
+# Redis Configuration
+REDIS_URL=redis://localhost:6379/0
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+```
+
+### 6. Start Services
+
+Launch all SpaceDF services using Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This command will:
+- Start all required containers
+- Set up networking between services
+- Initialize persistent volumes
+
+### 7. Initialize Database
+
+Run database migrations and create the initial organization:
+
+```bash
+# Run schema migrations
+docker-compose exec backend python manage.py migrate_schemas
+
+# Create your first organization
+docker-compose exec backend python manage.py create_organization
+```
+
+## Configuration Options
+
+### Essential Configuration
+
+Key settings you must configure in your `.env` file:
+
+#### Application Settings
+```env
+# Basic Application Configuration
+SECRET_KEY=your_very_secure_secret_key_here
+DEBUG=False
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+```
+
+#### Authentication Providers
+```env
+# Social Authentication (Optional)
+GOOGLE_OAUTH2_KEY=your_google_oauth_key
+GOOGLE_OAUTH2_SECRET=your_google_oauth_secret
+
+GITHUB_KEY=your_github_oauth_key
+GITHUB_SECRET=your_github_oauth_secret
+```
+
+#### External Service Integrations
+```env
+# Email Configuration
+EMAIL_HOST=smtp.yourmailprovider.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your_email_user
+EMAIL_HOST_PASSWORD=your_email_password
+EMAIL_USE_TLS=True
+
+# Storage Configuration
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_STORAGE_BUCKET_NAME=your_s3_bucket_name
+AWS_S3_REGION_NAME=us-east-1
+```
+
+### Security Configuration
+
+<Callout type="error">
+**Security Important**: Always use strong passwords, enable SSL/TLS, and configure proper firewall rules for production deployments.
+</Callout>
+
+#### SSL/TLS Setup
+```env
+# SSL Configuration
+USE_TLS=True
+SECURE_SSL_REDIRECT=True
+SECURE_PROXY_SSL_HEADER=HTTP_X_FORWARDED_PROTO,https
+```
+
+## Post-Installation Setup
+
+### 1. Create Admin User
+
+Create your first administrator account:
+
+```bash
+docker-compose exec backend python manage.py createsuperuser
+```
+
+### 2. Configure Domain and SSL
+
+Update your domain configuration and set up SSL certificates:
+
+```bash
+# Update ALLOWED_HOSTS in .env file
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+
+# Restart services to apply changes
+docker-compose restart
+```
+
+### 3. Test Installation
+
+Verify your installation by:
+1. Accessing the web interface at your configured domain
+2. Logging in with your admin credentials
+3. Creating a test organization
+4. Checking all services are running: `docker-compose ps`
+
+## Maintenance and Updates
+
+### Regular Maintenance Tasks
+
+1. **Database Backups**: Set up automated PostgreSQL backups
+2. **Log Rotation**: Configure log file rotation to prevent disk space issues
+3. **Security Updates**: Regularly update Docker images and system packages
+4. **Monitoring**: Implement monitoring for system resources and application health
+
+### Updating SpaceDF
+
+To update to the latest version:
+
+```bash
+# Pull latest changes
+git pull origin main
+
+# Update Docker images
+docker-compose pull
+
+# Restart services
+docker-compose down
+docker-compose up -d
+
+# Run any new migrations
+docker-compose exec backend python manage.py migrate_schemas
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Services not starting:**
+- Check Docker logs: `docker-compose logs [service-name]`
+- Verify port availability
+- Ensure sufficient disk space and memory
+
+**Database connection errors:**
+- Verify PostgreSQL is running
+- Check connection credentials in `.env`
+- Ensure database exists and user has proper permissions
+
+**Performance issues:**
+- Monitor system resources
+- Check database query performance
+- Review Redis cache hit rates
+
+## Next Steps
+
+After successful installation:
+
+1. **[API Configuration](/api-reference)** - Set up API access and authentication
+2. **[Deployment Guide](/deployment)** - Production deployment best practices
+3. **[Device Management](/devices)** - Add and configure your IoT devices
+4. **[Organization Setup](/organizations)** - Configure multi-tenancy and user management
+
+## Need Help?
+
+- **[Community Forum](https://docs.spacedf.com/community)** - Get help from the community
+- **[Discord Server](https://discord.gg/HxCTyMCzuK)** - Real-time support from developers
+- **[GitHub Issues](https://github.com/Space-DF/spacedf-backend/issues)** - Report bugs or request features
+- **[Professional Support](/support)** - Enterprise installation assistance
+
+---
+
+**Need professional installation assistance?** Our team offers [professional installation services](/support) with custom configuration and ongoing support.
