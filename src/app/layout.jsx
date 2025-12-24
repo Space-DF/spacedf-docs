@@ -48,7 +48,6 @@ export default async function RootLayout({children}) {
           <VersionLabel />
         </div>
       }
-      // SpaceDF discord server
       chatLink="https://discord.gg/HxCTyMCzuK"
       projectLink="https://github.com/Space-DF/spacedf-docs"
     />
