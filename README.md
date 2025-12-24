@@ -131,6 +131,8 @@ This documentation is licensed under the Apache License 2.0. See the individual 
 
 ## 🏢 About Digital Fortress
 
+[![SpaceDF - A project from Digital Fortress](https://df.technology/images/SpaceDF.png)](https://df.technology/)
+
 SpaceDF is developed by [Digital Fortress](https://df.technology), a technology company focused on IoT and distributed systems solutions.
 
 ---
