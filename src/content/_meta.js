@@ -4,7 +4,7 @@ export default {
   onboarding: 'Onboarding',
   organizations: 'Organizations & Staff',
   devices: 'Device Management',
-  spaces: 'Spaces & Location',
+  spaces: 'Spaces & Members',
   '---': {
     type: 'separator'
   },

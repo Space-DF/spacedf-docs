@@ -2,34 +2,51 @@
 title: Device Management
 ---
 
+import {Callout} from "nextra/components";
+
 # Device Management
 
-Comprehensive guide to managing LoRaWAN devices in SpaceDF.
+This guide provides an overview of managing LoRaWAN devices within SpaceDF, from registration to monitoring and configuration.
+
+---
 
 ## Device Registration
 
 ### Adding New Devices
 
-Register devices in your SpaceDF platform:
+You can register devices in SpaceDF using multiple methods:
 
-1. **Device Information**: Enter device EUI and configuration
-2. **Device Templates**: Use pre-configured templates for common devices
-3. **Bulk Import**: CSV import for multiple devices
-4. **API Integration**: Programmatic device registration
+- **Device Information:** Enter the device EUI and configuration details.
+- **Device Templates:** Apply pre-configured templates for common device types to speed up setup.
+- **Bulk Import:** Import multiple devices using CSV files.
+- **API Integration:** Programmatically register devices via API endpoints.
+
+Adding devices is a necessary step at both the **Organization Site** and the **Space Site**.
+
+<Callout type="info">
+  You can learn more about: - [How to add devices to the **Device Hub** at the
+  Organization](/docs/onboarding#3-add-devices-to-device-hub) - [How to add
+  devices to a **Space**](/docs/onboarding#5-add-devices-to-your-space) - [What
+  is the Device Hub?](/docs/organizations#device-hub)
+</Callout>
 
 ### Supported Devices
 
-SpaceDF supports various LoRaWAN devices:
+SpaceDF supports a wide range of LoRaWAN devices, including:
+
 - Asset trackers
 - Environmental sensors
 - Industrial IoT devices
-- Custom device integrations
+- Custom integrations
+
+---
 
 ## Device Configuration
 
-### Network Settings
+### Network Setting
 
 Configure LoRaWAN parameters:
+
 - Device EUI and App EUI
 - Network and application keys
 - Transmission intervals
@@ -38,16 +55,20 @@ Configure LoRaWAN parameters:
 ### Location Settings
 
 Set up location tracking:
+
 - Enable positioning services
 - Configure trilateration settings
 - Set location update intervals
 - Define accuracy requirements
 
+---
+
 ## Device Monitoring
 
 ### Real-Time Status
 
-Monitor device health:
+Monitor the health of devices in real time:
+
 - Connection status
 - Battery levels
 - Signal strength (RSSI)
@@ -55,16 +76,9 @@ Monitor device health:
 
 ### Data Visualization
 
-View device data through:
+View device data via:
+
 - Real-time dashboards
 - Historical charts
 - Location maps
-- Alert notifications
-
-## Device Templates
-
-Pre-configured settings for common device types:
-- Quick setup for new devices
-- Standardized configurations
-- Custom template creation
-- Template sharing across organizations
+- Alerts and notifications
