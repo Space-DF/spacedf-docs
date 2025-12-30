@@ -3,6 +3,7 @@ import {Footer, Layout, Navbar} from "nextra-theme-docs";
 import {Banner, Head} from "nextra/components";
 import {getPageMap} from "nextra/page-map";
 import VersionLabel from "./_components/VersionLabel";
+import ImageZoomProvider from "../components/ImageZoomProvider";
 import "nextra-theme-docs/style.css";
 import "./globals.css";
 
@@ -68,42 +69,44 @@ export default async function RootLayout({children}) {
         }}
       />
       <body>
-        <Layout
-          banner={
-            <Banner storageKey="SpaceDF Launch">
-              🚀 SpaceDF v2025.12.19 is now live!{" "}
-              <a
-                href="/blog/v2025.12.19"
-                style={{color: "inherit", textDecoration: "underline"}}
-              >
-                Read the release notes
-              </a>
-            </Banner>
-          }
-          navbar={navbar}
-          footer={
-            <Footer>
-              <p>
-                SpaceDF is a project from{" "}
+        <ImageZoomProvider>
+          <Layout
+            banner={
+              <Banner storageKey="SpaceDF Launch">
+                🚀 SpaceDF v2025.12.19 is now live!{" "}
                 <a
-                  href="https://df.technology"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{color: "#B7A1F7"}}
+                  href="/blog/v2025.12.19"
+                  style={{color: "inherit", textDecoration: "underline"}}
                 >
-                  Digital Fortress
+                  Read the release notes
                 </a>
-                .
-              </p>
-            </Footer>
-          }
-          editLink="Edit this page on GitHub"
-          docsRepositoryBase="https://github.com/Space-DF/spacedf-docs/blob/main"
-          sidebar={{defaultMenuCollapseLevel: 1}}
-          pageMap={pageMap}
-        >
-          {children}
-        </Layout>
+              </Banner>
+            }
+            navbar={navbar}
+            footer={
+              <Footer>
+                <p>
+                  SpaceDF is a project from{" "}
+                  <a
+                    href="https://df.technology"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{color: "#B7A1F7"}}
+                  >
+                    Digital Fortress
+                  </a>
+                  .
+                </p>
+              </Footer>
+            }
+            editLink="Edit this page on GitHub"
+            docsRepositoryBase="https://github.com/Space-DF/spacedf-docs/blob/main"
+            sidebar={{defaultMenuCollapseLevel: 1}}
+            pageMap={pageMap}
+          >
+            {children}
+          </Layout>
+        </ImageZoomProvider>
       </body>
     </html>
   );
