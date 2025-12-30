@@ -1,4 +1,4 @@
-import { Cards } from 'nextra/components'
+import {Cards} from "nextra/components";
 
 # Introduction
 
@@ -9,29 +9,117 @@ SpaceDF is a comprehensive **IoT platform** that supports multiple protocols and
 Connect your devices using any of these protocols through our **Multi-Protocol Adapter (MPA) Service**:
 
 <Cards>
-  <Cards.Card title="LoRaWAN" href="/protocols/lorawan">
-    **Long Range Wide Area Network** - Low-power, wide-area networking protocol for IoT devices with long battery life.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="LoRaWAN"
+    href="/protocols/lorawan"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lora-logo.png"
+        style={{width: "104px"}}
+        alt="LoRaWAN"
+      />
+    }
+  >
+    **Long Range Wide Area Network**
   </Cards.Card>
-  <Cards.Card title="HTTP/HTTPS" href="/protocols/http">
-    **REST API** - Standard web protocols for device communication and data exchange.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="HTTP/HTTPS"
+    href="/protocols/http"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/http.png"
+        style={{width: "74px"}}
+        alt="HTTP/HTTPS"
+      />
+    }
+  >
+    **REST API**
   </Cards.Card>
-  <Cards.Card title="MQTT" href="/protocols/mqtt">
-    **Pub/Sub Messaging** - Lightweight messaging protocol ideal for IoT device communication.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="MQTT"
+    href="/protocols/mqtt"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png"
+        style={{width: "74px"}}
+        alt="MQTT"
+      />
+    }
+  >
+    **Pub/Sub Messaging**
   </Cards.Card>
-  <Cards.Card title="WebSocket" href="/protocols/websocket">
-    **Real-time Data** - Full-duplex communication for real-time IoT applications.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="WebSocket"
+    href="/protocols/websocket"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/websocket.png"
+        style={{width: "44px"}}
+        alt="WebSocket"
+      />
+    }
+  >
+    **Real-time Data**
   </Cards.Card>
-  <Cards.Card title="Socket.IO" href="/protocols/socketio">
-    **Real-time Engine** - Enhanced WebSocket library with fallbacks and auto-reconnection.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Socket.IO"
+    href="/protocols/socketio"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/socket-io.png"
+        style={{width: "44px"}}
+        alt="Socket.IO"
+      />
+    }
+  >
+    **Real-time Engine**
   </Cards.Card>
-  <Cards.Card title="CoAP" href="/protocols/coap">
-    **Constrained Application** - Specialized protocol for resource-constrained devices.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="CoAP"
+    href="/protocols/coap"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/constrained-app.png"
+        style={{width: "44px"}}
+        alt="CoAP"
+      />
+    }
+  >
+    **Constrained Application**
   </Cards.Card>
-  <Cards.Card title="LwM2M" href="/protocols/lwm2m">
-    **Device Management** - Lightweight protocol for device management and service enablement.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="LwM2M"
+    href="/protocols/lwm2m"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lwm2m.png"
+        style={{height: "64px"}}
+        alt="LwM2M"
+      />
+    }
+  >
+    **Device Management**
   </Cards.Card>
-  <Cards.Card title="SNMP" href="/protocols/snmp">
-    **Network Management** - Standard protocol for managing and monitoring network devices.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="SNMP"
+    href="/protocols/snmp"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/snmp.png"
+        style={{width: "44px"}}
+        alt="SNMP"
+      />
+    }
+  >
+    **Network Management**
   </Cards.Card>
 </Cards>
 
@@ -40,37 +128,136 @@ Connect your devices using any of these protocols through our **Multi-Protocol A
 SpaceDF integrates seamlessly with popular IoT platforms and network servers:
 
 <Cards>
-  <Cards.Card title="ChirpStack" href="/platforms/chirpstack">
-    **LoRaWAN Network Server** - Open-source LoRaWAN network server for enterprise deployments.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="ChirpStack"
+    href="/platforms/chirpstack"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/chirpstack.png"
+        style={{height: "54px"}}
+        alt="ChirpStack"
+      />
+    }
+  >
+    **LoRaWAN Network Server**
   </Cards.Card>
-  <Cards.Card title="The Things Network" href="/platforms/ttn">
-    **Community LoRaWAN** - Global, open LoRaWAN network with community-driven infrastructure.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="The Things Network"
+    href="/platforms/ttn"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/ttn.webp"
+        style={{width: "54px"}}
+        alt="The Things Network"
+      />
+    }
+  >
+    **Community LoRaWAN**
   </Cards.Card>
-  <Cards.Card title="Helium" href="/platforms/helium">
-    **People's Network** - Decentralized wireless network powered by the Helium blockchain.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Helium"
+    href="/platforms/helium"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/helium.png"
+        style={{height: "54px"}}
+        alt="Helium"
+      />
+    }
+  >
+    **People's Network**
   </Cards.Card>
-  <Cards.Card title="Your Platform" href="/platforms/custom">
-    **Custom Integration** - Connect your existing IoT platform through our flexible APIs.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Your Platform"
+    href="/platforms/custom"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/platform.jpg"
+        style={{height: "54px"}}
+        alt="Your Platform"
+      />
+    }
+  >
+    **Custom Integration**
   </Cards.Card>
-  <Cards.Card title="Your MQTT Platform" href="/platforms/mqtt">
-    **MQTT Broker Integration** - Connect any MQTT broker or messaging platform.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Your MQTT Platform"
+    href="/platforms/mqtt"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png"
+        style={{height: "24px"}}
+        alt="MQTT Platform"
+      />
+    }
+  >
+    **MQTT Broker Integration**
   </Cards.Card>
 </Cards>
 
 ## Use Case Templates
 
 <Cards>
-  <Cards.Card title="Fleet Tracking" href="/spaces">
-    **Vehicle & Asset Tracking**: Monitor vehicles, equipment, and mobile assets with real-time location data and route optimization.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Fleet Tracking"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/location.png"
+        style={{height: "54px"}}
+        alt="Fleet Tracking"
+      />
+    }
+  >
+    **Vehicle & Asset Tracking**
   </Cards.Card>
-  <Cards.Card title="Smart Buildings" href="/spaces">
-    **Building Management**: Track assets, people, and equipment within buildings with indoor positioning and space utilization analytics.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Smart Buildings"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/building.png"
+        style={{height: "54px"}}
+        alt="Smart Buildings"
+      />
+    }
+  >
+    **Building Management**
   </Cards.Card>
-  <Cards.Card title="Smart City" href="/spaces">
-    **Urban IoT Solutions**: Monitor city infrastructure, public assets, and environmental sensors across urban environments.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Smart City"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/smart-city.png"
+        style={{height: "54px"}}
+        alt="Smart City"
+      />
+    }
+  >
+    **Urban IoT Solutions**
   </Cards.Card>
-  <Cards.Card title="Industrial IoT" href="/spaces">
-    **Manufacturing & Logistics**: Track inventory, equipment, and processes in warehouses, factories, and supply chains.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Industrial IoT"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/iot.png"
+        style={{height: "54px"}}
+        alt="Industrial IoT"
+      />
+    }
+  >
+    **Manufacturing & Logistics**
   </Cards.Card>
 </Cards>
 
@@ -79,23 +266,89 @@ SpaceDF integrates seamlessly with popular IoT platforms and network servers:
 Visualize and interact with your IoT data through powerful dashboard components and views:
 
 <Cards>
-  <Cards.Card title="Digital Twins" href="/spaces">
-    **Virtual Replicas**: Create digital representations of physical spaces, buildings, and assets with real-time data synchronization.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Digital Twins"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/digital-twin.png"
+        style={{height: "54px"}}
+        alt="Digital Twins"
+      />
+    }
+  >
+    **Virtual Replicas**
   </Cards.Card>
-  <Cards.Card title="Views" href="/spaces">
-    **Custom Layouts**: Design personalized dashboard views with drag-and-drop interface for different users and use cases.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Views"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/grid.png"
+        style={{height: "44px"}}
+        alt="Views"
+      />
+    }
+  >
+    **Custom Layouts**
   </Cards.Card>
-  <Cards.Card title="Cards" href="/spaces">
-    **Data Components**: Display device status, metrics, and controls through customizable card components with real-time updates.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Cards"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/real-time-strategy.png"
+        style={{height: "44px"}}
+        alt="Cards"
+      />
+    }
+  >
+    **Data Components**
   </Cards.Card>
-  <Cards.Card title="Widgets" href="/spaces">
-    **Interactive Elements**: Add charts, gauges, maps, and control widgets to monitor and manage your IoT devices and spaces.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Widgets"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/window.png"
+        style={{height: "44px"}}
+        alt="Widgets"
+      />
+    }
+  >
+    **Interactive Elements**
   </Cards.Card>
-  <Cards.Card title="Badges" href="/spaces">
-    **Status Indicators**: Show quick status updates, alerts, and notifications with compact badge components.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Badges"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/status-update.png"
+        style={{height: "44px"}}
+        alt="Badges"
+      />
+    }
+  >
+    **Status Indicators**
   </Cards.Card>
-  <Cards.Card title="2D/3D Views" href="/spaces">
-    **Spatial Visualization**: Explore your spaces with interactive 2D floor plans and immersive 3D models with device positioning.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="2D/3D Views"
+    href="/spaces"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/3d.png"
+        style={{height: "44px"}}
+        alt="2D/3D Views"
+      />
+    }
+  >
+    **Spatial Visualization**
   </Cards.Card>
 </Cards>
 
@@ -104,14 +357,47 @@ Visualize and interact with your IoT data through powerful dashboard components 
 Organize and manage your IoT deployments with flexible multi-tenant architecture:
 
 <Cards>
-  <Cards.Card title="Multi-Tenant" href="/organizations">
-    **Isolated Environments**: Separate organizations with complete data isolation, user management, and white-label customization.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Multi-Tenant"
+    href="/organizations"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/organization-chart.png"
+        style={{height: "54px"}}
+        alt="Multi-Tenant"
+      />
+    }
+  >
+    **Isolated Environments**
   </Cards.Card>
-  <Cards.Card title="Multi-Spaces" href="/organizations">
-    **Hierarchical Structure**: Create multiple spaces within organizations to represent different locations, buildings, or areas.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Multi-Spaces"
+    href="/organizations"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/space.png"
+        style={{height: "54px"}}
+        alt="Multi-Spaces"
+      />
+    }
+  >
+    **Hierarchical Structure**
   </Cards.Card>
-  <Cards.Card title="Group Your Assets" href="/organizations">
-    **Asset Organization**: Group devices and assets by location, type, or function for efficient management and monitoring.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Group Your Assets"
+    href="/organizations"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/assets.png"
+        style={{height: "54px"}}
+        alt="Group Your Assets"
+      />
+    }
+  >
+    **Asset Organization**
   </Cards.Card>
 </Cards>
 
@@ -120,14 +406,10 @@ Organize and manage your IoT deployments with flexible multi-tenant architecture
 Ready to get started with SpaceDF? Follow these steps to begin your IoT journey:
 
 <Cards>
-  <Cards.Card title="Installation" href="/getting-started" arrow>
-  </Cards.Card>
-  <Cards.Card title="Connect Devices" href="/devices" arrow>
-  </Cards.Card>
-  <Cards.Card title="Configure Spaces" href="/spaces" arrow>
-  </Cards.Card>
-  <Cards.Card title="API Integration" href="/api-reference" arrow>
-  </Cards.Card>
+  <Cards.Card title="Installation" href="/getting-started" arrow />
+  <Cards.Card title="Connect Devices" href="/devices" arrow />
+  <Cards.Card title="Configure Spaces" href="/spaces" arrow />
+  <Cards.Card title="API Integration" href="/api-reference" arrow />
 </Cards>
 
 ## Popular Topics
@@ -145,17 +427,65 @@ Ready to get started with SpaceDF? Follow these steps to begin your IoT journey:
 Need help? We're here to support you:
 
 <Cards>
-  <Cards.Card title="Community Forum" href="https://docs.spacedf.com/community">
-    **Ask questions and share experiences** with other SpaceDF users and developers in our active community forum.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Community Forum"
+    href="https://docs.spacedf.com/community"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/meeting.png"
+        style={{height: "54px"}}
+        alt="Community Forum"
+      />
+    }
+  >
+    **Ask questions and share experiences** with other SpaceDF users and
+    developers in our active community forum.
   </Cards.Card>
-  <Cards.Card title="GitHub" href="https://github.com/space-df">
-    **Open source components and issue tracking** - contribute to the project and report issues on our GitHub repositories.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="GitHub"
+    href="https://github.com/space-df"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/github.png"
+        style={{height: "44px"}}
+        alt="GitHub"
+      />
+    }
+  >
+    **Open source components and issue tracking** - contribute to the project
+    and report issues on our GitHub repositories.
   </Cards.Card>
-  <Cards.Card title="Professional Support" href="/support">
-    **Enterprise support with SLA guarantees** - dedicated support team for mission-critical deployments.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Professional Support"
+    href="/support"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/support.png"
+        style={{height: "54px"}}
+        alt="Professional Support"
+      />
+    }
+  >
+    **Enterprise support with SLA guarantees** - dedicated support team for
+    mission-critical deployments.
   </Cards.Card>
-  <Cards.Card title="Training" href="/support">
-    **Professional services and training programs** - get up to speed quickly with expert guidance and certification.
+  <Cards.Card
+    style={{padding: "5px 10px"}}
+    title="Training"
+    href="/support"
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/training.png"
+        style={{height: "54px"}}
+        alt="Training"
+      />
+    }
+  >
+    **Professional services and training programs** - get up to speed quickly
+    with expert guidance and certification.
   </Cards.Card>
 </Cards>
 
