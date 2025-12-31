@@ -24,7 +24,6 @@ const cards = [
         <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
       </svg>
     ),
-    bgColor: "#f3e8ff",
   },
   {
     title: "Self-Hosted Installation",
@@ -47,7 +46,6 @@ const cards = [
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
       </svg>
     ),
-    bgColor: "#dbeafe",
   },
 ];
 
@@ -57,12 +55,7 @@ export function GettingStartedCards() {
       {cards.map(card => (
         <Link key={card.title} href={card.href}>
           <div className="getting-started-card">
-            <div
-              className="getting-started-card-image"
-              style={{backgroundColor: card.bgColor}}
-            >
-              <img src={card.image} alt={card.title} />
-            </div>
+            <img src={card.image} alt={card.title} />
             <div className="getting-started-card-content">
               <span className="getting-started-card-icon">{card.icon}</span>
               <span className="getting-started-card-title">{card.title}</span>
@@ -91,6 +84,12 @@ export function GettingStartedCards() {
           grid-template-columns: repeat(2, 1fr);
           gap: 1.5rem;
           margin: 1.5rem 0;
+        }
+        .getting-started-card-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          padding: 0;
         }
 
         @media (max-width: 768px) {
