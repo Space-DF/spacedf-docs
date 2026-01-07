@@ -11,7 +11,7 @@
 
 /* Custom SpaceDF primary color #4006AA overrides */
 .nextra-sidebar-container .nextra-sidebar ul li.active > a {
-  background-color: #4006AA !important;
+  background-color: #4006aa !important;
   color: white !important;
 }
 
@@ -21,11 +21,17 @@
 
 /* Override specific classes to use 80% lightness instead of 45% */
 .nx-text-primary-600 {
-  color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% / var(--tw-text-opacity)) !important;
+  color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% /
+      var(--tw-text-opacity)
+  ) !important;
 }
 
-html[class~=dark] .dark\:nx-text-primary-600 {
-  color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% / var(--tw-text-opacity)) !important;
+html[class~="dark"] .dark\:nx-text-primary-600 {
+  color: hsl(
+    var(--nextra-primary-hue) var(--nextra-primary-saturation) 80% /
+      var(--tw-text-opacity)
+  ) !important;
 }
 
 /* SpaceDF Logo Theme Styles */
@@ -34,5 +40,14 @@ html[class~=dark] .dark\:nx-text-primary-600 {
 }
 
 .dark .spacedf-logo {
+  filter: brightness(0) invert(1);
+}
+
+/* Training Icon Theme Styles */
+.svg-icon {
+  filter: brightness(0);
+}
+
+.dark .svg-icon {
   filter: brightness(0) invert(1);
 }
