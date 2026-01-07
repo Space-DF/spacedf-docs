@@ -123,6 +123,7 @@ export function GettingStartedCards() {
 
         :global(.dark) .getting-started-card:hover {
           border-color: #6366f1;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .getting-started-card-image {
@@ -159,6 +160,12 @@ export function GettingStartedCards() {
           white-space: nowrap;
         }
 
+        :global(.dark) .getting-started-card-label {
+          background: #1f2937;
+          color: #818cf8;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
         .getting-started-card-content {
           display: flex;
           align-items: center;
@@ -170,6 +177,7 @@ export function GettingStartedCards() {
 
         :global(.dark) .getting-started-card-content {
           border-top-color: #374151;
+          background-color: #111827;
         }
 
         .getting-started-card-icon {
@@ -199,9 +207,17 @@ export function GettingStartedCards() {
           transition: transform 0.2s ease;
         }
 
+        :global(.dark) .getting-started-card-arrow {
+          color: #6b7280;
+        }
+
         .getting-started-card:hover .getting-started-card-arrow {
           transform: translateX(4px);
           color: #4f46e5;
+        }
+
+        :global(.dark) .getting-started-card:hover .getting-started-card-arrow {
+          color: #818cf8;
         }
       `}</style>
     </div>
