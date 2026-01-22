@@ -1,11 +1,11 @@
 /* eslint-env node */
-import {Footer, Layout, Navbar} from "nextra-theme-docs";
-import {Banner, Head} from "nextra/components";
-import {getPageMap} from "nextra/page-map";
-import VersionLabel from "./_components/VersionLabel";
-import ImageZoomProvider from "../components/ImageZoomProvider";
-import "nextra-theme-docs/style.css";
-import "./globals.css";
+import { Footer, Layout, Navbar } from "nextra-theme-docs"
+import { Banner, Head } from "nextra/components"
+import { getPageMap } from "nextra/page-map"
+import VersionLabel from "./_components/VersionLabel"
+import ImageZoomProvider from "../components/ImageZoomProvider"
+import "nextra-theme-docs/style.css"
+import "./globals.css"
 
 export const metadata = {
   metadataBase: new URL("https://spacedf.com"),
@@ -30,13 +30,13 @@ export const metadata = {
     images: ["https://d33et8skld5wvq.cloudfront.net/images/spacedf-og.jpg"],
     site: "https://spacedf.com",
   },
-};
+}
 
-export default async function RootLayout({children}) {
+export default async function RootLayout({ children }) {
   const navbar = (
     <Navbar
       logo={
-        <div style={{display: "flex", alignItems: "center", gap: "8px"}}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <img
             src="/spacedf_logo.svg"
             alt="SpaceDF"
@@ -53,10 +53,10 @@ export default async function RootLayout({children}) {
       chatLink="https://discord.gg/HxCTyMCzuK"
       projectLink="https://github.com/Space-DF/spacedf-docs"
     />
-  );
-  const pageMap = await getPageMap();
+  )
+  const pageMap = await getPageMap()
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang="en" dir="ltr" suppressHydrationWarning style={{ fontSize: 18 }}>
       <Head
         faviconGlyph="✦"
         color={{
@@ -68,7 +68,7 @@ export default async function RootLayout({children}) {
           },
         }}
       />
-      <body>
+      <body suppressHydrationWarning>
         <ImageZoomProvider>
           <Layout
             banner={
@@ -76,7 +76,7 @@ export default async function RootLayout({children}) {
                 🚀 SpaceDF v2025.12.19 is now live!{" "}
                 <a
                   href="/blog/v2025.12.19"
-                  style={{color: "inherit", textDecoration: "underline"}}
+                  style={{ color: "inherit", textDecoration: "underline" }}
                 >
                   Read the release notes
                 </a>
@@ -91,7 +91,7 @@ export default async function RootLayout({children}) {
                     href="https://df.technology"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{color: "#B7A1F7"}}
+                    style={{ color: "#B7A1F7" }}
                   >
                     Digital Fortress
                   </a>
@@ -101,7 +101,7 @@ export default async function RootLayout({children}) {
             }
             editLink="Edit this page on GitHub"
             docsRepositoryBase="https://github.com/Space-DF/spacedf-docs/blob/main"
-            sidebar={{defaultMenuCollapseLevel: 1}}
+            sidebar={{ defaultMenuCollapseLevel: 1 }}
             pageMap={pageMap}
           >
             {children}
@@ -109,5 +109,5 @@ export default async function RootLayout({children}) {
         </ImageZoomProvider>
       </body>
     </html>
-  );
+  )
 }

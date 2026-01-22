@@ -1,4 +1,4 @@
 export default {
-  'cloud-setup': 'Cloud Setup',
-  'self-hosted': 'Self Host'
+  "cloud-setup": "Cloud Setup",
+  "self-hosting": "Self-Hosting",
 }

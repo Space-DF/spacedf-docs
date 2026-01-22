@@ -1,3 +1,6 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark *));
 /* SpaceDF Theme Color Configuration */
 :root {
   --nextra-primary-hue: 255deg;

@@ -1,0 +1,625 @@
+import { Steps } from "nextra/components"
+import { Table } from 'nextra/components'
+import { Callout } from 'nextra/components'
+
+import {
+    NumberOfContent,
+    NumberWithMdx
+} from "@/app/_components/NumberOfContent.jsx"
+
+
+# Self-Hosting with Docker
+
+> Learn how to configure and deploy SpaceDF Platform with Docker.
+
+---
+
+Docker is the easiest way to start self-hosting SpaceDF.
+You can usually get everything running in under 30 minutes.
+
+## Contents
+<br/>
+
+<NumberOfContent number={1} title="Before You Begin" href="/docs/getting-started/self-hosting/docker#before-you-begin" description="What you need to prepare before setting up SpaceDF."/>
+<NumberOfContent number={2} title="System Requirements" href="/docs/getting-started/self-hosting/docker#system-requirements" description="Minimum hardware and software requirements."/>
+<NumberOfContent number={3} title="Installing SpaceDF" href="/docs/getting-started/self-hosting/docker#installing-spacedf" description="How to install SpaceDF using Docker."/>
+<NumberOfContent number={4} title="Configuration and Security" href="/docs/getting-started/self-hosting/docker#configuring-and-securing-spacedf" description="Basic configuration and recommended security settings."/>
+<NumberOfContent number={5} title="Starting and Stopping SpaceDF" href="" description="How to start, stop, and restart the services."/>
+<NumberOfContent number={6} title="Accessing SpaceDF Services" href="" description="How to access the dashboard and APIs after setup."/>
+<NumberOfContent number={7} title="Updating SpaceDF" href="" description="How to upgrade to a newer version safely."/>
+<NumberOfContent number={8} title="Uninstalling SpaceDF" href="" description="How to remove SpaceDF from your system."/>
+<NumberOfContent number={9} title="Advanced Topics" href="" description="Optional topics for more advanced use cases."/>
+
+## Before you begin
+Before setting up SpaceDF, you should be familiar with some basic concepts. You do not need to be an expert, but you should understand:
+- Basic Linux server usage (connecting to a server, running commands)
+- How Docker and Docker Compose work at a high level
+- Basic networking concepts such as ports and firewalls
+
+Make sure the following tools are installed on your machine or server:
+- [Git](https://git-scm.com/downloads) – used to download the SpaceDF source code
+- [Docker](https://docs.docker.com/manuals/) – used to run SpaceDF and its services
+
+Install Docker based on your operating system:
+- **Linux server or VPS**: Install [Docker Engine](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+- **Linux desktop**: Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/linux/)
+- **macOS**: Install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/)
+- **Windows**: Install [Docker Desktop](https://docs.docker.com/desktop/install/windows-install/)
+
+Once these requirements are met, you are ready to start installing SpaceDF.
+
+## System requirements
+
+Minimum requirements for running all SpaceDF Platform components, suitable for development and small to medium production workloads:
+
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Resource
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Minimum
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Recommended
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        <td className="py-3 text-gray-700 dark:text-gray-300">RAM</td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">4 GB</td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">8 GB+</td>
+      </tr>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        <td className="py-3 text-gray-700 dark:text-gray-300">CPU</td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">2 cores</td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">4 cores+</td>
+      </tr>
+      <tr>
+        <td className="py-3 text-gray-700 dark:text-gray-300">Disk</td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">
+          20 GB available
+        </td>
+        <td className="py-3 text-gray-700 dark:text-gray-300">
+          80 GB+ SSD
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+## Installing SpaceDF
+Follow the steps below to install and run SpaceDF on your machine.
+
+```bash copy
+# Get the code
+git clone https://github.com/Space-DF/spacedf-core.git
+
+# Make your new spacedf project directory
+mkdir spacedf-project
+
+# Tree should look like this
+# .
+# ├── spacedf-core
+# └── spacedf-project
+
+# Copy the compose files over to your project
+cp -rf spacedf-core/docker-compose.yml spacedf-project
+
+# Copy the fake env vars
+cp spacedf-core/.env.example spacedf-project/.env
+
+# Switch to your project directory
+cd spacedf-project
+
+# Pull the latest images
+docker compose pull
+```
+
+## Configuring and securing SpaceDF
+
+The `.env.example` file includes sample passwords and keys for reference only.
+You must replace these values before starting SpaceDF in a self-hosted environment.
+
+<Callout type="error">
+    Review the configuration options below and make sure all secret values are set before starting SpaceDF.
+</Callout>
+
+### Quick setup (experimental)
+To generate and apply all secrets at once you can run:
+
+```sh copy
+sh ./utils/generate-keys.sh
+```
+
+The script is experimental, so review the output before proceeding and also check `.env` after it's updated by the script.
+
+Alternatively, configure all secrets manually as follows.
+
+### Configuring Environment Variables
+This section explains how to configure the required environment variables in the `.env` file before starting SpaceDF.
+
+Open the `.env` file using a text editor (for example: VS Code, Nano, or Notepad).
+
+#### RabbitMQ credentials
+> RabbitMQ is used by SpaceDF to handle background tasks and message processing.
+
+```bash copy
+RABBITMQ_DEFAULT_USER=default
+RABBITMQ_DEFAULT_PASS=password
+```
+
+- `RABBITMQ_DEFAULT_USER` - The username SpaceDF uses to connect to RabbitMQ.
+- `RABBITMQ_DEFAULT_PASS` - The password for the RabbitMQ user above.
+
+<Callout type="warning">
+  Do not use simple or common passwords. This account controls access to your message queue.
+</Callout>
+
+#### Radis
+> Redis is used by SpaceDF for caching and fast data access.
+
+Set the Redis connection URL in the `.env` file.
+
+```bash copy
+# Replace these placeholders with your own values.
+REDIS_HOST="redis://redis:6379/1"
+```
+- `redis://` — Connection protocol
+- `redis` — Redis service name (default in Docker)
+- `6379` — Default Redis port
+- `/1` — Redis database number
+
+<Callout type="info">
+  **When you do NOT need to change this**
+    - You are using the provided Docker setup
+    - Redis is running as part of the included Docker Compose file
+</Callout>
+
+<Callout type="info">
+  **When you SHOULD change this**
+    - Redis runs on a different server or host
+    - Redis uses a non-default port
+    - You want to use a different Redis database
+</Callout>
+
+
+#### Authentication (JWT)
+> SpaceDF uses JSON Web Tokens (JWT) to authenticate users and secure API requests.
+
+You must set a **private key** and a **public key** before starting SpaceDF.
+
+<NumberWithMdx number={1} href="" className="mt-6">
+    **Recommended:** Generate a new key pair
+</NumberWithMdx>
+```bash copy
+openssl genrsa -out jwt_private.pem 2048
+openssl rsa -in jwt_private.pem -pubout -out jwt_public.pem
+```
+<NumberWithMdx number={2} href="" className="mt-6">
+    Copy the contents of each file into your `.env` file:
+</NumberWithMdx>
+```bash copy
+JWT_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----...
+JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
+```
+- `JWT_PRIVATE_KEY` - Signs authentication tokens (***Keep this key secret.***).
+
+- `JWT_PUBLIC_KEY` - Verifies authentication tokens. This key can be shared with other services if needed.
+> Make sure the keys are pasted correctly and not broken across lines.
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit JWT private keys to Git
+  - Do not reuse keys from other systems
+  - Rotate keys if they are exposed
+</Callout>
+
+#### Google OAuth
+> Google OAuth allows users to sign in to SpaceDF using their Google account.
+
+To enable Google login, you need to create OAuth credentials in the ***Google Cloud Console*** and set the values below in your `.env` file.
+```bash copy
+# Replace these placeholders with your own values.
+GOOGLE_CALLBACK_URL=https://spacedf.example.com/auth/google/callback
+GOOGLE_CLIENT_ID=1234567890-abcxyz.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+- `GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.
+- `GOOGLE_CLIENT_ID` - Identifies your application to Google.
+- `GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
+
+
+**How to get Google OAuth credentials**
+<NumberWithMdx number={1} className="mt-3">
+    Go to the [Google Cloud Console](https://console.cloud.google.com/)
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Create or select a project.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+    Enable **Google Identity Services**.
+</NumberWithMdx>
+<NumberWithMdx number={4}>
+    Go to **APIs & Services → Credentials**.
+</NumberWithMdx>
+<NumberWithMdx number={5}>
+    Create an **OAuth 2.0 Client ID:**
+    <ul>
+        <li>
+            Application type: **Web application**
+        </li>
+        <li>
+           Authorized redirect URI:
+           ```string copy
+            https://your-domain.com/auth/google/callback
+           ```
+        </li>
+    </ul>
+</NumberWithMdx>
+<NumberWithMdx number={6} className="mb-3">
+   Copy the generated **Client ID** and **Client Secret** into your `.env` file.
+</NumberWithMdx>
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit `GOOGLE_CLIENT_SECRET` to Git
+  - Use HTTPS for the callback URL in production
+  - Rotate the secret if it is exposed
+</Callout>
+
+#### Apple OAuth (Coming Soon)
+
+Apple sign-in support is planned but not yet supported in SpaceDF.
+
+<Callout type="warning">
+  Do not configure these values yet.
+  Apple OAuth is not supported in the current release.
+</Callout>
+
+```bash copy
+# Apple OAuth (reserved for future use)
+APPLE_CLIENT_ID=__APPLE_CLIENT_ID__
+APPLE_CLIENT_SECRET=__APPLE_CLIENT_SECRET__
+APPLE_CLIENT_KEY=__APPLE_CLIENT_KEY__
+APPLE_CERTIFICATE_KEY=__APPLE_CERTIFICATE_KEY__
+```
+
+#### Auth Service
+> The Auth Service is responsible for user authentication, authorization, and tenant management in SpaceDF.
+
+Set the following values in your `.env` file.
+```bash copy
+# Replace these placeholders with your own values.
+AUTH_POSTGRES_PASSWORD=__AUTH_POSTGRES_PASSWORD__
+AUTH_SECRET_KEY=__AUTH_SECRET_KEY__
+DEFAULT_TENANT_HOST=__DEFAULT_TENANT_HOST__
+ROOT_API_KEY=__ROOT_API_KEY__
+```
+- `AUTH_POSTGRES_PASSWORD` - The password used by the Auth Service to connect to its ***PostgreSQL database***. (***Use a strong and unique password.***)
+- `AUTH_SECRET_KEY` - A secret key used to sign and validate authentication-related data. (***Keep this value private.***)
+- `DEFAULT_TENANT_HOST` - The default domain or host assigned to the initial tenant. This is usually your main application domain.
+- `ROOT_API_KEY` - A master API key with full access to the Auth Service. Used for administrative or internal operations only.
+
+**Secret keys**: Generate secure random values for secret keys:
+```bash copy
+openssl rand -hex 32
+```
+Use the generated value for:
+```bash copy
+AUTH_SECRET_KEY=generated_secret_value
+ROOT_API_KEY=generated_root_api_key
+```
+
+**Default tenant host**
+
+Set this to the domain or host where SpaceDF will be accessed:
+```bash copy
+DEFAULT_TENANT_HOST=app.spacedf.example
+```
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit secrets or API keys to Git
+  - Do not reuse secrets from other systems
+  - Rotate keys if they are exposed
+</Callout>
+
+#### S3 Service
+> The S3 Service is used by SpaceDF to store files such as uploads, assets, and generated data. This setup commonly uses **Amazon S3** or any **S3-compatible storage**.
+
+**How to configure**
+
+<NumberWithMdx number={1} className="mt-6">
+    **Create an S3 bucket**
+    <ul>
+        <li>
+           Create a bucket in your AWS account
+        </li>
+        <li>
+           Note the **bucket name** and **region**
+        </li>
+    </ul>
+</NumberWithMdx>
+
+<NumberWithMdx number={2}>
+    **Create IAM credentials**
+    <ul>
+        <li>
+           Create an IAM user with access to the bucket
+        </li>
+        <li>
+          Generate an **Access Key ID** and **Secret Access Key**
+        </li>
+    </ul>
+</NumberWithMdx>
+
+<NumberWithMdx number={3}>
+    Set values in `.env`
+    ```bash copy
+    # Replace these placeholders with your own values.
+    AWS_ACCESS_KEY_ID=AKIAXXXXXXXX
+    AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXX
+    AWS_STORAGE_BUCKET_NAME=spacedf-storage
+    AWS_REGION=ap-southeast-1
+    ```
+</NumberWithMdx>
+
+- `AWS_ACCESS_KEY_ID` - The access key used by SpaceDF to authenticate with S3.
+- `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (***Keep this value private***)
+- `AWS_STORAGE_BUCKET_NAME` - The name of the S3 bucket where SpaceDF stores files.
+- `AWS_REGION` - The AWS region where the S3 bucket is located. (e.g., `us-east-1`, `ap-southeast-1`).
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit AWS credentials to Git
+  - Use IAM policies with **minimum required permissions**
+  - Rotate access keys if they are exposed
+</Callout>
+
+**Using S3-compatible providers**
+
+If you are using an S3-compatible service (e.g., MinIO, DigitalOcean Spaces):
+- Use the provider’s access key and secret
+- Set the appropriate bucket name and region
+
+#### Dashboard Service
+> The Dashboard Service provides the web interface for managing SpaceDF, including administration and monitoring features.
+
+**Database password**
+
+Choose a strong password for the Dashboard Service database:
+```bash copy
+# Replace these placeholders with your own values.
+DASHBOARD_POSTGRES_PASSWORD=change_this_to_a_secure_password
+```
+`DASHBOARD_POSTGRES_PASSWORD` - The password used by the Dashboard Service to connect to its PostgreSQL database. (***Use a strong and unique password***.)
+
+**Secret key**: Generate a secure random value:
+```bash
+openssl rand -hex 32
+```
+Set it in your `.env` file:
+
+```bash copy
+# Replace these placeholders with your own values.
+DASHBOARD_SECRET_KEY=generated_secret_value
+```
+`DASHBOARD_SECRET_KEY` - A secret key used to sign and protect dashboard-related sessions and data. (***Keep this value private.***)
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit passwords or secret keys to Git
+  - Do not reuse secrets from other services
+  - Rotate keys if they are exposed
+</Callout>
+
+#### Device Service
+> The Device Service manages devices, device data, and communication with telemetry-related services in SpaceDF.
+
+**Database password**
+
+Choose a strong password for the Device Service database:
+```bash copy
+# Replace these placeholders with your own values.
+DEVICE_POSTGRES_PASSWORD=change_this_to_a_secure_password
+```
+
+- `DEVICE_POSTGRES_PASSWORD` - The password used by the Device Service to connect to its PostgreSQL database. (***Use a strong and unique password***.)
+
+**Secret key**: Generate a secure random value:
+```bash
+openssl rand -hex 32
+```
+
+Set it in your `.env` file:
+
+```bash copy
+# Replace these placeholders with your own values.
+DEVICE_SECRET_KEY=generated_secret_value
+```
+`DEVICE_SECRET_KEY` - A secret key used to sign and protect device-related data and requests. (***Keep this value private.***)
+
+**Telemetry service URL**
+Set this to the URL where the Telemetry Service is running.
+
+Example: Telemetry service running in Docker
+```bash copy
+# Replace these placeholders with your own values.
+TELEMETRY_SERVICE_URL=http://telemetry-service:8080
+```
+
+Example: External telemetry service
+```bash copy
+# Replace these placeholders with your own values.
+TELEMETRY_SERVICE_URL=https://telemetry.spacedf.example
+```
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit passwords or secret keys to Git
+  - Use HTTPS for external telemetry services in production
+  - Rotate secrets if they are exposed
+</Callout>
+
+#### EMQX Service
+> EMQX is the MQTT broker used by SpaceDF to handle device messaging and real-time communication.
+
+Choose a username and a strong password:
+
+```bash copy
+# Replace these placeholders with your own values.
+EMQX_USERNAME=spacedf
+EMQX_PASSWORD=change_this_to_a_secure_password
+```
+
+- `EMQX_USERNAME` - The username SpaceDF uses to authenticate with the EMQX broker.
+- `EMQX_PASSWORD` - The password for the EMQX user above. (***Use a strong and unique password***.)
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit EMQX credentials to Git
+  - Do not reuse broker credentials across environments
+  - Rotate credentials if they are exposed
+</Callout>
+
+#### Broker Bridge Service
+> The Broker Bridge Service connects SpaceDF to an external MQTT broker or bridges messages between brokers.
+
+**Broker credentials**
+```bash copy
+# Replace these placeholders with your own values.
+MQTT_BROKER_BRIDGE_USERNAME=bridge-user
+MQTT_BROKER_BRIDGE_PASSWORD=change_this_to_a_secure_password
+```
+
+- `MQTT_BROKER_BRIDGE_USERNAME` - The username used to authenticate with the external MQTT broker.
+- `MQTT_BROKER_BRIDGE_PASSWORD` - The password for the broker bridge user. (***Keep this value private***.)
+
+**MQTT topics**
+
+Specify one or more topics, separated by commas.
+```bash copy
+# Replace these placeholders with your own values.
+MQTT_TOPICS=devices/+/telemetry,devices/+/status
+```
+- `MQTT_TOPICS` - A list of MQTT topics that SpaceDF subscribes to or bridges.
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit MQTT credentials to Git
+  - Limit broker permissions to required topics only
+  - Rotate credentials if they are exposed
+</Callout>
+
+
+#### Email (AWS SES)
+> SpaceDF uses email services to send system emails such as account verification, password resets, and notifications.
+
+This setup commonly uses **AWS Simple Email Service (SES)**, but can be adapted to other SMTP-compatible providers.
+
+Set the following values in your `.env` file.
+
+```bash
+# Replace these placeholders with your own values.
+EMAIL_BACKEND=ses
+EMAIL_HOST=email-smtp.us-east-1.amazonaws.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=true
+EMAIL_HOST_USER=AKIAXXXXXXXX
+EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXX
+DEFAULT_FROM_EMAIL=no-reply@spacedf.example
+```
+- `EMAIL_BACKEND` - Specifies the email provider. Use `ses` when sending email through AWS SES.
+- `EMAIL_HOST` - The SMTP endpoint provided by AWS SES (e.g. `email-smtp.us-east-1.amazonaws.com`).
+- `EMAIL_PORT` - The SMTP port used to send email. Common values: `587` (TLS) or `465` (SSL).
+- `EMAIL_USE_TLS` - Enables secure email delivery using TLS. Recommended value: `true`.
+- `EMAIL_HOST_USER` - The SMTP username generated by AWS SES.
+- `EMAIL_HOST_PASSWORD` - The SMTP password generated by AWS SES (***Keep this value secret***)
+- `DEFAULT_FROM_EMAIL` - The sender email address shown to users.
+
+**How to get AWS SES credentials**
+<NumberWithMdx number={1} className="mt-3">
+    Sign in to the [AWS Console](https://aws.amazon.com/console/)
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+  Open **Simple Email Service (SES)**.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+   Verify your domain or sender email address.
+</NumberWithMdx>
+<NumberWithMdx number={4}>
+    Create **SMTP credentials** in SES:
+    <ul>
+        <li>
+           These are different from your AWS access keys.
+        </li>
+    </ul>
+</NumberWithMdx>
+<NumberWithMdx number={5}>
+    Copy the SMTP username and password into:
+     <ul>
+        <li>
+           `EMAIL_HOST_USER`
+        </li>
+        <li>
+           `EMAIL_HOST_PASSWORD`
+        </li>
+    </ul>
+</NumberWithMdx>
+<NumberWithMdx number={6}>
+    Find your SMTP endpoint and set it as `EMAIL_HOST`.
+</NumberWithMdx>
+
+#### MPA Service
+> The MPA Service connects SpaceDF to an MQTT broker to receive and publish messages for application-level processing.
+
+Example: MQTT broker running in Docker
+```bash
+# Replace these placeholders with your own values.
+MQTT_BROKER=emqxl
+MQTT_PORT=1883
+MQTT_USERNAME=mpa
+MQTT_PASSWORD=change_this_to_a_secure_password
+MQTT_CLIENT_ID=spacedf-mpa
+MQTT_TOPIC=devices/+/events
+```
+- `MQTT_BROKER` - The hostname or IP address of the MQTT broker.
+- `MQTT_USERNAME` - The username used to authenticate with the MQTT broker.
+- `MQTT_PASSWORD` - The password for the MQTT user. (***Keep this value private***.)
+- `MQTT_PORT` - The port used to connect to the MQTT broker (e.g., `1883` for plain TCP, `8883` for TLS).
+- `MQTT_CLIENT_ID` - A unique client identifier for the MPA Service when connecting to MQTT.
+- `MQTT_TOPIC` - The MQTT topic the MPA Service subscribes to.
+
+<Callout type="info">
+  **Security notes**
+  - Do not commit MQTT credentials to Git
+  - Use TLS (`8883`) in production if available
+  - Restrict broker permissions to required topics only
+</Callout>
+
+#### Organization Initialization
+> These settings are used to create the **initial organization and owner account** when SpaceDF starts for the first time. This step runs only during the first startup.
+
+```bash
+# Replace these placeholders with your own values.
+ORG_NAME=SpaceDF
+ORG_SLUG=spacedf
+OWNER_EMAIL=admin@spacedf.example
+OWNER_PASSWORD=change_this_to_a_secure_password
+```
+
+- `ORG_NAME` - The display name of your organization.
+- `ORG_SLUG` - A short, URL-friendly identifier for the organization (lowercase, no spaces).
+- `OWNER_EMAIL` - The email address of the initial organization owner.
+- `OWNER_PASSWORD` - The password for the owner account. (***Use a strong and secure password***.)
+
+<Callout type="info">
+  **Security notes**
+  - Change the owner password after first login if required
+  - Do not commit owner credentials to Git
+  - Use a real email address to receive system notifications
+</Callout>
