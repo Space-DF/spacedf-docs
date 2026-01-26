@@ -362,7 +362,7 @@ If you are using an S3-compatible service (e.g., MinIO, DigitalOcean Spaces):
 - Use the provider’s access key and secret
 - Set the appropriate bucket name and region
 
-##### Radis
+##### Redis
 > Redis is used by SpaceDF for caching and fast data access.
 
 Set the Redis connection URL in the `.env` file.
@@ -789,18 +789,12 @@ This value is used for redirects and callbacks.
 **Using Docker**
 ```bash copy
 DASHBOARD_AUTH_API=http://haproxy:3000
-
-# This key must match the value configured on the backend.
-SPACE_API_KEY=__SPACE_API_KEY__
 ```
 
 **External API**
 ```bash copy
 # Replace with your own values.
 DASHBOARD_AUTH_API=https://api.spacedf.example
-
-# This key must match the value configured on the backend.
-SPACE_API_KEY=__SPACE_API_KEY__
 ```
 
 ##### Map Services
@@ -863,11 +857,12 @@ Use ws (WebSocket) for browser-based clients.
 > This section explains how to start, check, and stop SpaceDF services using Docker Compose.
 
 ### Starting the services
-From the directory that contains your `docker-compose.yml` file, run:
+From the directory that contains your `./entrypoint.sh` file, run:
 
 ```bash copy 
 # Start all services in the background
-docker compose up -d
+chmod +x entrypoint.sh
+./entrypoint.sh
 ```
 
 Docker will start all SpaceDF services in detached mode.
