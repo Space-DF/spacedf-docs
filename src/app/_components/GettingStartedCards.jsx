@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import Link from "next/link";
+import Link from "next/link"
 
 const cards = [
   {
@@ -29,7 +29,7 @@ const cards = [
     title: "Self-Hosted Installation",
     description:
       "Deploy SpaceDF on your own infrastructure for complete control and customization.",
-    href: "/docs/getting-started/self-hosted",
+    href: "/docs/getting-started/self-hosting",
     image:
       "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/self-host.png",
     icon: (
@@ -47,12 +47,12 @@ const cards = [
       </svg>
     ),
   },
-];
+]
 
 export function GettingStartedCards() {
   return (
     <div className="getting-started-grid">
-      {cards.map(card => (
+      {cards.map((card) => (
         <Link key={card.title} href={card.href}>
           <div className="getting-started-card">
             <img src={card.image} alt={card.title} />
@@ -221,5 +221,5 @@ export function GettingStartedCards() {
         }
       `}</style>
     </div>
-  );
+  )
 }

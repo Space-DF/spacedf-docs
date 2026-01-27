@@ -1,0 +1,113 @@
+---
+sidebarTitle: Quick Start
+---
+
+import { Steps } from 'nextra/components'
+
+# Quick Start
+
+> This guide helps you get **SpaceDF running quickly** on your own infrastructure using **Docker Compose** and **default settings**.
+
+<div className='mt-10 p-6 bg-gray-100 dark:bg-zinc-800 dark:border-zinc-600 border border-gray-200 shadow rounded-2xl'>
+    <p className='font-semibold text-xl'>Before You Begin</p>
+    <ul className='list-disc'>
+        Make sure you have:
+        -   Docker and Docker Compose installed
+        -   Basic Linux command-line knowledge
+        -   An environment with at least the minimum system requirements
+    </ul>
+    If you are unsure about any of the requirements above, see [Prerequisites](/docs/getting-started/self-hosting/docker/advanced-setup#prerequisites) for details.
+</div>
+
+If you need advanced configuration, security tuning, or production setup, see [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) instead.
+
+<Steps>
+### Get the Source Code
+ 
+```bash copy
+# Make your new spacedf project directory
+mkdir spacedf-project
+
+# Clone the SpaceDF repository:
+cd spacedf-project
+git clone https://github.com/Space-DF/spacedf-core.git
+
+# Switch to your project directory
+cd spacedf-core
+
+# Copy the env vars
+cp .env.example .env
+```
+ 
+### Configure Environment Variables
+To generate and apply all secrets at once you can run:
+```sh copy
+chmod +x generate-keys.sh
+./generate-keys.sh
+```
+The default values are sufficient for Quick Start.
+
+### Pull Images and Start SpaceDF
+From the directory that contains your `./entrypoint.sh` file, run:
+
+```bash copy 
+# Start all services in the background
+chmod +x entrypoint.sh
+./entrypoint.sh
+```
+This script pulls the required Docker images and starts all SpaceDF services in the background.
+
+### Verify Services
+Confirm that all containers are running:
+```bash copy 
+docker compose ps
+```
+When all services are healthy, SpaceDF is ready to use.
+</Steps>
+
+### Default Ports
+After startup, SpaceDF services are available on the following default ports:
+
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Service
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Port
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Dashboard</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Admin Portal</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3001</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Backend API</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">EMQX (API)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:18083</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">MQTT (WebSocket)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8883</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+Make sure these ports are open on your server and not used by other services.
+
+🎉 **You’re all set!** SpaceDF is now running on your server. Enjoy building with it.
+
+---
+
+Continue with [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) to customize your deployment.

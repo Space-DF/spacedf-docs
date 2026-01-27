@@ -1,0 +1,48 @@
+---
+asIndexPage: true
+sidebarTitle: Docker
+---
+
+import { RichCardOptions, RichCardOption } from "@/app/_components/RichCard.jsx"
+
+# Self-Hosting with Docker
+> This section helps you run SpaceDF on your own infrastructure using **Docker** and **Docker Compose**.
+
+Choose the setup path that best fits your needs:
+
+<RichCardOptions>
+  <RichCardOption
+    icon={
+      <div
+        className="w-2/3 text-center"
+      >
+        🚀
+      </div>
+    }
+    title="Quick Start"
+    badge="Recommended"
+    description="Get SpaceDF running quickly using Docker Compose with default settings."
+    href="/docs/getting-started/self-hosting/docker/quick-start"
+  />
+
+  <RichCardOption
+    icon={
+      <div
+        className="w-2/3 text-center"
+      >
+        ⚙️
+      </div>
+    }
+    title="Advanced Setup"
+    description="Full Docker Compose configuration, security settings, and production guidance."
+    href="/docs/getting-started/self-hosting/docker/advanced-setup"
+  />
+</RichCardOptions>
+---
+## Prerequisites
+
+- [Basic Linux](https://www.digitalocean.com/community/tutorials/linux-commands) server usage (connecting to a server, running commands).
+- How Docker and Docker Compose work at a high level.
+- Basic networking concepts such as [ports](https://www.cloudflare.com/learning/network-layer/what-is-a-computer-port) and [firewalls](https://www.cloudflare.com/learning/security/what-is-a-firewall/)
+
+If you are unsure which path to choose, start with **Quick Start**. You can move to **Advanced Setup** at any time.
