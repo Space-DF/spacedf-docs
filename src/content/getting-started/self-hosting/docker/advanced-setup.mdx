@@ -8,32 +8,40 @@ import {
 } from "@/app/_components/NumberOfContent.jsx"
 
 
-# Self-Hosting with Docker
+# Advanced Setup with Docker
 
-> Learn how to configure and deploy SpaceDF Platform with Docker.
+> This guide covers **detailed configuration**, **customization**, **and operational topics** for running SpaceDF with Docker Compose.
+
+<div className='mt-10 p-6 bg-gray-100 dark:bg-zinc-800 dark:border-zinc-600 border border-gray-200 shadow rounded-2xl'>
+    <p className='font-semibold text-xl'>Use this guide if you need:</p>
+    <ul className='list-disc'>
+        -   Production-ready configuration
+        -   Security hardening
+        -   Custom ports, domains, or authentication
+        -   Update, maintenance, and removal procedures
+    </ul>
+</div>
+If you only want to get SpaceDF running quickly with default settings, see [Quick Start](/docs/getting-started/self-hosting/docker/quick-start).
 
 ---
-
-Docker is the easiest way to start self-hosting SpaceDF.
-You can usually get everything running in under 30 minutes.
 
 ## Contents
 <br/>
 
-<NumberOfContent number={1} title="Before You Begin" href="/docs/getting-started/self-hosting/docker#before-you-begin" description="What you need to prepare before setting up SpaceDF."/>
-<NumberOfContent number={2} title="System Requirements" href="/docs/getting-started/self-hosting/docker#system-requirements" description="Minimum hardware and software requirements."/>
-<NumberOfContent number={3} title="Installing SpaceDF" href="/docs/getting-started/self-hosting/docker#installing-spacedf" description="How to install SpaceDF using Docker."/>
-<NumberOfContent number={4} title="Configuration and Security" href="/docs/getting-started/self-hosting/docker#configuring-and-securing-spacedf" description="Basic configuration and recommended security settings."/>
-<NumberOfContent number={5} title="Starting and Stopping SpaceDF" href="/docs/getting-started/self-hosting/docker#starting-and-stopping" description="How to start, stop, and restart the services."/>
-<NumberOfContent number={6} title="Accessing SpaceDF Services" href="/docs/getting-started/self-hosting/docker#accessing-spacedf-services" description="How to access the dashboard and APIs after setup."/>
-<NumberOfContent number={7} title="Updating SpaceDF" href="/docs/getting-started/self-hosting/docker#updating" description="How to upgrade to a newer version safely."/>
-<NumberOfContent number={8} title="Uninstalling SpaceDF" href="/docs/getting-started/self-hosting/docker#uninstalling" description="How to remove SpaceDF from your system."/>
+<NumberOfContent number={1} title="Prerequisites" href="#prerequisites" description="What you need to prepare before setting up SpaceDF."/>
+<NumberOfContent number={2} title="System Requirements" href="#system-requirements" description="Minimum hardware and software requirements."/>
+<NumberOfContent number={3} title="Installing SpaceDF" href="#installing-spacedf" description="How to install SpaceDF using Docker."/>
+<NumberOfContent number={4} title="Configuration and Security" href="#configuring-and-securing-spacedf" description="Basic configuration and recommended security settings."/>
+<NumberOfContent number={5} title="Starting and Stopping SpaceDF" href="#starting-and-stopping" description="How to start, stop, and restart the services."/>
+<NumberOfContent number={6} title="Accessing SpaceDF Services" href="#accessing-spacedf-services" description="How to access the dashboard and APIs after setup."/>
+<NumberOfContent number={7} title="Updating SpaceDF" href="#updating" description="How to upgrade to a newer version safely."/>
+<NumberOfContent number={8} title="Uninstalling SpaceDF" href="#uninstalling" description="How to remove SpaceDF from your system."/>
 
-## Before you begin
+## Prerequisites
 Before setting up SpaceDF, you should be familiar with some basic concepts. You do not need to be an expert, but you should understand:
-- Basic Linux server usage (connecting to a server, running commands)
-- How Docker and Docker Compose work at a high level
-- Basic networking concepts such as ports and firewalls
+- [Basic Linux](https://www.digitalocean.com/community/tutorials/linux-commands) server usage (connecting to a server, running commands).
+- How Docker and Docker Compose work at a high level.
+- Basic networking concepts such as [ports](https://www.cloudflare.com/learning/network-layer/what-is-a-computer-port) and [firewalls](https://www.cloudflare.com/learning/security/what-is-a-firewall/)
 
 Make sure the following tools are installed on your machine or server:
 - [Git](https://git-scm.com/downloads) – used to download the SpaceDF source code
@@ -94,25 +102,19 @@ Minimum requirements for running all SpaceDF Platform components, suitable for d
 Follow the steps below to install and run SpaceDF on your machine.
 
 ```bash copy
-# Get the code
-git clone https://github.com/Space-DF/spacedf-core.git
 
 # Make your new spacedf project directory
 mkdir spacedf-project
 
-# Tree should look like this
-# .
-# ├── spacedf-core
-# └── spacedf-project
-
-# Copy the compose files over to your project
-cp -rf spacedf-core/docker-compose.yml spacedf-project
-
-# Copy the fake env vars
-cp spacedf-core/.env.example spacedf-project/.env
+# Get the code
+cd spacedf-project
+git clone https://github.com/Space-DF/spacedf-core.git
 
 # Switch to your project directory
-cd spacedf-project
+cd spacedf-core
+
+# Copy the env vars
+cp .env.example .env
 
 # Pull the latest images
 docker compose pull
@@ -127,17 +129,6 @@ You must replace these values before starting SpaceDF in a self-hosted environme
     Review the configuration options below and make sure all secret values are set before starting SpaceDF.
 </Callout>
 
-### Quick setup (experimental)
-To generate and apply all secrets at once you can run:
-
-```sh copy
-sh ./utils/generate-keys.sh
-```
-
-The script is experimental, so review the output before proceeding and also check `.env` after it's updated by the script.
-
-Alternatively, configure all secrets manually as follows.
-
 ### Configuring Environment Variables
 This section explains how to configure the required environment variables in the `.env` file before starting SpaceDF.
 
@@ -149,18 +140,24 @@ These environment variables configure the backend services that power the self-h
 Backend services include APIs, messaging, databases, and integrations required to run the core system.
 
 ##### RabbitMQ credentials
-> RabbitMQ is used by SpaceDF to handle background tasks and message processing.
+> RabbitMQ is used by SpaceDF for **background tasks** and **internal message** processing between services.
+
+You can **choose any username and password you want**, as long as:
+- The same values are used by **RabbitMQ** and **all SpaceDF services**
+- The credentials are defined in the environment variables below
 
 ```bash copy
-RABBITMQ_DEFAULT_USER=default
-RABBITMQ_DEFAULT_PASS=password
+# Replace with your own values.
+RABBITMQ_DEFAULT_USER=your_username
+RABBITMQ_DEFAULT_PASS=your_password
 ```
 
 - `RABBITMQ_DEFAULT_USER` - The username SpaceDF uses to connect to RabbitMQ.
 - `RABBITMQ_DEFAULT_PASS` - The password for the RabbitMQ user above.
 
 <Callout type="warning">
-  Do not use simple or common passwords. This account controls access to your message queue.
+  Do not use simple or common passwords. This account controls access to your message queue. <br/>
+  Keep these credentials safe—you may need them to log in to RabbitMQ for troubleshooting later.
 </Callout>
 
 ##### Authentication (JWT)
@@ -198,16 +195,6 @@ JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
 > Google OAuth allows users to sign in to SpaceDF using their Google account.
 
 To enable Google login, you need to create OAuth credentials in the ***Google Cloud Console*** and set the values below in your `.env` file.
-```bash copy
-# Replace with your own values.
-GOOGLE_CALLBACK_URL=https://spacedf.example.com/auth/google/callback
-GOOGLE_CLIENT_ID=1234567890-abcxyz.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-```
-- `GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.
-- `GOOGLE_CLIENT_ID` - Identifies your application to Google.
-- `GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
-
 
 **How to get Google OAuth credentials**
 <NumberWithMdx number={1} className="mt-3">
@@ -223,22 +210,33 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
     Go to **APIs & Services → Credentials**.
 </NumberWithMdx>
 <NumberWithMdx number={5}>
-    Create an **OAuth 2.0 Client ID:**
-    <ul>
-        <li>
-            Application type: **Web application**
-        </li>
-        <li>
-           Authorized redirect URI:
-           ```string copy
-            https://your-domain.com/auth/google/callback
-           ```
-        </li>
-    </ul>
+    Create an **OAuth 2.0 Client ID:**<br/>
+    Application type: **Web application**<br/>
 </NumberWithMdx>
-<NumberWithMdx number={6} className="mb-3">
+<NumberWithMdx number={6}>
+    Authorized redirect URI: (`GOOGLE_CALLBACK_URL`)<br/>
+    This is the callback URL that Google redirects to after a user successfully signs in with Google.
+    ```bash copy
+     # Production
+     https://your-domain.com/auth/google/callback
+
+     # Development
+     http://localhost:3000/auth/google/callback
+    ```
+</NumberWithMdx>
+<NumberWithMdx number={7} className="mb-3">
    Copy the generated **Client ID** and **Client Secret** into your `.env` file.
 </NumberWithMdx>
+
+```bash copy
+# Replace with your own values.
+GOOGLE_CALLBACK_URL=https://spacedf.example.com/auth/google/callback
+GOOGLE_CLIENT_ID=1234567890-abcxyz.apps.googleusercontent.com #(Step 5)
+GOOGLE_CLIENT_SECRET=your_google_client_secret #(Step 5)
+```
+- `GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.
+- `GOOGLE_CLIENT_ID` - Identifies your application to Google.
+- `GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
 
 <Callout type="important">
   **Security notes**
@@ -305,44 +303,71 @@ DEFAULT_TENANT_HOST=app.spacedf.example
 </Callout>
 
 ##### S3 Service
-> The S3 Service is used by SpaceDF to store files such as uploads, assets, and generated data. This setup commonly uses **Amazon S3** or any **S3-compatible storage**.
+> The Amazon S3 service is used by SpaceDF to store files such as uploads, assets, and generated data.
+
+<Callout type="info">
+    SpaceDF supports **Amazon S3 only** for file storage in this setup.
+</Callout>
+
+**How it works**
+
+SpaceDF connects to Amazon S3 using **IAM credentials** that you provide in the `.env` file. All file operations (upload, read, delete) are handled internally by SpaceDF services.<br/>
+End users do **not** need AWS accounts or credentials.
 
 **How to configure**
 
+If you do not already have an AWS account, create one at, [see more](https://repost.aws/knowledge-center/create-and-activate-aws-account): <br/>
+https://signin.aws.amazon.com/signup?request_type=register
+
+After creating your account, sign in to the AWS Management Console to continue with the steps below. 
+
+***Create an S3 bucket***
+
 <NumberWithMdx number={1} className="mt-6">
-    **Create an S3 bucket**
-    <ul>
-        <li>
-           Create a bucket in your AWS account
-        </li>
-        <li>
-           Note the **bucket name** and **region**
-        </li>
-    </ul>
+    Open the [Amazon S3 Console](https://console.aws.amazon.com/s3/)
 </NumberWithMdx>
-
 <NumberWithMdx number={2}>
-    **Create IAM credentials**
-    <ul>
-        <li>
-           Create an IAM user with access to the bucket
-        </li>
-        <li>
-          Generate an **Access Key ID** and **Secret Access Key**
-        </li>
-    </ul>
+    Create a new bucket
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+    Choose:<br/>
+        A unique bucket name -> will be used for `AWS_STORAGE_BUCKET_NAME`<br/>
+        An AWS region close to your server → will be used for `AWS_REGION`
+    <img src="/screenshots/bucket-guide.png" className="w-full mt-2"/>
 </NumberWithMdx>
 
+Save the bucket name and region for later use.
+
+Read more: [AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html#creating-bucket)
+
+***Create IAM credentials***
+<NumberWithMdx number={1} className="mt-6">
+    Open the [AWS IAM Console](https://console.aws.amazon.com/iam/)
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Create a new **IAM user**
+</NumberWithMdx>
 <NumberWithMdx number={3}>
-    Set values in `.env`
-    ```bash copy
+    Grant the user access to the S3 bucket<br/>
+    *Recommended:* grant only required S3 permissions (read/write)
+</NumberWithMdx>
+<NumberWithMdx number={4}>
+    Create an **Access Key** for the user<br/>
+    Access Key ID, Secret Access Key
+    <img src="/screenshots/iam-credentials.png" className="w-full mt-2"/>
+</NumberWithMdx>
+
+Read more: [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+
+***Set values in `.env`***
+```bash copy
     # Replace with your own values.
     AWS_ACCESS_KEY_ID=AKIAXXXXXXXX
     AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXX
+    
     AWS_STORAGE_BUCKET_NAME=spacedf-storage
     AWS_REGION=ap-southeast-1
-    ```
-</NumberWithMdx>
+```
 
 - `AWS_ACCESS_KEY_ID` - The access key used by SpaceDF to authenticate with S3.
 - `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (***Keep this value private***)
@@ -355,12 +380,6 @@ DEFAULT_TENANT_HOST=app.spacedf.example
   - Use IAM policies with **minimum required permissions**
   - Rotate access keys if they are exposed
 </Callout>
-
-**Using S3-compatible providers**
-
-If you are using an S3-compatible service (e.g., MinIO, DigitalOcean Spaces):
-- Use the provider’s access key and secret
-- Set the appropriate bucket name and region
 
 ##### Redis
 > Redis is used by SpaceDF for caching and fast data access.
@@ -446,28 +465,27 @@ DEVICE_SECRET_KEY=generated_secret_value
 ```
 `DEVICE_SECRET_KEY` - A secret key used to sign and protect device-related data and requests. (***Keep this value private.***)
 
-**Telemetry service URL**
-Set this to the URL where the Telemetry Service is running.
-
-Example: Telemetry service running in Docker
-```bash copy
-# Replace with your own values.
-TELEMETRY_SERVICE_URL=http://telemetry-service:8080
-```
-
-Example: External telemetry service
-```bash copy
-# Replace with your own values.
-TELEMETRY_SERVICE_URL=https://telemetry.spacedf.example
-```
-
 <Callout type="important">
   **Security notes**
   - Do not commit passwords or secret keys to Git
-  - Use HTTPS for external telemetry services in production
   - Rotate secrets if they are exposed
 </Callout>
 
+**Telemetry service URL**
+
+Defines the internal Docker service address that SpaceDF uses to communicate with the Telemetry Service.
+
+When using the **default Docker setup**, the Telemetry Service runs as a Docker container and is accessible via its **service name**.
+
+```bash copy
+# Default (recommended)
+TELEMETRY_SERVICE_URL=http://telemetry-service:8080
+```
+- This value is the same for both **local and production** deployments when using Docker Compose.
+- The Telemetry Service runs from a **Docker image** and is exposed internally.
+- You **do not need to change this value** in most cases.
+
+Only change this value if you modify the Telemetry Service name or port in `docker-compose.yml`.
 ##### EMQX Service
 > EMQX is the MQTT broker used by SpaceDF to handle device messaging and real-time communication.
 
@@ -508,7 +526,7 @@ MQTT_BROKER_BRIDGE_PASSWORD=change_this_to_a_secure_password
 Specify one or more topics, separated by commas.
 ```bash copy
 # Replace with your own values.
-MQTT_TOPICS=devices/+/telemetry,devices/+/status
+MQTT_TOPICS=device/+/telemetry,device/+/status
 ```
 `MQTT_TOPICS` - A list of MQTT topics that SpaceDF subscribes to or bridges.
 
@@ -524,26 +542,6 @@ MQTT_TOPICS=devices/+/telemetry,devices/+/status
 > SpaceDF uses email services to send system emails such as account verification, password resets, and notifications.
 
 This setup commonly uses **AWS Simple Email Service (SES)**, but can be adapted to other SMTP-compatible providers.
-
-Set the following values in your `.env` file.
-
-```bash copy
-# Replace with your own values.
-EMAIL_BACKEND=ses
-EMAIL_HOST=email-smtp.us-east-1.amazonaws.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=true
-EMAIL_HOST_USER=AKIAXXXXXXXX
-EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXX
-DEFAULT_FROM_EMAIL=no-reply@spacedf.example
-```
-- `EMAIL_BACKEND` - Specifies the email provider. Use `ses` when sending email through AWS SES.
-- `EMAIL_HOST` - The SMTP endpoint provided by AWS SES (e.g. `email-smtp.us-east-1.amazonaws.com`).
-- `EMAIL_PORT` - The SMTP port used to send email. Common values: `587` (TLS) or `465` (SSL).
-- `EMAIL_USE_TLS` - Enables secure email delivery using TLS. Recommended value: `true`.
-- `EMAIL_HOST_USER` - The SMTP username generated by AWS SES.
-- `EMAIL_HOST_PASSWORD` - The SMTP password generated by AWS SES (***Keep this value secret***)
-- `DEFAULT_FROM_EMAIL` - The sender email address shown to users.
 
 **How to get AWS SES credentials**
 <NumberWithMdx number={1} className="mt-3">
@@ -578,6 +576,25 @@ DEFAULT_FROM_EMAIL=no-reply@spacedf.example
     Find your SMTP endpoint and set it as `EMAIL_HOST`.
 </NumberWithMdx>
 
+Set the following values in your `.env` file.
+```bash copy
+# Replace with your own values.
+EMAIL_BACKEND=ses
+EMAIL_HOST=email-smtp.us-east-1.amazonaws.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=true
+EMAIL_HOST_USER=AKIAXXXXXXXX
+EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXX
+DEFAULT_FROM_EMAIL=no-reply@spacedf.example
+```
+- `EMAIL_BACKEND` - Specifies the email provider. Use `ses` when sending email through AWS SES.
+- `EMAIL_HOST` - The SMTP endpoint provided by AWS SES (e.g. `email-smtp.us-east-1.amazonaws.com`).
+- `EMAIL_PORT` - The SMTP port used to send email. Common values: `587` (TLS) or `465` (SSL).
+- `EMAIL_USE_TLS` - Enables secure email delivery using TLS. Recommended value: `true`.
+- `EMAIL_HOST_USER` - The SMTP username generated by AWS SES.
+- `EMAIL_HOST_PASSWORD` - The SMTP password generated by AWS SES (***Keep this value secret***)
+- `DEFAULT_FROM_EMAIL` - The sender email address shown to users.
+
 ##### MPA Service
 > The MPA Service connects SpaceDF to an MQTT broker to receive and publish messages for application-level processing.
 
@@ -606,22 +623,28 @@ MQTT_TOPIC=devices/+/events
 </Callout>
 
 ##### Bootstrap Service
-> The Bootstrap Service is responsible for initial system setup and cross-service coordination when SpaceDF starts.
+> The Bootstrap Service is the **backend service** responsible for initial system setup and cross-service coordination when SpaceDF starts.
+
+This service runs inside Docker as the SpaceDF backend.
 
 **Service host**
 
-Set this to the URL where the Bootstrap Service is reachable.
+This value defines the **base URL** where the Bootstrap (Backend) service is accessible.
 ```bash copy 
-# Replace with your own values.
+# Local development (default)
 HOST=http://localhost:8000
 ```
-For production, use your public domain:
+For production deployments, set this to your **public API domain**:
 ```bash copy 
-# Replace with your own values.
+# Replace with your public API domain.
 HOST=https://api.spacedf.example
 ```
 
 `HOST` - The public base URL where the Bootstrap Service is accessible. This is used by other services to communicate with it.
+
+If you change the backend port, make sure to update:
+- HOST in your `.env` file
+- The backend port in `docker-compose.yml`
 
 **CORS origins**
 
@@ -630,6 +653,7 @@ Separate multiple values with commas.
 
 Development (local)
 ```bash copy 
+# Local development (default)
 CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:3000,http://localhost:3001
 ```
 
@@ -903,13 +927,42 @@ This stops and removes the containers but keeps your data volumes intact.
 ## Accessing SpaceDF Services
 > After all services are running, you can access SpaceDF through the web interfaces and backend APIs using the URLs below.
 
-| Service          | Port  |
-| ---------------- | ----- |
-| Dashboard        | 3000  |
-| Admin Portal     | 3001  |
-| Backend API      | 8000  |
-| EMQX (API)       | 18083 |
-| MQTT (WebSocket) | 8883  |
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Service
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Port
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Dashboard</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Admin Portal</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3001</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Backend API</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">EMQX (API)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:18083</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">MQTT (WebSocket)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8883</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
 
 <Callout type="info">
   **Notes**
