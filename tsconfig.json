@@ -32,7 +32,9 @@
     "**/*.tsx",
     "src/app/_components/OptionsCard.tsx",
     "src/app/_components/RichCard.jsx",
-    "src/app/_components/NumberOfContent.jsx"
+    "src/app/_components/NumberOfContent.jsx",
+    "src/app/_components/CardInfo.jsx",
+    "src/app/troubleshooting/_containers/index.jsx"
   ],
   "exclude": ["node_modules"]
 }

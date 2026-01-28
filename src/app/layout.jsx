@@ -36,7 +36,7 @@ export default async function RootLayout({ children }) {
   const navbar = (
     <Navbar
       logo={
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div className="flex flex-col md:flex-row items-center md:gap-2">
           <img
             src="/spacedf_logo.svg"
             alt="SpaceDF"
@@ -56,7 +56,7 @@ export default async function RootLayout({ children }) {
   )
   const pageMap = await getPageMap()
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning style={{ fontSize: 18 }}>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head
         faviconGlyph="✦"
         color={{

@@ -3,23 +3,33 @@ sidebarTitle: Quick Start
 ---
 
 import { Steps } from 'nextra/components'
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+
 
 # Quick Start
 
 > This guide helps you get **SpaceDF running quickly** on your own infrastructure using **Docker Compose** and **default settings**.
 
-<div className='mt-10 p-6 bg-gray-100 dark:bg-zinc-800 dark:border-zinc-600 border border-gray-200 shadow rounded-2xl'>
-    <p className='font-semibold text-xl'>Before You Begin</p>
-    <ul className='list-disc'>
-        Make sure you have:
+<CardInfo title="Quick Start Limitations">
+  <ul className='list-none space-y-2'>
+      <li className='mt-3'>❌ Google login is not enabled</li>
+      <li>❌ AWS integrations (S3, SES) are not configured</li>
+      <li>❌ Email sending is disabled</li>
+      <li>❌ Image uploads and asset images are not displayed (cloud storage is not configured)</li>
+  </ul>
+</CardInfo>
+
+If you need advanced configuration, security tuning, or production setup, see [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) instead.
+
+<CardInfo title="Before You Begin">
+  <ul className='list-disc'>
+    Make sure you have:
         -   Docker and Docker Compose installed
         -   Basic Linux command-line knowledge
         -   An environment with at least the minimum system requirements
-    </ul>
-    If you are unsure about any of the requirements above, see [Prerequisites](/docs/getting-started/self-hosting/docker/advanced-setup#prerequisites) for details.
-</div>
-
-If you need advanced configuration, security tuning, or production setup, see [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) instead.
+  </ul>
+  If you are unsure about any of the requirements above, see [Prerequisites](/docs/getting-started/self-hosting/docker/advanced-setup#prerequisites) for details.
+</CardInfo>
 
 <Steps>
 ### Get the Source Code
@@ -106,8 +116,89 @@ After startup, SpaceDF services are available on the following default ports:
 </div>
 Make sure these ports are open on your server and not used by other services.
 
+### Default account (Quick Start only)
+> Quick Start creates default accounts for initial access
+
+These accounts are for **local testing only**.
+
+#### Frontend Web Apps
+
+<CardInfo title="Dashboard" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Username: `admin@example.com`
+- Password: `changeme@Default123`
+</CardInfo>
+
+<CardInfo title="Admin Portal" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Username: `admin@example.com`
+- Password: `changeme@Default123`
+</CardInfo>
+
+#### Backend Services
+
+<CardInfo title="Auth service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5434`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `auth_service`
+</CardInfo>
+
+<CardInfo title="Bootstrap service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5433`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `bootstrap_service`
+</CardInfo>
+
+<CardInfo title="Dashboard service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5435`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `dashboard_service`
+</CardInfo>
+
+<CardInfo title="Device service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5436`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `device_service`
+</CardInfo>
+
+<CardInfo title="Telemetry service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5437`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `spacedf_telemetry`
+</CardInfo>
+
+To configure authentication, user management, and production security,
+continue with [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup).
+
 🎉 **You’re all set!** SpaceDF is now running on your server. Enjoy building with it.
-
----
-
-Continue with [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) to customize your deployment.

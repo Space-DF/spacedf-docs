@@ -1,0 +1,105 @@
+---
+title: "Google OAuth: redirect_uri_mismatch"
+source: ["Auth"]
+errorCode: ["401", "500", "unauthenticated", "server_error"]
+tags: ["Self-hosting"]
+---
+import { Steps } from 'nextra/components'
+import {
+    NumberOfContent,
+    NumberWithMdx
+} from "@/app/_components/NumberOfContent.jsx"
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+import { Callout } from 'nextra/components'
+
+
+# Google OAuth: `redirect_uri_mismatch`
+> This error occurs when the **redirect URI used by SpaceDF does not exactly match** the Authorized Redirect URI configured in the Google Cloud Console.
+
+## Symptoms
+Google shows an error page with:
+
+```text
+Error 400: redirect_uri_mismatch
+```
+
+Google login works in one environment (local or production) but fails in another.
+
+The login flow redirects to Google, then immediately fails.
+
+## Common causes (SpaceDF-specific)
+- `GOOGLE_CALLBACK_URL` in `.env` does not match the redirect URI configured in Google Cloud Console.
+- The redirect URI is correct, but:
+    - Protocol is different (`http` vs `https`)
+    - Port is different (`3000` vs `80`)
+    - Trailing slash mismatch
+- Production domain is not added to Google OAuth settings.
+- Switching from **Quick Start** to **Advanced Setup** without updating OAuth settings.
+
+## Fix
+ 
+<Steps>
+### Verify `GOOGLE_CALLBACK_URL`
+Check your .env file:
+
+```bash copy
+# Development
+GOOGLE_CALLBACK_URL=http://localhost:3000
+
+# Production
+GOOGLE_CALLBACK_URL=https://your-domain.com
+```
+
+> Do not include `/auth/google/callback` in `GOOGLE_CALLBACK_URL`
+SpaceDF appends it automatically.
+
+### Update Google Cloud Console
+<NumberWithMdx number={1} className="mt-3">
+    Go to the [Google Cloud Console](https://console.cloud.google.com/)
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Navigate to **APIs & Services → Credentials**
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+    Select your **OAuth 2.0 Client ID**.
+</NumberWithMdx>
+<NumberWithMdx number={4}>
+    Under **Authorized redirect URIs**, add:
+```bash
+# Development
+http://localhost:3000/auth/google/callback
+
+# Production
+https://your-domain.com/auth/google/callback
+```
+> The URI must match exactly, including protocol, domain, port, and path.
+
+</NumberWithMdx>
+
+### Restart SpaceDF services
+After updating `.env`, restart all services:
+
+```bash copy
+docker compose down
+docker compose up -d
+```
+</Steps>
+
+<CardInfo title="Common mistakes to avoid" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-lg",
+  description: "!text-base"
+}}>
+ ❌ Using localhost in production<br/>
+ ❌ Mixing HTTP and HTTPS<br/>
+ ❌ Missing the `/auth/google/callback path` in `Google Console`<br/>
+ ❌ Adding trailing slashes inconsistently<br/>
+ ❌ Forgetting to restart services after changing `.env`<br/>
+</CardInfo>
+
+<Callout type="info">
+***Notes***
+- Google OAuth is **not enabled in Quick Start**.
+- This error only applies when using **Advanced Setup**.
+- Each environment (local, staging, production) requires its own redirect URI entry.
+</Callout>
