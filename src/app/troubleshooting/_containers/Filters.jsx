@@ -68,7 +68,7 @@ export const Filters = ({
       </div>
 
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild className="md:hidden">
           <Button variant="outline">
             <Funnel size={16} />
             Filter

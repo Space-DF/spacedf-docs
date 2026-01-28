@@ -1,0 +1,80 @@
+---
+title: "RabbitMQ: Existing setup with different credentials"
+source: ["RabbitMQ", "Messaging"]
+errorCode: ["ACCESS_REFUSED", "AUTHENTICATION_FAILED"]
+tags: ["Self-hosting", "rabbitmq", "credentials", "volume_conflict", "docker"]
+---
+
+import { Callout } from 'nextra/components'
+import { Steps } from 'nextra/components'
+
+# RabbitMQ: Existing setup with different credentials
+
+> This issue occurs when a **previous RabbitMQ setup already exists** on the machine and was initialized with different credentials than the ones currently configured for SpaceDF.
+
+## Symptoms
+- SpaceDF services fail to start or keep restarting
+- Logs show RabbitMQ authentication errors such as:
+    - `ACCESS_REFUSED`
+    - `authentication failed`
+- Updating `RABBITMQ_DEFAULT_USER` or `RABBITMQ_DEFAULT_PASS` does not fix the issue
+
+## Cause
+RabbitMQ **stores credentials in persistent volumes** on first startup.
+
+If RabbitMQ was previously started with different credentials:
+- Updating environment variables alone is **not enough**
+- RabbitMQ will continue using the **old credentials stored in volumes**
+- This results in a credential mismatch between SpaceDF services and RabbitMQ
+
+## How to verify
+
+Check if an existing RabbitMQ container or volume is present:
+```bash copy
+docker ps -a | grep rabbitmq
+```
+
+```bash copy
+docker volume ls | grep rabbitmq
+```
+If RabbitMQ volumes exist, they may contain credentials from a previous setup.
+
+## Fix (reset RabbitMQ credentials)
+
+<Callout type="warning">
+This will remove all RabbitMQ data.
+Only assume safe in development or fresh setups.
+</Callout>
+
+<Steps>
+### Stop all SpaceDF services:
+ 
+```bash copy
+docker compose down
+```
+ 
+### Remove existing RabbitMQ volumes:
+```bash copy
+docker volume rm <rabbitmq_volume_name>
+```
+
+### Verify credentials in `.env`:
+```bash copy
+RABBITMQ_DEFAULT_USER=your_username
+RABBITMQ_DEFAULT_PASS=your_password
+```
+
+### Restart SpaceDF:
+```bash copy
+docker compose up -d
+```
+
+RabbitMQ will be re-initialized using the new credentials.
+</Steps>
+
+<Callout type="info">
+***Notes***
+- Changing RabbitMQ credentials **always requires resetting volumes**
+- Do not reuse RabbitMQ credentials across projects on the same host
+- For production systems, plan credential changes carefully to avoid data loss
+</Callout>

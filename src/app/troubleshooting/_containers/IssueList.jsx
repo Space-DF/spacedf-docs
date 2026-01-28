@@ -9,10 +9,15 @@ export const IssueList = ({ list = [], isLoading }) => {
 
       {!!list.length &&
         list.map((issue, index) => (
-          <Link key={index} href={issue.href}>
+          <div key={index}>
             <div className="w-full flex md:flex-row flex-col gap-3 pt-6">
               <div className="flex-1">
-                <p className="font-semibold text-lg">{issue.title}</p>
+                <Link
+                  className="font-semibold text-lg hover:underline"
+                  href={issue.href}
+                >
+                  {issue.title}
+                </Link>
                 <p className="mt-4 text-sm opacity-80">
                   {(issue.errorCode || []).join(", ")}
                 </p>
@@ -35,7 +40,7 @@ export const IssueList = ({ list = [], isLoading }) => {
             </div>
 
             <hr />
-          </Link>
+          </div>
         ))}
     </div>
   )
