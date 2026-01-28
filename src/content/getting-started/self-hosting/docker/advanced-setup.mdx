@@ -1,10 +1,11 @@
 import { Steps } from "nextra/components"
 import { Table } from 'nextra/components'
 import { Callout } from 'nextra/components'
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
 
 import {
-    NumberOfContent,
-    NumberWithMdx
+  NumberOfContent,
+  NumberWithMdx
 } from "@/app/_components/NumberOfContent.jsx"
 
 
@@ -12,15 +13,12 @@ import {
 
 > This guide covers **detailed configuration**, **customization**, **and operational topics** for running SpaceDF with Docker Compose.
 
-<div className='mt-10 p-6 bg-gray-100 dark:bg-zinc-800 dark:border-zinc-600 border border-gray-200 shadow rounded-2xl'>
-    <p className='font-semibold text-xl'>Use this guide if you need:</p>
-    <ul className='list-disc'>
-        -   Production-ready configuration
-        -   Security hardening
-        -   Custom ports, domains, or authentication
-        -   Update, maintenance, and removal procedures
-    </ul>
-</div>
+<CardInfo title="Use this guide if you need:">
+  -   Production-ready configuration
+  -   Security hardening
+  -   Custom ports, domains, or authentication
+  -   Update, maintenance, and removal procedures
+</CardInfo>
 If you only want to get SpaceDF running quickly with default settings, see [Quick Start](/docs/getting-started/self-hosting/docker/quick-start).
 
 ---
@@ -129,6 +127,18 @@ You must replace these values before starting SpaceDF in a self-hosted environme
     Review the configuration options below and make sure all secret values are set before starting SpaceDF.
 </Callout>
 
+<Callout type="important">
+***Security notes***
+- **Do not commit** passwords, secrets, or API keys to Git
+- **Do not expose secret values** on the client side (browser)
+- If a value is marked as **“Keep this value secret”**, it must never be shared publicly
+- **Do not reuse secrets** across systems or environments
+- Use strong and unique passwords for all services
+- Use the **minimum required permissions** for all credentials
+- **Rotate keys immediately** if they are **exposed**
+- Use **HTTPS / WSS** in production environments
+</Callout>
+
 ### Configuring Environment Variables
 This section explains how to configure the required environment variables in the `.env` file before starting SpaceDF.
 
@@ -160,6 +170,7 @@ RABBITMQ_DEFAULT_PASS=your_password
   Keep these credentials safe—you may need them to log in to RabbitMQ for troubleshooting later.
 </Callout>
 
+---
 ##### Authentication (JWT)
 > SpaceDF uses JSON Web Tokens (JWT) to authenticate users and secure API requests.
 
@@ -169,8 +180,8 @@ You must set a **private key** and a **public key** before starting SpaceDF.
     **Recommended:** Generate a new key pair
 </NumberWithMdx>
 ```bash copy
-openssl genrsa -out jwt_private.pem 2048
-openssl rsa -in jwt_private.pem -pubout -out jwt_public.pem
+openssl genrsa -out private_key.pem 2048
+openssl rsa -in private_key.pem -pubout -out public_key.pem
 ```
 <NumberWithMdx number={2} href="" className="mt-6">
     Copy the contents of each file into your `.env` file:
@@ -183,14 +194,7 @@ JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
 
 - `JWT_PUBLIC_KEY` - Verifies authentication tokens. This key can be shared with other services if needed.
 > Make sure the keys are pasted correctly and not broken across lines.
-
-<Callout type="important">
-  **Security notes**
-  - Do not commit JWT private keys to Git
-  - Do not reuse keys from other systems
-  - Rotate keys if they are exposed
-</Callout>
-
+---
 ##### Google OAuth
 > Google OAuth allows users to sign in to SpaceDF using their Google account.
 
@@ -237,21 +241,17 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret #(Step 5)
 - `GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.
 - `GOOGLE_CLIENT_ID` - Identifies your application to Google.
 - `GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
-
-<Callout type="important">
-  **Security notes**
-  - Do not commit `GOOGLE_CLIENT_SECRET` to Git
-  - Use HTTPS for the callback URL in production
-  - Rotate the secret if it is exposed
+<Callout type="info">
+Use HTTPS for the callback URL in production.
 </Callout>
-
+---
 ##### Apple OAuth (Coming Soon)
 
 Apple sign-in support is planned but not yet supported in SpaceDF.
 
 <Callout type="warning">
   Do not configure these values yet.
-  Apple OAuth is not supported in the current release.
+  Apple OAuth is **not supported** in the current release.
 </Callout>
 
 ```bash copy
@@ -261,7 +261,7 @@ APPLE_CLIENT_SECRET=__APPLE_CLIENT_SECRET__
 APPLE_CLIENT_KEY=__APPLE_CLIENT_KEY__
 APPLE_CERTIFICATE_KEY=__APPLE_CERTIFICATE_KEY__
 ```
-
+---
 ##### Auth Service
 > The Auth Service is responsible for user authentication, authorization, and tenant management in SpaceDF.
 
@@ -294,14 +294,7 @@ Set this to the domain or host where SpaceDF will be accessed:
 ```bash copy
 DEFAULT_TENANT_HOST=app.spacedf.example
 ```
-
-<Callout type="important">
-  **Security notes**
-  - Do not commit secrets or API keys to Git
-  - Do not reuse secrets from other systems
-  - Rotate keys if they are exposed
-</Callout>
-
+---
 ##### S3 Service
 > The Amazon S3 service is used by SpaceDF to store files such as uploads, assets, and generated data.
 
@@ -309,19 +302,15 @@ DEFAULT_TENANT_HOST=app.spacedf.example
     SpaceDF supports **Amazon S3 only** for file storage in this setup.
 </Callout>
 
-**How it works**
-
 SpaceDF connects to Amazon S3 using **IAM credentials** that you provide in the `.env` file. All file operations (upload, read, delete) are handled internally by SpaceDF services.<br/>
 End users do **not** need AWS accounts or credentials.
-
-**How to configure**
 
 If you do not already have an AWS account, create one at, [see more](https://repost.aws/knowledge-center/create-and-activate-aws-account): <br/>
 https://signin.aws.amazon.com/signup?request_type=register
 
 After creating your account, sign in to the AWS Management Console to continue with the steps below. 
 
-***Create an S3 bucket***
+**Create an S3 bucket**
 
 <NumberWithMdx number={1} className="mt-6">
     Open the [Amazon S3 Console](https://console.aws.amazon.com/s3/)
@@ -340,7 +329,7 @@ Save the bucket name and region for later use.
 
 Read more: [AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html#creating-bucket)
 
-***Create IAM credentials***
+**Create IAM credentials**
 <NumberWithMdx number={1} className="mt-6">
     Open the [AWS IAM Console](https://console.aws.amazon.com/iam/)
 </NumberWithMdx>
@@ -359,7 +348,11 @@ Read more: [AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userg
 
 Read more: [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
-***Set values in `.env`***
+<Callout type="info">
+Use IAM policies with **minimum required permissions**.
+</Callout>
+
+**Set values in `.env`**
 ```bash copy
     # Replace with your own values.
     AWS_ACCESS_KEY_ID=AKIAXXXXXXXX
@@ -373,14 +366,7 @@ Read more: [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/
 - `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (***Keep this value private***)
 - `AWS_STORAGE_BUCKET_NAME` - The name of the S3 bucket where SpaceDF stores files.
 - `AWS_REGION` - The AWS region where the S3 bucket is located. (e.g., `us-east-1`, `ap-southeast-1`).
-
-<Callout type="important">
-  **Security notes**
-  - Do not commit AWS credentials to Git
-  - Use IAM policies with **minimum required permissions**
-  - Rotate access keys if they are exposed
-</Callout>
-
+---
 ##### Redis
 > Redis is used by SpaceDF for caching and fast data access.
 
@@ -395,19 +381,26 @@ REDIS_HOST="redis://redis:6379/1"
 - `6379` — Default Redis port
 - `/1` — Redis database number
 
-<Callout type="info">
-  **When you do NOT need to change this**
-    - You are using the provided Docker setup
-    - Redis is running as part of the included Docker Compose file
-</Callout>
+<CardInfo title="When you do NOT need to change this:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-lg",
+  description: "!text-sm"
+}}>
+  -   You are using the provided Docker setup
+  -   Redis is running as part of the included Docker Compose file
+</CardInfo>
 
-<Callout type="info">
-  **When you SHOULD change this**
-    - Redis runs on a different server or host
-    - Redis uses a non-default port
-    - You want to use a different Redis database
-</Callout>
+<CardInfo title="When you SHOULD change this:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-lg",
+  description: "!text-sm"
+}}>
+  -   Redis runs on a different server or host
+  -   Redis uses a non-default port
+  -   You want to use a different Redis database
+</CardInfo>
 
+---
 ##### Dashboard Service
 > The Dashboard Service provides the web interface for managing SpaceDF, including administration and monitoring features.
 
@@ -432,13 +425,7 @@ DASHBOARD_SECRET_KEY=generated_secret_value
 ```
 `DASHBOARD_SECRET_KEY` - A secret key used to sign and protect dashboard-related sessions and data. (***Keep this value private.***)
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit passwords or secret keys to Git
-  - Do not reuse secrets from other services
-  - Rotate keys if they are exposed
-</Callout>
-
+---
 ##### Device Service
 > The Device Service manages devices, device data, and communication with telemetry-related services in SpaceDF.
 
@@ -465,12 +452,6 @@ DEVICE_SECRET_KEY=generated_secret_value
 ```
 `DEVICE_SECRET_KEY` - A secret key used to sign and protect device-related data and requests. (***Keep this value private.***)
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit passwords or secret keys to Git
-  - Rotate secrets if they are exposed
-</Callout>
-
 **Telemetry service URL**
 
 Defines the internal Docker service address that SpaceDF uses to communicate with the Telemetry Service.
@@ -481,11 +462,18 @@ When using the **default Docker setup**, the Telemetry Service runs as a Docker 
 # Default (recommended)
 TELEMETRY_SERVICE_URL=http://telemetry-service:8080
 ```
-- This value is the same for both **local and production** deployments when using Docker Compose.
-- The Telemetry Service runs from a **Docker image** and is exposed internally.
-- You **do not need to change this value** in most cases.
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  description: "!text-base"
+}}>
+  - This value is the same for both **local and production** deployments when using Docker Compose.
+  - The Telemetry Service runs from a **Docker image** and is exposed internally.
+  - You **do not need to change this value** in most cases.
+</CardInfo>
 
 Only change this value if you modify the Telemetry Service name or port in `docker-compose.yml`.
+
+---
 ##### EMQX Service
 > EMQX is the MQTT broker used by SpaceDF to handle device messaging and real-time communication.
 
@@ -501,13 +489,7 @@ EMQX_PASSWORD=change_this_to_a_secure_password
 - `EMQX_USERNAME` - The username SpaceDF uses to authenticate with the EMQX broker.
 - `EMQX_PASSWORD` - The password for the EMQX user above. (***Use a strong and unique password***.)
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit EMQX credentials to Git
-  - Do not reuse broker credentials across environments
-  - Rotate credentials if they are exposed
-</Callout>
-
+---
 ##### Broker Bridge Service
 > The Broker Bridge Service connects SpaceDF to an external MQTT broker or bridges messages between brokers.
 
@@ -530,14 +512,7 @@ MQTT_TOPICS=device/+/telemetry,device/+/status
 ```
 `MQTT_TOPICS` - A list of MQTT topics that SpaceDF subscribes to or bridges.
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit MQTT credentials to Git
-  - Limit broker permissions to required topics only
-  - Rotate credentials if they are exposed
-</Callout>
-
-
+---
 ##### AWS to access to SES service
 > SpaceDF uses email services to send system emails such as account verification, password resets, and notifications.
 
@@ -594,7 +569,7 @@ DEFAULT_FROM_EMAIL=no-reply@spacedf.example
 - `EMAIL_HOST_USER` - The SMTP username generated by AWS SES.
 - `EMAIL_HOST_PASSWORD` - The SMTP password generated by AWS SES (***Keep this value secret***)
 - `DEFAULT_FROM_EMAIL` - The sender email address shown to users.
-
+---
 ##### MPA Service
 > The MPA Service connects SpaceDF to an MQTT broker to receive and publish messages for application-level processing.
 
@@ -615,13 +590,11 @@ MQTT_TOPIC=devices/+/events
 - `MQTT_CLIENT_ID` - A unique client identifier for the MPA Service when connecting to MQTT.
 - `MQTT_TOPIC` - The MQTT topic the MPA Service subscribes to.
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit MQTT credentials to Git
-  - Use TLS (`8883`) in production if available
-  - Restrict broker permissions to required topics only
+<Callout type="info">
+  Use TLS (`8883`) in production if available<br/>
+  Restrict broker permissions to required topics only
 </Callout>
-
+---
 ##### Bootstrap Service
 > The Bootstrap Service is the **backend service** responsible for initial system setup and cross-service coordination when SpaceDF starts.
 
@@ -642,9 +615,14 @@ HOST=https://api.spacedf.example
 
 `HOST` - The public base URL where the Bootstrap Service is accessible. This is used by other services to communicate with it.
 
-If you change the backend port, make sure to update:
-- HOST in your `.env` file
-- The backend port in `docker-compose.yml`
+<CardInfo title="If you change the backend port, make sure to update:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  - HOST in your `.env` file
+  - The backend port in `docker-compose.yml`
+</CardInfo>
 
 **CORS origins**
 
@@ -665,7 +643,21 @@ CORS_ALLOWED_ORIGINS=https://app.spacedf.example,https://admin.spacedf.example
 
 `CORS_ALLOWED_ORIGINS` - A comma-separated list of allowed origins for cross-origin requests. This controls which frontend domains can access the Bootstrap Service.
 
-> Only include domains you trust. Avoid using wildcards (*) in production.
+<Callout type="info">
+  **Important notes**
+  - Controls **which frontend domains can access** the Bootstrap service
+  - Each frontend **must be listed explicitly**, including protocol and port
+  - If you change frontend ports in `docker-compose.yml`, update both the Docker ports and `CORS_ALLOWED_ORIGINS`
+</Callout>
+
+Example:
+
+If the Dashboard is moved from port `3000` to `4000`, you must add:
+
+```text copy
+http://localhost:4000
+```
+to `CORS_ALLOWED_ORIGINS`.
 
 **Secret key**: Generate a secure random value:
 ```bash
@@ -680,6 +672,7 @@ BOOTSTRAP_SECRET_KEY=generated_secret_value
 ```
 `BOOTSTRAP_SECRET_KEY` - A secret key used to secure internal Bootstrap operations. (***Keep this value private.***)
 
+---
 ##### Organization Initialization
 > These settings are used to create the **initial organization and owner account** when SpaceDF starts for the first time. This step runs only during the first startup.
 
@@ -696,20 +689,19 @@ OWNER_PASSWORD=change_this_to_a_secure_password
 - `OWNER_EMAIL` - The email address of the initial organization owner.
 - `OWNER_PASSWORD` - The password for the owner account. (***Use a strong and secure password***.)
 
-<Callout type="important">
-  **Security notes**
-  - Change the owner password after first login if required
-  - Do not commit owner credentials to Git
-  - Use a real email address to receive system notifications
-</Callout>
+---
+🎉 You have now finished configuring the backend services. <br/>
+Next, continue with the frontend (web app) configuration.
 
-<Callout emoji="✅">You have now finished configuring the backend services. <br/>
-Next, continue with the frontend (web app) configuration.</Callout>
-
+---
 ### Admin Portal Configuration
-The Admin Portal is used for **system-level** and **organization-level** administration.
-
-This application is typically accessed by **platform administrators**, not end users.
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  description: "!text-base"
+}}>
+  The Admin Portal is used for **system-level** and **organization-level** administration.<br/>
+  This application is typically accessed by **platform administrators**, not end users.
+</CardInfo>
 
 Configure these environment variables to connect the Admin Portal to backend services and authentication providers.
 
@@ -718,7 +710,6 @@ Configure these environment variables to connect the Admin Portal to backend ser
     Make sure you have completed the **Backend Services Configuration** above.<br/>
     The Admin Portal depends on backend authentication and API services.
 </Callout>
-
 ##### Authentication
 
 **Generate NextAuth secret**
@@ -749,7 +740,7 @@ PORTAL_NEXTAUTH_URL=https://admin.spacedf.example
 
 - `HOST_FRONTEND_ADMIN` - The public URL where the Admin Portal is accessible.
 - `PORTAL_NEXTAUTH_URL` - The base URL used by NextAuth for redirects and callbacks. <br/>This value should match the Admin Portal public URL.
-
+---
 ##### API Access
 
 **Using Docker**
@@ -766,20 +757,14 @@ PORTAL_AUTH_API=https://api.spacedf.example
 `PORTAL_AUTH_API` - The backend API endpoint used by the Admin Portal for authentication.<br/>
 This typically points to the internal API gateway or load balancer.
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit `PORTAL_NEXTAUTH_SECRET` to Git
-  - Always use HTTPS in production
-  - Restrict access to the Admin Portal to trusted users only
-</Callout>
-
+---
 ##### References
 
 Use the official documentation below if you need more details about **NextAuth** behavior or advanced configuration:
 - [NextAuth.js Documentation](https://next-auth.js.org/)
 - [NextAuth Environment Variables](https://next-auth.js.org/configuration/options)
 - [NextAuth Security Guide](https://next-auth.js.org/security)
-
+---
 ### Dashboard Configuration
 This section configures the **SpaceDF Dashboard**, the main web interface used for daily operations, device monitoring, and data visualization.
 
@@ -807,7 +792,7 @@ DASHBOARD_NEXTAUTH_URL=http://localhost:3000
 - `DASHBOARD_NEXTAUTH_SECRET` - A secret key used by NextAuth to encrypt sessions and tokens. (***Keep this value private.***)
 - `DASHBOARD_NEXTAUTH_URL` - The public URL where the Dashboard is accessible.<br/>
 This value is used for redirects and callbacks.
-
+---
 ##### API Access
 
 **Using Docker**
@@ -820,14 +805,9 @@ DASHBOARD_AUTH_API=http://haproxy:3000
 # Replace with your own values.
 DASHBOARD_AUTH_API=https://api.spacedf.example
 ```
-
+---
 ##### Map Services
 > The Dashboard uses **MapTiler** as a map service to resolve location names from coordinates and support location-based features.
-
-```bash copy
-# Replace with your API Key.
-MAPTILER_API_KEY=__MAPTILER_API_KEY__
-```
 
 **How to get a MapTiler API key**
 <NumberWithMdx number={1} className="mt-3">
@@ -840,6 +820,11 @@ MAPTILER_API_KEY=__MAPTILER_API_KEY__
    Copy the key and set it as `MAPTILER_API_KEY`.
 </NumberWithMdx>
 
+```bash copy
+# Replace with your API Key.
+MAPTILER_API_KEY=__MAPTILER_API_KEY__
+```
+---
 ##### MQTT (Real-time Data)
 > The Dashboard connects to MQTT to receive real-time device data.
 
@@ -865,13 +850,11 @@ Use ws (WebSocket) for browser-based clients.
 - `DASHBOARD_MQTT_PORT` - Port exposed by the MQTT broker for WebSocket connections.
 - `DASHBOARD_MQTT_BROKER` - Host and port of the MQTT broker accessible from the browser.
 
-<Callout type="important">
-  **Security notes**
-  - Do not commit secrets or API keys to Git
-  - Use HTTPS and `wss` in production environments
-  - Restrict MQTT permissions to read-only topics for the Dashboard
+<Callout type="info">
+  Use HTTPS and `wss` in production environments <br/>
+  Restrict MQTT permissions to read-only topics for the Dashboard
 </Callout>
-
+---
 ##### References
 - [NextAuth.js Documentation](https://next-auth.js.org/)
 - [MapTiler Documentation](https://docs.maptiler.com/)
