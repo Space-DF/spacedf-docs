@@ -3,6 +3,7 @@ import { Table } from 'nextra/components'
 import { Callout } from 'nextra/components'
 import { CardInfo } from "@/app/_components/CardInfo.jsx"
 import { Tabs } from 'nextra/components'
+import { Badge } from "@/components/ui/badge.tsx"
 
 import {
   NumberOfContent,
@@ -30,7 +31,7 @@ If you only want to get SpaceDF running quickly with default settings, see [Quic
 <NumberOfContent number={1} title="Prerequisites" href="#prerequisites" description="What you need to prepare before setting up SpaceDF."/>
 <NumberOfContent number={2} title="System Requirements" href="#system-requirements" description="Minimum hardware and software requirements."/>
 <NumberOfContent number={3} title="Installing SpaceDF" href="#installing-spacedf" description="How to install SpaceDF using Docker."/>
-<NumberOfContent number={4} title="Configuration and Security" href="#configuring-and-securing-spacedf" description="Basic configuration and recommended security settings."/>
+<NumberOfContent number={4} title="Configuration and Security" href="#configuration--security" description="Basic configuration and recommended security settings."/>
 <NumberOfContent number={5} title="Starting and Stopping SpaceDF" href="#starting-and-stopping" description="How to start, stop, and restart the services."/>
 <NumberOfContent number={6} title="Accessing SpaceDF Services" href="#accessing-spacedf-services" description="How to access the dashboard and APIs after setup."/>
 <NumberOfContent number={7} title="Updating SpaceDF" href="#updating" description="How to upgrade to a newer version safely."/>
@@ -149,131 +150,226 @@ Before starting SpaceDF, you need to set up the environment variables.
     </Tabs.Tab>
 </Tabs>
 
-<Callout type="warning">
-    Review the configuration options below and make sure all secret values are set before starting SpaceDF.
-</Callout>
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ⚠️ **Action Required:** You must replace all sample values in the .env file before starting the app.
+</CardInfo>
 
-<Callout type="important">
-***Security notes***
-- **Do not commit** passwords, secrets, or API keys to Git
-- **Do not expose secret values** on the client side (browser)
-- If a value is marked as **“Keep this value secret”**, it must never be shared publicly
-- **Do not reuse secrets** across systems or environments
-- Use strong and unique passwords for all services
-- Use the **minimum required permissions** for all credentials
-- **Rotate keys immediately** if they are **exposed**
-- Use **HTTPS / WSS** in production environments
-</Callout>
+<CardInfo title="✅ DO:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  -  **Use strong passwords**: Make them long and unique for every service.
+  -  **Use HTTPS**: Always use a secure connection (https://) when your site is live.
+  -  **Keep it private**: If a value says "Secret", never share it with anyone.
+</CardInfo>
+
+<CardInfo title="❌ DO NOT:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  -  **Do not share your `.env` file**: Never upload this file to GitHub, GitLab, or share screenshots of it.
+  -  **Do not reuse passwords**: Don't use the same password you use for other websites.
+  -  **Do not expose secrets**: Never use these secret keys in your frontend code (browser-side).
+</CardInfo>
 
 ### Configuring Environment Variables
-This section explains how to configure the required environment variables in the `.env` file before starting SpaceDF.
+Now that you have your `.env` file, you need to configure the settings.
 
-Open the `.env` file using a text editor (for example: VS Code, Nano, or Notepad).
+<NumberWithMdx number={1} className="mt-6">
+  Open the file Open the `.env` file using any text editor of your choice.<br/>
 
-#### Services Configuration
-
-These environment variables configure the backend services that power the self-hosted SpaceDF server.  
-Backend services include APIs, messaging, databases, and integrations required to run the core system.
-
-##### RabbitMQ credentials
-> RabbitMQ is used by SpaceDF for **background tasks** and **internal message** processing between services.
-
-You can **choose any username and password you want**, as long as:
-- The same values are used by **RabbitMQ** and **all SpaceDF services**
-- The credentials are defined in the environment variables below
-
-```bash copy
-# Replace with your own values.
-RABBITMQ_DEFAULT_USER=your_username
-RABBITMQ_DEFAULT_PASS=your_password
-```
-
-`RABBITMQ_DEFAULT_USER` - The username SpaceDF uses to connect to RabbitMQ.<br/>
-`RABBITMQ_DEFAULT_PASS` - The password for the RabbitMQ user above.
-
-<Callout type="warning">
-  Do not use simple or common passwords. This account controls access to your message queue. <br/>
-  Keep these credentials safe—you may need them to log in to RabbitMQ for troubleshooting later.
-</Callout>
-
----
-##### Authentication (JWT)
-> SpaceDF uses JSON Web Tokens (JWT) to authenticate users and secure API requests.
-
-You must set a **private key** and a **public key** before starting SpaceDF.
-
-<NumberWithMdx number={1} href="" className="mt-6">
-    **Recommended:** Generate a new key pair
-</NumberWithMdx>
-```bash copy
-openssl genrsa -out private_key.pem 2048
-openssl rsa -in private_key.pem -pubout -out public_key.pem
-```
-<NumberWithMdx number={2} href="" className="mt-6">
-   Copy the key contents from your local machine<br/>
-   Choose the command based on your operating system:
-  <Tabs items={['macOS', 'Windows', 'Linux']}>
-    <Tabs.Tab>
-    ```bash copy
-    pbcopy < private_key.pem
-    pbcopy < public_key.pem
-    ```
-    </Tabs.Tab>
-
-    <Tabs.Tab>
-    ```powershell copy
-    Get-Content private_key.pem | Set-Clipboard
-    Get-Content public_key.pem | Set-Clipboard
-    ```
-    </Tabs.Tab>
-
-    <Tabs.Tab>
-    ```bash copy
-    cat private_key.pem | xclip -selection clipboard
-    cat public_key.pem | xclip -selection clipboard
-    ```
-    </Tabs.Tab>
-  </Tabs>
-</NumberWithMdx>
-<NumberWithMdx number={3} href="" className="mt-6">
-    Paste the keys into your `.env` file:
-</NumberWithMdx>
-```bash copy
-JWT_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----...
-JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
-```
-
-`JWT_PRIVATE_KEY` - Signs authentication tokens (***Keep this key secret.***). <br/>
-`JWT_PUBLIC_KEY` - Verifies authentication tokens. This key can be shared with other services if needed.
-> Make sure the keys are pasted correctly and not broken across lines.
----
-##### Google OAuth
-> Google OAuth allows users to sign in to SpaceDF using their Google account.
-
-To enable Google login, you need to create OAuth credentials in the ***Google Cloud Console*** and set the values below in your `.env` file.
-
-**How to get Google OAuth credentials**
-<NumberWithMdx number={1} className="mt-3">
-    Go to the [Google Cloud Console](https://console.cloud.google.com/)
+  Recommended Editors:
+  - **All platforms:** VS Code (Recommended for easier reading)
+  - **Windows:** Notepad
+  - **macOS:** TextEdit
+  - **Linux:** Nano or Vim
 </NumberWithMdx>
 <NumberWithMdx number={2}>
-    Create or select a project.
+  **Update the values** Review the sections below and update the corresponding values in your file.
+</NumberWithMdx>
+
+<CardInfo title="Tag Note:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  -  <Badge variant="destructive">Required</Badge> These values are mandatory. SpaceDF **will not start** without them.
+  -  <Badge>Optional</Badge> These are for advanced features. You can leave them as default or skip them for now
+  -  <Badge variant="outline">Coming Soon</Badge> Features planned for future updates. **No action required** at this time.
+</CardInfo>
+
+#### Backend Services
+
+This section configures the connections between SpaceDF and your infrastructure (such as your database and cache).
+
+These settings are the backbone of your server.
+
+##### RabbitMQ Configuration
+<Badge variant="destructive">Required</Badge>
+
+SpaceDF uses RabbitMQ to handle background tasks and internal messaging. <br/>
+You need to set up credentials so the system can connect to the message queue.
+
+**Set your credentials** You can choose any username and password you want.
+
+```bash copy
+RABBITMQ_DEFAULT_USER="your_secure_username"
+RABBITMQ_DEFAULT_PASS="your_secure_password"
+```
+
+**Variable Details:**
+- `RABBITMQ_DEFAULT_USER`: The username for the connection.
+- `RABBITMQ_DEFAULT_PASS`: The password for the connection.
+
+<CardInfo title="⚠️ Important Setup Rules:" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  -  **Consistency:** If you are running RabbitMQ via Docker or another service, these values must match the credentials defined there.
+  -  **Security:** Use a strong password. You may need these credentials later to log in to the RabbitMQ dashboard for troubleshooting
+</CardInfo>
+---
+##### Authentication (JWT)
+<Badge variant="destructive">Required</Badge>
+
+SpaceDF uses **JSON Web Tokens (JWT)** to secure API requests. You need to generate a specific key pair for this to work.
+
+<NumberWithMdx number={1} href="" className="mt-6">
+    **Generate & Copy Keys**<br/>
+    Choose your operating system below to generate and copy the keys.
+
+    <Tabs items={['macOS', 'Windows (Git Bash)', 'Linux']}>
+      <Tabs.Tab>
+        **1. Generate Keys**
+        Open Terminal and run:
+        ```bash copy
+        openssl genrsa -out private_key.pem 2048
+        openssl rsa -in private_key.pem -pubout -out public_key.pem
+        ```
+
+        **2. Copy to Clipboard**
+        Run these commands to copy the keys directly (no manual selection needed):
+        ```bash copy
+        # Copy Private Key
+        pbcopy < private_key.pem
+
+        # Copy Public Key
+        pbcopy < public_key.pem
+        ```
+      </Tabs.Tab>
+
+      <Tabs.Tab>
+        > **Note:** Please use **Git Bash** for these commands. Do not use PowerShell or CMD.
+
+        **1. Generate Keys**
+        Run this in Git Bash:
+        ```bash copy
+        openssl genrsa -out private_key.pem 2048
+        openssl rsa -in private_key.pem -pubout -out public_key.pem
+        ```
+
+        **2. Copy to Clipboard**
+        Run these commands to copy the keys to your Windows clipboard:
+        ```bash copy
+        # Copy Private Key
+        cat private_key.pem | clip
+
+        # Copy Public Key
+        cat public_key.pem | clip
+        ```
+      </Tabs.Tab>
+
+      <Tabs.Tab>
+        **1. Generate Keys**
+        Open Terminal and run:
+        ```bash copy
+        openssl genrsa -out private_key.pem 2048
+        openssl rsa -in private_key.pem -pubout -out public_key.pem
+        ```
+
+        **2. Copy Content**
+        Run these commands to view the key content, then manually select and copy it:
+        ```bash copy
+        # Show Private Key -> Copy the output
+        cat private_key.pem
+
+        # Show Public Key -> Copy the output
+        cat public_key.pem
+        ```
+      </Tabs.Tab>
+    </Tabs>
+</NumberWithMdx>
+
+<NumberWithMdx number={2} href="" className="mt-6">
+    **Update `.env` file**<br/>
+    Paste the copied keys into your `.env` file.
+</NumberWithMdx>
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ⚠️ **Formatting Rule:** Because these keys span multiple lines, you **must** enclose the entire value in double quotes (`""`). If you omit the quotes, the server will fail to start.
+</CardInfo>
+
+**Example of correct formatting:**
+
+```bash
+# ✅ CORRECT (Quotes are used)
+JWT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEA...
+... (your long key content) ...
+...O4zXk=
+-----END RSA PRIVATE KEY-----"
+
+JWT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG...
+... (your long key content) ...
+...IDAQAB
+-----END PUBLIC KEY-----"
+```
+---
+##### Google OAuth
+<Badge>Optional</Badge>
+
+Enable this to allow users to sign in to SpaceDF using their Google accounts.
+
+You will need to generate credentials in the `Google Cloud Console`.
+
+**1. Get Credentials**
+
+Follow these steps to create your `Client ID` and `Secret`.
+
+<NumberWithMdx number={1} className="mt-6">
+    Go to the [Google Cloud Console](https://console.cloud.google.com/)<br/>
+    Create a new project (or select an existing one).
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Configure Consent Screen<br/>
+    - Go to **APIs & Services** > **OAuth consent screen**.<br/>
+    - Select **External** and click **Create**.<br/>
+    - Fill in the required App Information (App name, User support email) and click Save.<br/>
+    *(You can skip the Scopes and Test Users sections for now)*.
 </NumberWithMdx>
 <NumberWithMdx number={3}>
-    Enable **Google Identity Services**.
+    Create Credentials
+    - Go to **APIs & Services** > **Credentials**.
+    - Click + **Create Credentials** and select **OAuth client ID**.
+    - **Application type:** Select **Web application**.
+    - **Name:** Enter a name (e.g., "SpaceDF Self-Hosted").
+    <img src="/screenshots/google-oauth.png" className="w-full mt-2"/>
 </NumberWithMdx>
 <NumberWithMdx number={4}>
-    Go to **APIs & Services → Credentials**.
-</NumberWithMdx>
-<NumberWithMdx number={5}>
-    Create an **OAuth 2.0 Client ID:**<br/>
-    Application type: **Web application**<br/>
-    <img src="/screenshots/google-oauth.png" className="w-full mt-2"/>
-    *If you see a warning about **OAuth consent screen** or **branding** not being configured, you must complete the **OAuth consent screen setup** first before creating the Client ID.*
-</NumberWithMdx>
-<NumberWithMdx number={6}>
-    Authorized redirect URI: (`GOOGLE_CALLBACK_URL`)<br/>
-    This is the callback URL that Google redirects to after a user successfully signs in with Google.
+    **Set Redirect URI (Important)** Scroll down to **Authorized redirect URIs** and click **Add URI**.<br/>
+    Enter the URL based on your environment:
     ```bash copy
      # Production
      https://your-domain.com/auth/google/callback
@@ -281,468 +377,672 @@ To enable Google login, you need to create OAuth credentials in the ***Google Cl
      # Development
      http://localhost:3000/auth/google/callback
     ```
+    > Note: This URL must match exactly what you put in the .env file later.
 </NumberWithMdx>
-<NumberWithMdx number={7} className="mb-3">
-   Copy the generated **Client ID** and **Client Secret** into your `.env` file.
+<NumberWithMdx number={5} className="mb-3">
+   Copy **Keys** Click **Create**. A popup will appear with your **Client ID** and **Client Secret**. Copy these values.
 </NumberWithMdx>
 
+**2. Update Environment**
+
+Open your `.env` file and paste the values you just obtained.
+
+**Connection Settings**
+
 ```bash copy
-# Replace with your own values.
-GOOGLE_CALLBACK_URL=your_google_callback_uri
-GOOGLE_CLIENT_ID=your_google_client_id #(Step 5)
-GOOGLE_CLIENT_SECRET=your_google_client_secret #(Step 5)
+# 1. The URL you configured in Step 4 above
+GOOGLE_CALLBACK_URL="http://localhost:3000/auth/google/callback"
+
+# 2. The Client ID from Step 5
+GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+
+# 3. The Client Secret from Step 5
+GOOGLE_CLIENT_SECRET="your-client-secret"
 ```
-`GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.<br/>
-`GOOGLE_CLIENT_ID` - Identifies your application to Google.<br/>
-`GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
 
-<Callout type="info">
-Use HTTPS for the callback URL in production.
-</Callout>
+**Variable Details**<br/>
+- `GOOGLE_CALLBACK_URL` - Where Google sends the user after login. **Must match** the URI in Google Cloud Console exactly.<br/>
+- `GOOGLE_CLIENT_ID` - The public identifier for your app.<br/>
+- `GOOGLE_CLIENT_SECRET` - The secret key to authenticate your app. **Keep this private**.
 ---
-##### Apple OAuth (Coming Soon)
+##### Apple OAuth
+<Badge variant="outline">Coming Soon</Badge>
 
-Apple sign-in support is planned but not yet supported in SpaceDF.
+Support for "Sign in with Apple" is currently in development. It is **not enabled in this version** of SpaceDF.
 
-<Callout type="warning">
-  Do not configure these values yet.
-  Apple OAuth is **not supported** in the current release.
-</Callout>
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ℹ️ **No Action Required:** You can safely skip this section. Please leave these values blank or commented out in your `.env` file.
+</CardInfo>
 
 ```bash copy
-# Apple OAuth (reserved for future use)
-APPLE_CLIENT_ID=your_apple_client_id
-APPLE_CLIENT_SECRET=your_apple_client_secrect
-APPLE_CLIENT_KEY=your_apple_client_key
-APPLE_CERTIFICATE_KEY=your_apple_certificate_key
+# Apple OAuth (Reserved for future updates)
+# Leave these lines commented out for now:
+# APPLE_CLIENT_ID=
+# APPLE_CLIENT_SECRET=
+# APPLE_CLIENT_KEY=
+# APPLE_CERTIFICATE_KEY=
 ```
 ---
 ##### Auth Service
-> The Auth Service is responsible for user authentication, authorization, and tenant management in SpaceDF.
+<Badge variant="destructive">Required</Badge>
 
-**`AUTH_POSTGRES_PASSWORD`**
+The Auth Service manages user logins and security. You need to configure its database connection and domain settings.
 
-The password used by the Auth Service to connect to its *PostgreSQL database*. (*Use a strong and unique password.*)
+**1. Security Credentials**
 
-```bash copy
-AUTH_POSTGRES_PASSWORD=your_auth_postgres_password
-```
+Set up the password for the database and the encryption key for sessions.
 
-**`AUTH_SECRET_KEY`**
+<NumberWithMdx number={1} className="mt-6">
+    **Generate a Secret Key**: Run this command in your terminal to get a secure random string:
 
-A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
+    ```bash copy
+    openssl rand -hex 32
+    ```
+</NumberWithMdx>
 
-Generate secure random values for secret keys:
-```bash copy
-openssl rand -hex 32
-```
+<NumberWithMdx number={2}>
+    **Update `.env`**: Copy the generated string and your database password into the file:
+    
+    ```bash copy
+    # 1. Database Password (Make sure it is strong)
+    AUTH_POSTGRES_PASSWORD=your_secure_db_password
 
-Paste the generated Secret Key into your `.env` file:
-```bash copy
-AUTH_SECRET_KEY=your_auth_secret_key
-```
+    # 2. Secret Key (Paste the output from Step 1)
+    AUTH_SECRET_KEY=paste_generated_key_here
+    ```
+</NumberWithMdx>
 
-**`DEFAULT_TENANT_HOST`**
+**2. Tenant Configuration**
 
-The default domain or host assigned to the initial tenant. This is usually your main application domain.
+This defines the main domain where your application runs.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ⚠️ **Format Note:** Do not include `http://` or `https://`. Only enter the domain name
+</CardInfo>
 
 <Tabs items={['Development', 'Production']}>
     <Tabs.Tab>
+    For Localhost: Use this if you are running SpaceDF on your own computer.
     ```bash copy
     DEFAULT_TENANT_HOST=localhost
     ```
     </Tabs.Tab>
 
     <Tabs.Tab>
+    For Live Server:
+    Use your actual domain name (e.g., `app.spacedf.com` or `spacedf.com`).
     ```bash copy
-    DEFAULT_TENANT_HOST=your_api_domain
+    DEFAULT_TENANT_HOST=your-domain.com
     ```
     </Tabs.Tab>
 </Tabs>
-
 ---
 ##### S3 Service
-> The Amazon S3 service is used by SpaceDF to store files such as uploads, assets, and generated data.
+<Badge variant="destructive">Required</Badge>
 
-<Callout type="info">
-    SpaceDF supports **Amazon S3 only** for file storage in this setup.
-</Callout>
+SpaceDF uses Amazon S3 to store uploaded files, assets, and generated data. 
 
-SpaceDF connects to Amazon S3 using **IAM credentials** that you provide in the `.env` file. All file operations (upload, read, delete) are handled internally by SpaceDF services.<br/>
-End users do **not** need AWS accounts or credentials.
+You need to provide **IAM Credentials** so SpaceDF can access your storage securely.
 
-If you do not already have an AWS account, create one at, [see more](https://repost.aws/knowledge-center/create-and-activate-aws-account): <br/>
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ℹ️ **Note:** Currently, SpaceDF supports **Amazon S3 only**.<br/>
+  Other providers (like Google Cloud Storage or MinIO) are not yet supported.
+</CardInfo>
+
+If you do not already have an AWS account, create one at: <br/>
 https://signin.aws.amazon.com/signup?request_type=register
 
-After creating your account, sign in to the AWS Management Console to continue with the steps below. 
+**1. Create an S3 Bucket**
 
-**Create an S3 bucket**
+This is the "container" where your files will be stored.
 
 <NumberWithMdx number={1} className="mt-6">
-    Open the [Amazon S3 Console](https://console.aws.amazon.com/s3/)
+    Log in to your AWS account and navigate to the [Amazon S3 Console](https://console.aws.amazon.com/s3/)
 </NumberWithMdx>
 <NumberWithMdx number={2}>
-    Create a new bucket
-</NumberWithMdx>
-<NumberWithMdx number={3}>
-    Choose:<br/>
-        A unique bucket name -> will be used for `AWS_STORAGE_BUCKET_NAME`<br/>
-        An AWS region close to your server → will be used for `AWS_REGION`
+    Create a new bucket<br/>
+    Click the orange `Create bucket` button. Configure the following:
+    - **Bucket name:** Enter a globally unique name (e.g., `spacedf-storage-yourname`).
+    - **AWS Region:** Choose a region close to your users (e.g., `Sydney (ap-southeast-2)`)
+    - **Block Public Access:** Keep "Block all public access" **checked** (Enabled) for security. SpaceDF handles access control internally.
     <img src="/screenshots/bucket-guide.png" className="w-full mt-2"/>
 </NumberWithMdx>
+<NumberWithMdx number={3}>
+    Finish<br/>
+        Scroll to the bottom and click `Create bucket`. Note down your **Bucket Name** and **Region Code**.
+</NumberWithMdx>
 
-Save the bucket name and region for later use.
+Refer: [Official AWS Guide on Creating Buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html)
 
-Read more: [AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/GetStartedWithS3.html#creating-bucket)
+**2. Create IAM Credentials**
+
+Now you need to create a "Service User" that has permission to read/write to that bucket.
 
 **Create IAM credentials**
 <NumberWithMdx number={1} className="mt-6">
-    Open the [AWS IAM Console](https://console.aws.amazon.com/iam/)
+    Open the [AWS IAM Console](https://console.aws.amazon.com/iam/) and click **Users** in the left sidebar.
 </NumberWithMdx>
 <NumberWithMdx number={2}>
-    Create a new **IAM user**
+    **Add User**<br/>
+    Click **Create user**. 
+    * **User name:** Enter a name like `spacedf-s3-user`. 
+    * Click **Next**.
 </NumberWithMdx>
 <NumberWithMdx number={3}>
-    Grant the user access to the S3 bucket<br/>
-    *Recommended:* grant only required S3 permissions (read/write)
+    **Set Permissions**
+    - Select **Attach policies directly**.
+    - In the search bar, type `AmazonS3FullAccess`.
+    - Check the box next to `AmazonS3FullAccess`
+    - Click **Next**, then click **Create user**
+    > Note: For advanced security, you can create a custom policy restricted to a single bucket later
 </NumberWithMdx>
 <NumberWithMdx number={4}>
-    Create an **Access Key** for the user<br/>
-    Access Key ID, Secret Access Key
+    **Generate Keys**
+    - Click on the user name you just created.
+    - Go to the **Security credentials** tab
+    - Scroll down to **Access keys** and click **Create access key**.
+    - Select **Application running outside AWS**
+    - Click **Next** -> Click **Create access key**.
     <img src="/screenshots/iam-credentials.png" className="w-full mt-2"/>
 </NumberWithMdx>
 
-Read more: [AWS documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ⚠️ **Important:** This is the **only time** you can view the **Secret access key**. Copy it immediately or download the `.csv` file
+</CardInfo>
 
-<Callout type="info">
-Use IAM policies with **minimum required permissions**.
-</Callout>
+Refer: [Managing Access Keys in IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
-**Set values in `.env`**
+**3. Update Environment**
+
+Open your `.env` file and fill in the values from the previous steps.
+
 ```bash copy
-# Replace with your own values.
-AWS_ACCESS_KEY_ID=your_access_key_id #IAM credentials (Step 4)
-AWS_SECRET_ACCESS_KEY=your_secret_access_key #IAM credentials (Step 4)
-    
-AWS_STORAGE_BUCKET_NAME=your_aws_storage_bucket_name #S3 bucket (Step 3)
-AWS_REGION=your_aws_region #S3 bucket (Step 3)
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID="your_access_key_id_from_phase_2"
+AWS_SECRET_ACCESS_KEY="your_secret_key_from_phase_2"
+
+AWS_STORAGE_BUCKET_NAME="your_bucket_name_from_phase_1"
+AWS_REGION="your_region_code"
 ```
 
-- `AWS_ACCESS_KEY_ID` - The access key used by SpaceDF to authenticate with S3.
-- `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (*Keep this value private*)
-- `AWS_STORAGE_BUCKET_NAME` - The name of the S3 bucket where SpaceDF stores files.
-- `AWS_REGION` - The AWS region where the S3 bucket is located. (e.g., `us-east-1`, `ap-southeast-1`).
+**Variable Details:**
+- `AWS_ACCESS_KEY_ID`: The ID connecting to your IAM user.
+- `AWS_SECRET_ACCESS_KEY`: The password for the IAM user.
+- `AWS_STORAGE_BUCKET_NAME`: The name of your bucket (e.g., `my-app-storage`).
+- `AWS_REGION`: The code for your region.
 ---
 ##### Redis
-> Redis is used by SpaceDF for caching and fast data access.
+<Badge variant="destructive">Required</Badge>
 
-Set the Redis connection URL in the `.env` file.
+SpaceDF uses Redis for caching data and handling background tasks (like sending emails).
+
+**1. Default Configuration (Docker)**
+
+If you are installing SpaceDF using the standard Docker setup, you **do not need to change this**.
 
 ```bash copy
-# Replace with your own values.
 REDIS_HOST="redis://redis:6379/1"
 ```
-- `redis://` — Connection protocol
-- `redis` — Redis service name (default in Docker)
-- `6379` — Default Redis port
-- `/1` — Redis database number
-
-<CardInfo title="When you do NOT need to change this:" classNames={{
+<CardInfo classNames={{
   container: "!mt-6 !p-3 shadow-none",
-  title: "!text-lg",
+  title: "!text-base",
   description: "!text-sm"
 }}>
-  -   You are using the provided Docker setup
-  -   Redis is running as part of the included Docker Compose file
+  ❓ **Why** In our Docker setup, the service is named `redis`. SpaceDF automatically finds it at this address.
 </CardInfo>
 
-<CardInfo title="When you SHOULD change this:" classNames={{
+**2. External Configuration (Advanced)**
+
+Only change the value if your Redis runs on a different server (e.g., AWS ElastiCache, DigitalOcean Managed Redis).
+
+<CardInfo classNames={{
   container: "!mt-6 !p-3 shadow-none",
-  title: "!text-lg",
+  title: "!text-base",
   description: "!text-sm"
 }}>
-  -   Redis runs on a different server or host
-  -   Redis uses a non-default port
-  -   You want to use a different Redis database
+  ℹ️ **Syntax with Password:** If your Redis requires a password, follow this format: <br/>
+  `redis://:PASSWORD@HOST:PORT/DB_INDEX`
 </CardInfo>
 
----
-##### Dashboard Service
-> The Dashboard Service provides the web interface for managing SpaceDF, including administration and monitoring features.
-
-**`DASHBOARD_POSTGRES_PASSWORD`**
-
-The password used by the Dashboard Service to connect to its PostgreSQL database. (*Use a strong and unique password*.)
-
+Example:
 ```bash copy
-DASHBOARD_POSTGRES_PASSWORD=your_postgres_password
+# Example for external Redis with password
+REDIS_HOST="redis://:mypassword123@192.168.1.50:6379/0"
 ```
 
-**`DASHBOARD_SECRET_KEY`**
+**3. Connection Details**
 
-A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
+Breakdown of the connection string components:
 
-Generate secure random values for secret keys:
-```bash
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Component
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Description
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Example
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">`redis://`</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Protocol</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Always `redis://`</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">`:password@`</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">(Optional) Password prefix</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">`:secret123@`</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">`host`</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Server IP or Domain</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">`localhost` or `192.168.x.x`</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">`:6379`</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Port number</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Default is `6379`</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">`/1`</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Database Index (0-15)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">`/1`</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+---
+#### Service Credentials
+<Badge variant="destructive">Required</Badge>
+
+The following services (Dashboard & Device) operate independently. Each requires its own Database Password and unique Secret Key to function securely.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  🔐 **Security Rule** Do **not reuse** the same password or secret key across different services.<br/>
+  Generate a unique value for each variable below.
+</CardInfo>
+
+**1. Generate Secret Keys** Run this command twice to generate two different keys:
+```bash copy
 openssl rand -hex 32
 ```
 
-Paste the generated Secret Key into your `.env` file:
+**2. Update `.env`** Update the values for both the Dashboard and Device services.
 ```bash copy
-DASHBOARD_SECRET_KEY=your_secret_key
-```
+# --- Dashboard Service ---
+# Password for Dashboard Database
+DASHBOARD_POSTGRES_PASSWORD=your_dashboard_db_password
+# Secret Key for Dashboard (Paste generated key 1)
+DASHBOARD_SECRET_KEY=your_dashboard_secret_key
 
----
-##### Device Service
-> The Device Service manages devices, device data, and communication with telemetry-related services in SpaceDF.
-
-**`DEVICE_POSTGRES_PASSWORD`**
-
-The password used by the Device Service to connect to its PostgreSQL database. (*Use a strong and unique password*.)
-
-```bash copy
-DEVICE_POSTGRES_PASSWORD=your_postgres_password
-```
-
-**`DEVICE_SECRET_KEY`**
-
-A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
-
-Generate secure random values for secret keys:
-```bash
-openssl rand -hex 32
-```
-
-Paste the generated Secret Key into your `.env` file:
-```bash copy
-DEVICE_SECRET_KEY=your_secret_key
+# --- Device Service ---
+# Password for Device Database
+DEVICE_POSTGRES_PASSWORD=your_device_db_password
+# Secret Key for Device (Paste generated key 2)
+DEVICE_SECRET_KEY=your_device_secret_key
 ```
 ---
 
 ##### Telemetry service
+<Badge variant="destructive">Required</Badge>
 
-Defines the internal Docker service address that SpaceDF uses to communicate with the Telemetry Service.
+This variable points to the internal Docker container that handles device data.
 
-When using the **default Docker setup**, the Telemetry Service runs as a Docker container and is accessible via its **service name**.
+**Configuration** In 99% of cases (Local & Production), you **should keep the default value**.
 
 ```bash copy
 # Default (recommended)
 TELEMETRY_SERVICE_URL=http://telemetry:8080
 ```
+
 <CardInfo classNames={{
   container: "!mt-6 !p-3 shadow-none",
-  description: "!text-base"
-}}>
-  - This value is the same for both **local and production** deployments when using Docker Compose.
-  - The Telemetry Service runs from a **Docker image** and is exposed internally.
-  - You **do not need to change this value** in most cases.
+  title: "!text-base",
+  description: "!text-sm"
+}}
+  title="❓ Why"
+>
+  - **No Action Needed:** This service runs automatically inside Docker.
+  - **Internal Access:** SpaceDF uses this URL to talk to the service internally. It does not need a public domain or HTTPS.
 </CardInfo>
 
-Only change this value if you modify the Telemetry Service name or port in `docker-compose.yml`.
+**When to change this?**
+
+Only modify this value if you have manually customized the `docker-compose.yml` file to run the Telemetry service on a different port or server.
 
 ---
 ##### EMQX Service
-> EMQX is the MQTT broker used by SpaceDF to handle device messaging and real-time communication.
+<Badge variant="destructive">Required</Badge>
 
-Choose a username and a strong password:
+EMQX is the core engine that handles real-time messages from your devices. SpaceDF needs to connect to the EMQX Management API to control it.
 
+**1. API Connection (Internal)** Use the default value if you are running SpaceDF via Docker.
 ```bash copy
-# Replace with your own values.
 EMQX_HOST=http://emqx:18083/api/v5
-EMQX_USERNAME=your_emqx_username
-EMQX_PASSWORD=your_emqx_password
 ```
-`EMQX_HOST` - The base URL of the EMQX Management API used by SpaceDF. This is typically the EMQX service running inside Docker.<br/>
-`EMQX_USERNAME` - The username SpaceDF uses to authenticate with the EMQX broker.<br/>
-`EMQX_PASSWORD` - The password for the EMQX user above. (*Use a strong and unique password*.)
 
----
-##### Broker Bridge Service
-> The Broker Bridge Service connects SpaceDF to an external MQTT broker or bridges messages between brokers.
-
-**Broker credentials**
+**2. Admin Credentials** Define the username and password SpaceDF will use to log in to EMQX.
 ```bash copy
-# Replace with your own values.
-MQTT_BROKER_BRIDGE_USERNAME=your_username
-MQTT_BROKER_BRIDGE_PASSWORD=your_password
+EMQX_USERNAME=your_secure_username
+EMQX_PASSWORD=your_secure_password
 ```
 
-`MQTT_BROKER_BRIDGE_USERNAME` - The username used to authenticate with the external MQTT broker. <br/>
-`MQTT_BROKER_BRIDGE_PASSWORD` - The password for the broker bridge user. (*Keep this value private*.)
-
-**MQTT topics**
-
-Specify one or more topics, separated by commas.
-```bash copy
-MQTT_TOPICS=device/+/telemetry,device/+/status
-```
-`MQTT_TOPICS` - A list of MQTT topics that SpaceDF subscribes to or bridges.
-
----
-##### AWS to access to SES service
-> SpaceDF uses email services to send system emails such as account verification, password resets, and notifications.
-
-This setup commonly uses **AWS Simple Email Service (SES)**, but can be adapted to other SMTP-compatible providers.
-
-**How to get AWS SES credentials**
-<NumberWithMdx number={1} className="mt-3">
-    Sign in to the [AWS Console](https://aws.amazon.com/console/)
-</NumberWithMdx>
-<NumberWithMdx number={2}>
-  Open **Simple Email Service (SES)**.
-</NumberWithMdx>
-<NumberWithMdx number={3}>
-   Verify your domain or sender email address.
-</NumberWithMdx>
-<NumberWithMdx number={4}>
-    Create **SMTP credentials** in SES:
-    <ul>
-        <li>
-           These are different from your AWS access keys.
-        </li>
-    </ul>
-</NumberWithMdx>
-<NumberWithMdx number={5}>
-    Copy the SMTP username and password into:
-     <ul>
-        <li>
-           `EMAIL_HOST_USER`
-        </li>
-        <li>
-           `EMAIL_HOST_PASSWORD`
-        </li>
-    </ul>
-</NumberWithMdx>
-
-Set the following values in your `.env` file.
-```bash copy
-# Replace with your own values.
-EMAIL_HOST_USER=AKIAXXXXXXXX
-EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXX
-DEFAULT_FROM_EMAIL=no-reply@spacedf.example
-```
-- `EMAIL_HOST_USER` - The SMTP username generated by AWS SES.
-- `EMAIL_HOST_PASSWORD` - The SMTP password generated by AWS SES (***Keep this value secret***)
-- `DEFAULT_FROM_EMAIL` - The sender email address shown to users.
----
-##### MPA Service
-> The MPA Service connects SpaceDF to an MQTT broker to receive and publish messages for application-level processing.
-
-Example: MQTT broker running in Docker
-```bash copy
-# Replace with your own values.
-MQTT_BROKER=emqxl
-MQTT_PORT=1883
-MQTT_USERNAME=mpa
-MQTT_PASSWORD=change_this_to_a_secure_password
-MQTT_CLIENT_ID=spacedf-mpa
-MQTT_TOPIC=devices/+/events
-```
-- `MQTT_BROKER` - The hostname or IP address of the MQTT broker.
-- `MQTT_USERNAME` - The username used to authenticate with the MQTT broker.
-- `MQTT_PASSWORD` - The password for the MQTT user. (***Keep this value private***.)
-- `MQTT_PORT` - The port used to connect to the MQTT broker (e.g., `1883` for plain TCP, `8883` for TLS).
-- `MQTT_CLIENT_ID` - A unique client identifier for the MPA Service when connecting to MQTT.
-- `MQTT_TOPIC` - The MQTT topic the MPA Service subscribes to.
-
-<Callout type="info">
-  Use TLS (`8883`) in production if available<br/>
-  Restrict broker permissions to required topics only
-</Callout>
----
-##### Bootstrap Service
-> The Bootstrap Service is the **backend service** responsible for initial system setup and cross-service coordination when SpaceDF starts.
-
-This service runs inside Docker as the SpaceDF backend.
-
-**Service host**
-
-This value defines the **base URL** where the Bootstrap (Backend) service is accessible.
-```bash copy 
-# Local development (default)
-HOST=http://localhost:8000
-```
-For production deployments, set this to your **public API domain**:
-```bash copy 
-# Replace with your public API domain.
-HOST=https://api.spacedf.example
-```
-
-`HOST` - The public base URL where the Bootstrap Service is accessible. This is used by other services to communicate with it.
-
-<CardInfo title="If you change the backend port, make sure to update:" classNames={{
+<CardInfo classNames={{
   container: "!mt-6 !p-3 shadow-none",
   title: "!text-base",
   description: "!text-sm"
 }}>
-  - HOST in your `.env` file
-  - The backend port in `docker-compose.yml`
+  ⚠️ **Consistency:** These credentials must match the admin user defined in your EMQX configuration (or Dashboard).
 </CardInfo>
 
-**CORS origins**
+---
+##### Broker Bridge Service
+<Badge variant="destructive">Required</Badge>
 
-List all frontend origins that should be allowed to access the service.
-Separate multiple values with commas.
+The Bridge Service acts as a listener. It connects to the MQTT Broker to receive device data and forward it to SpaceDF.
 
-Development (local)
-```bash copy 
-# Local development (default)
-CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:3000,http://localhost:3001
+**1. Broker Authentication**
+
+Enter the credentials required to connect to the MQTT Broker (usually the same credentials used for EMQX clients).
+```bash copy
+MQTT_BROKER_BRIDGE_USERNAME=your_bridge_username
+MQTT_BROKER_BRIDGE_PASSWORD=your_bridge_password
 ```
 
-Production
-```bash copy 
-# Replace with your own values.
-CORS_ALLOWED_ORIGINS=https://app.spacedf.example,https://admin.spacedf.example
-```
+**2. Topic Subscription**
 
-`CORS_ALLOWED_ORIGINS` - A comma-separated list of allowed origins for cross-origin requests. This controls which frontend domains can access the Bootstrap Service.
-
-<Callout type="info">
-  **Important notes**
-  - Controls **which frontend domains can access** the Bootstrap service
-  - Each frontend **must be listed explicitly**, including protocol and port
-  - If you change frontend ports in `docker-compose.yml`, update both the Docker ports and `CORS_ALLOWED_ORIGINS`
-</Callout>
-
-Example:
-
-If the Dashboard is moved from port `3000` to `4000`, you must add:
-
-```text copy
-http://localhost:4000
-```
-to `CORS_ALLOWED_ORIGINS`.
-
-**Secret key**: Generate a secure random value:
-```bash
-openssl rand -hex 32
-```
-
-Set it in your `.env` file:
+Define which MQTT topics SpaceDF should listen to.
 
 ```bash copy
-# Replace with your own values.
-BOOTSTRAP_SECRET_KEY=generated_secret_value
+MQTT_TOPICS=device/+/telemetry,device/+/status
 ```
-`BOOTSTRAP_SECRET_KEY` - A secret key used to secure internal Bootstrap operations. (***Keep this value private.***)
+
+**Syntax Guide:**
+- Comma (`,`): Use to separate multiple topics.
+- Plus (`+`): Wildcard for a single level (e.g., matching any device ID).
+- Hash (`#`): Wildcard for all remaining levels.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  📝 **Example:** `device/+/telemetry` will match `device/sensor-01/telemetry` and `device/sensor-02/telemetry`.
+</CardInfo>
+
+---
+##### Email Service (AWS SES)
+<Badge variant="destructive">Required</Badge>
+
+SpaceDF uses AWS SES (Simple Email Service) to send account verification emails, password resets, and notifications.
+
+**1. Setup & Verify**
+
+Before sending emails, you must tell AWS which email address or domain you own.
+
+<NumberWithMdx number={1} className="mt-6"> 
+  **Go to SES Console** <br/>
+  Log in to AWS and open the [Amazon SES Console](https://console.aws.amazon.com/ses/). 
+</NumberWithMdx>
+
+<NumberWithMdx number={2}> 
+**Verify Identity**
+* Go to **Configuration** -> **Verified identities**. 
+* Click **Create identity**. 
+* Choose **Email address** (easiest) or **Domain**. 
+* Check your inbox and click the verification link sent by AWS. 
+</NumberWithMdx>
+
+Refer: [AWS Guide on Verifying Identities](https://docs.aws.amazon.com/ses/latest/dg/creating-identities.html)
+
+**2. Get SMTP Credentials**
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ⚠️ **Crucial Distinction:** Do **not** use your standard AWS Access Keys.<br/>
+  You must generate specific **SMTP Credentials**.
+</CardInfo>
+
+<NumberWithMdx number={1} className="mt-6"> 
+**Create Credentials**
+* Go to **SMTP Settings** in the left sidebar. 
+* Click the button **Create SMTP credentials**. 
+</NumberWithMdx>
+
+<NumberWithMdx number={2}> 
+**Copy Keys**
+* Click **Create**. 
+* Download the credentials or copy the **SMTP Username** and **SMTP Password** immediately. 
+</NumberWithMdx>
+
+Refer: [AWS Guide on Obtaining SMTP Credentials](https://docs.aws.amazon.com/ses/latest/dg/smtp-credentials.html)
+
+**3. Update Environment**
+
+Update the `.env` file with the SMTP credentials you just created.
+```bash copy
+# Acount AWS to access to SES service
+EMAIL_HOST_USER=AKIA... #(Your SMTP Username)
+EMAIL_HOST_PASSWORD=BAj... #(Your SMTP Password)
+DEFAULT_FROM_EMAIL="no-reply@yourdomain.com"
+```
+
+**Variable Details:**
+- `EMAIL_HOST_USER`: The username specifically generated for SMTP (starts with `AKIA...` usually).
+- `EMAIL_HOST_PASSWORD`: The long secret string for SMTP authentication.
+- `DEFAULT_FROM_EMAIL`: The email address that will appear as the sender (Must be verified in Phase 1).
+
+---
+##### MPA Service
+<Badge variant="destructive">Required</Badge>
+
+The MPA Service connects to the MQTT Broker to process application events. It acts as a client that listens for device messages.
+
+**Configuration**
+
+Update the `.env` file with the connection details below.
+
+```bash copy
+# --- Connection Settings ---
+# Hostname (Use 'emqx' if running inside Docker)
+MQTT_BROKER=emqx
+# Port (1883 for TCP, 8883 for SSL/TLS)
+MQTT_PORT=1883
+# Unique name for this client
+MQTT_CLIENT_ID=spacedf-mpa-client
+# Topics to subscribe to (use '+' for wildcards)
+MQTT_TOPIC=devices/+/events
+
+# --- Authentication ---
+MQTT_USERNAME=mpa_user
+MQTT_PASSWORD=change_this_to_secure_password
+```
+
+**Variable Details**
+- `MQTT_BROKER`: The IP or Hostname of the broker.
+- `MQTT_PORT`: `1883` (Plain) or `8883` (Secure).
+- `MQTT_TOPIC`: The data channel to listen to.
+- `MQTT_USERNAME`: Must match a user created in EMQX.
+- `MQTT_PASSWORD`: The password for the user above.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}
+  title="⚠️ Production Tips:"
+>
+  - **Use TLS:** In a live environment, change the port to 8883 for encrypted connections.
+  - **Client ID:** Ensure `MQTT_CLIENT_ID` is unique. If you run multiple instances of SpaceDF, they cannot share the same ID
+</CardInfo>
+---
+##### Bootstrap Service
+<Badge variant="destructive">Required</Badge>
+
+The Bootstrap Service is the **main backend API of SpaceDF**. It orchestrates the system setup and handles requests from your frontend applications.
+
+**1. API URL (`HOST`)**
+
+This variable defines the public address where your Backend API is accessible.
+
+<Tabs items={['Development (Local)', 'Production (Live)']}> 
+  <Tabs.Tab> 
+  For Localhost: Use this default value if you are running SpaceDF on your computer.
+  ```bash copy
+  HOST=http://localhost:8000 
+  ```
+  </Tabs.Tab>
+
+  <Tabs.Tab> 
+  For Public Domain: Set this to your actual API domain.
+  ```bash copy
+  HOST=https://api.yourdomain.com
+  ```
+
+  <CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Requirement:** In production, you should use HTTPS for security. .
+  </CardInfo>
+  </Tabs.Tab> 
+</Tabs>
+
+**2. Access Control (`CORS`)**
+
+This setting controls which websites (frontends) are allowed to talk to your backend. 
+
+This prevents unauthorized websites from using your API.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⚠️ Syntax Rule:"
+>
+  - List all frontend URLs exactly (including `http/https` and port).
+  - Separate multiple URLs with a comma (`,`) and `no spaces`.
+</CardInfo>
+
+<Tabs items={['Development (Local)', 'Production (Live)']}> 
+  <Tabs.Tab> 
+    **Allow Local Ports:** List all the local ports your frontend apps use (e.g., Dashboard on `3000`, Admin portal on `3001`). 
+    ```bash copy 
+    CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001 
+    ```
+  </Tabs.Tab>
+
+  <Tabs.Tab> 
+    **Allow Public Domains:** List your actual frontend domains (App and Admin). 
+    ```bash copy 
+    CORS_ALLOWED_ORIGINS=https://app.yourdomain.com,https://admin.yourdomain.com 
+    ```
+  </Tabs.Tab> 
+</Tabs>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⚠️ Common Mistake:"
+>
+  - If you change a frontend port (e.g., from `3000` to `4000`) in `docker-compose.yml`, you must update this list to include `http://localhost:4000`
+  - If you forget, the app will show a `Network Error` or `CORS-ERROR`.
+</CardInfo>
+
+**3. Security Key**
+
+This key secures the internal operations of the backend.
+
+<NumberWithMdx number={1} className="mt-6"> 
+  **Generate Key**
+ ```bash copy
+openssl rand -hex 32
+ ```
+</NumberWithMdx>
+
+<NumberWithMdx number={1} className="mt-6"> 
+  **Update `.env`**
+ ```bash copy
+BOOTSTRAP_SECRET_KEY=paste_your_generated_key_here
+ ```
+</NumberWithMdx>
 
 ---
 ##### Organization Initialization
-> These settings are used to create the **initial organization and owner account** when SpaceDF starts for the first time. This step runs only during the first startup.
+<Badge variant="destructive">Required</Badge>
+
+These settings are used to generate the **Super Admin account** and the **Default Organization** when SpaceDF runs for the **very first time**.
+
+**1. Setup Credentials**
+
+Define your organization name and the login credentials for the owner.
 
 ```bash copy
 # Replace with your own values.
-ORG_NAME=SpaceDF
-ORG_SLUG=spacedf
-OWNER_EMAIL=admin@spacedf.example
-OWNER_PASSWORD=change_this_to_a_secure_password
+ORG_NAME="My IoT Company"
+OWNER_EMAIL="admin@your-domain.com"
+OWNER_PASSWORD="change_this_to_a_secure_password"
 ```
 
-- `ORG_NAME` - The display name of your organization.
-- `ORG_SLUG` - A short, URL-friendly identifier for the organization (lowercase, no spaces).
-- `OWNER_EMAIL` - The email address of the initial organization owner.
-- `OWNER_PASSWORD` - The password for the owner account. (***Use a strong and secure password***.)
+**2. Variable Details**
+- `ORG_NAME` - The display name of your organization (e.g., "SmartHome Solutions")
+- `OWNER_EMAIL` - The email address used to log in as the System Administrator.
+- `OWNER_PASSWORD` - The master password for the admin account. **Must be strong**.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}
+  title="ℹ️ How to change these later?"
+>
+  These `.env` values are only read during the initial installation.
+  * **To change Password/Email:** Log in to the Dashboard and go to Profile Settings. 
+  * **To change Organization Name:** Log in to the Dashboard and go to **Organization Settings**.<br/>
+  (Modifying the `.env` file after installation will have no effect).
+</CardInfo>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⭐ **Branding:** The `ORG_NAME` helps brand your system immediately. In production, you can point your **custom domain** (e.g., `iot.your-brand.com`) to the server to fully white-label the platform.
+</CardInfo>
 
 ---
 🎉 You have now finished configuring the backend services. <br/>
@@ -750,220 +1050,476 @@ Next, continue with the frontend (web app) configuration.
 
 ---
 ### Admin Portal Configuration
+
+The Admin Portal is your central command center. It allows **Platform Administrators** to manage organizations, users, and system-wide settings. 
+
+*(Note: This interface is for you and your staff, not for your end-users)*.
+
 <CardInfo classNames={{
-  container: "!mt-6 !p-3 shadow-none",
-  description: "!text-base"
-}}>
-  The Admin Portal is used for **system-level** and **organization-level** administration.<br/>
-  This application is typically accessed by **platform administrators**, not end users.
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}
+  >
+    SpaceDF uses `NextAuth.js` for its authentication layer. If you need to customize behavior or debug specific issues, please refer to the official documentation:
+     - [NextAuth.js Documentation](https://next-auth.js.org/) - General guide and concepts.
+     - [Environment Variables](https://next-auth.js.org/configuration/options) - Detailed list of all available options.
+     - [Security Guide](https://next-auth.js.org/security) - Best practices for securing your authentication.
 </CardInfo>
 
-Configure these environment variables to connect the Admin Portal to backend services and authentication providers.
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Prerequisite Check:** Please ensure you have fully configured the **Backend Services** section above.<br/>
+    The Admin Portal cannot function without a running backend.
+</CardInfo>
 
-<Callout type="warning">
-  **Before continuing** <br/>
-    Make sure you have completed the **Backend Services Configuration** above.<br/>
-    The Admin Portal depends on backend authentication and API services.
-</Callout>
-##### Authentication
+##### Authentication & URLs
+<Badge variant="destructive">Required</Badge>
 
-**Generate NextAuth secret**
+This section secures user sessions and defines the public address of your Admin Portal.
 
-Open the [following link](https://generate-secret.vercel.app/32) in your browser to generate a secure random secret:
-
-Copy the generated value and set it in your `.env` file:
+**1. Generate Secret Key** Create a unique key to encrypt login sessions. Run this command in your terminal:
 
 ```bash copy
-# Replace with your own values.
-PORTAL_NEXTAUTH_SECRET=4f7c2a9e8d1b6c3f0a...
+openssl rand -hex 32
 ```
-`PORTAL_NEXTAUTH_SECRET` - A secret key used by NextAuth to encrypt sessions and tokens. (***Keep this value private.***)
 
-**Admin Portal URL**
+Update the value in your `.env` file:
 
-Development
 ```bash copy
-HOST_FRONTEND_ADMIN=http://localhost:3001
-PORTAL_NEXTAUTH_URL=http://localhost:3001
+# Replace with the generated string
+PORTAL_NEXTAUTH_SECRET=your_generated_secret_key
 ```
 
-Production
-```bash copy
-HOST_FRONTEND_ADMIN=https://admin.spacedf.example
-PORTAL_NEXTAUTH_URL=https://admin.spacedf.example
-```
+**2. Configure Domain** Set the URL where administrators will access the portal.
 
-- `HOST_FRONTEND_ADMIN` - The public URL where the Admin Portal is accessible.
-- `PORTAL_NEXTAUTH_URL` - The base URL used by NextAuth for redirects and callbacks. <br/>This value should match the Admin Portal public URL.
+<Tabs items={['Development (Local)', 'Production (Live)']}> 
+  <Tabs.Tab> 
+    For Localhost: Use this setup if you are running the portal on your computer. 
+    ```bash copy 
+    HOST_FRONTEND_ADMIN=http://localhost:3001 
+    PORTAL_NEXTAUTH_URL=http://localhost:3001 
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab> 
+    For Public Domain: Replace with your actual domain name. 
+    ```bash copy 
+    HOST_FRONTEND_ADMIN=https://admin.yourdomain.com 
+    PORTAL_NEXTAUTH_URL=https://admin.yourdomain.com 
+    ```
+    <CardInfo classNames={{
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}>
+      ⚠️ **Consistency:** In most cases, these two variables must be identical.
+    </CardInfo>
+  </Tabs.Tab> 
+</Tabs>
+
+**Variable Details:**
+- `PORTAL_NEXTAUTH_SECRET`: The encryption key for cookies/tokens. **Keep this private**.
+- `HOST_FRONTEND_ADMIN`: The public URL shown in the browser address bar.
+- `PORTAL_NEXTAUTH_URL`: The base URL used internally by the authentication system for callbacks.
+
 ---
-##### API Access
+##### Backend Connection (API)
 
-**Using Docker**
-```bash copy
-PORTAL_AUTH_API=http://haproxy:3000
-```
+The Admin Portal needs to communicate with the Backend API to handle user authentication and data retrieval.
 
-**External API**
-```bash copy
-# Replace with your own values.
-PORTAL_AUTH_API=https://api.spacedf.example
-```
+**Choose your deployment scenario:**
 
-`PORTAL_AUTH_API` - The backend API endpoint used by the Admin Portal for authentication.<br/>
-This typically points to the internal API gateway or load balancer.
+<Tabs items={['Docker (Recommended)', 'Separate Hosting']}> 
+  <Tabs.Tab> 
+  **Scenario: All-in-One (Docker Compose)** If you are running both the Frontend and Backend on the same server using our provided Docker setup, use the internal service name.
+  ```bash copy
+  # Connects internally via the Docker network
+  PORTAL_AUTH_API=http://haproxy:3000
+  ```
+  <CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}>
+    ❓ **Why not localhost** Inside a Docker container, `localhost` refers to the container itself, not your computer. Using `haproxy` allows the Portal to find the API within the internal Docker network.
+  </CardInfo>
+  </Tabs.Tab>
 
----
-##### References
+  <Tabs.Tab> 
+  **Scenario: Distributed / External** Use this only if your Backend is hosted on a different server or if you are deploying the Frontend to a service like Vercel/Netlify.
+  ```bash copy
+  # Connects over the public internet
+  PORTAL_AUTH_API=https://api.yourdomain.com
+  ```
+  </Tabs.Tab>
+</Tabs>
 
-Use the official documentation below if you need more details about **NextAuth** behavior or advanced configuration:
-- [NextAuth.js Documentation](https://next-auth.js.org/)
-- [NextAuth Environment Variables](https://next-auth.js.org/configuration/options)
-- [NextAuth Security Guide](https://next-auth.js.org/security)
+**Variable Details:**
+
+- `PORTAL_AUTH_API` - The endpoint the Admin Portal uses to make **server-side** requests to the Backend.
+
+<CardInfo classNames={{
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}
+  title="⭐ References"  
+  >
+     - [NextAuth.js Documentation](https://next-auth.js.org/) - General guide and concepts.
+     - [Environment Variables](https://next-auth.js.org/configuration/options) - Detailed list of all available options.
+     - [Security Guide](https://next-auth.js.org/security) - Best practices for securing your authentication.
+</CardInfo>
+
 ---
 ### Dashboard Configuration
-This section configures the **SpaceDF Dashboard**, the main web interface used for daily operations, device monitoring, and data visualization.
+The Dashboard is the primary interface for **End Users (your customers)**. It is used for daily operations, including real-time device monitoring, data visualization, and asset control.
 
-<Callout type="warning">
-  **Before continuing** <br/>
-    Make sure you have completed the **Backend Services Configuration** above. <br/>
-    The Dashboard depends on backend APIs, MQTT, and authentication services.
-</Callout>
+<CardInfo classNames={{
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}
+  >
+    SpaceDF uses `NextAuth.js` for its authentication layer. If you need to customize behavior or debug specific issues, please refer to the official documentation:
+     - [NextAuth.js Documentation](https://next-auth.js.org/) - General guide and concepts.
+     - [Environment Variables](https://next-auth.js.org/configuration/options) - Detailed list of all available options.
+     - [Security Guide](https://next-auth.js.org/security) - Best practices for securing your authentication.
+</CardInfo>
 
-##### Authentication
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Prerequisite Check:** Please ensure you have fully configured the **Backend Services** section above.<br/> 
+    The Dashboard requires the Backend API and MQTT Broker to be running to fetch data.
+</CardInfo>
 
-**Generate NextAuth secret**
+##### Authentication & URLs
+<Badge variant="destructive">Required</Badge>
 
-Open the [following link](https://generate-secret.vercel.app/32) in your browser to generate a secure random secret:
+This section secures user sessions and defines the public address of your Dashboard.
 
-Copy the generated value and set it in your `.env` file:
+**1. Generate Secret Key** Create a unique key to encrypt login sessions. Run this command in your terminal:
 
 ```bash copy
-# Replace with random secret.
-DASHBOARD_NEXTAUTH_SECRET=4f7c2a9e8d1b6c3f0a...
-
-# The public URL where the Dashboard is accessible.
-DASHBOARD_NEXTAUTH_URL=http://localhost:3000
+openssl rand -hex 32
 ```
-- `DASHBOARD_NEXTAUTH_SECRET` - A secret key used by NextAuth to encrypt sessions and tokens. (***Keep this value private.***)
-- `DASHBOARD_NEXTAUTH_URL` - The public URL where the Dashboard is accessible.<br/>
-This value is used for redirects and callbacks.
+
+Update the value in your `.env` file:
+
+```bash copy
+# Replace with the generated string
+DASHBOARD_NEXTAUTH_SECRET=your_generated_secret_key
+```
+
+**2. Configure Domain** Set the URL where end-users will access the dashboard.
+
+<Tabs items={['Development (Local)', 'Production (Live)']}> 
+  <Tabs.Tab> 
+    For Localhost: Use this setup if you are running the dashboard on your computer
+    ```bash copy 
+    DASHBOARD_NEXTAUTH_URL=http://localhost:3000
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab> 
+    For Public Domain: Replace with your actual domain name. 
+    ```bash copy 
+    DASHBOARD_NEXTAUTH_URL=https://dashboard.yourdomain.com
+    ```
+    <CardInfo classNames={{
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}>
+      ⚠️ **HTTPS:** In production, ensure your domain is secured with SSL (HTTPS)
+    </CardInfo>
+  </Tabs.Tab> 
+</Tabs>
+
+**Variable Details:**
+- `DASHBOARD_NEXTAUTH_SECRET`: The encryption key for cookies/tokens. **Keep this private**.
+- `DASHBOARD_NEXTAUTH_URL`: The public URL (Base URL) used by the authentication system for redirects and callbacks.
+
 ---
-##### API Access
+##### Backend Connection (API)
+<Badge variant="destructive">Required</Badge>
 
-**Using Docker**
-```bash copy
-DASHBOARD_AUTH_API=http://haproxy:3000
-```
+The Dashboard needs to communicate with the Backend API to fetch user data, device status, and charts.
 
-**External API**
-```bash copy
-# Replace with your own values.
-DASHBOARD_AUTH_API=https://api.spacedf.example
-```
+**Choose your deployment scenario:**
+
+<Tabs items={['Docker (Recommended)', 'Separate Hosting']}> 
+  <Tabs.Tab> 
+  **Scenario: All-in-One (Docker Compose)** If you are running both the Dashboard and Backend on the same server using our Docker setup, use the internal service name.
+  ```bash copy
+  # Connects internally via the Docker network
+  DASHBOARD_AUTH_API=http://haproxy:3000
+  ```
+  <CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}>
+    ℹ️ **Network Note:** Do not use `localhost` here. Inside the Docker network, `haproxy` is the correct hostname to reach the API gateway.
+  </CardInfo>
+  </Tabs.Tab>
+
+  <Tabs.Tab> 
+  **Scenario: Distributed / External** Use this **only** if your Backend is hosted on a different server or if you are deploying the Dashboard to a cloud provider (e.g., Vercel, Netlify).
+  ```bash copy
+  # Connects over the public internet
+  DASHBOARD_AUTH_API=https://api.yourdomain.com
+  ```
+  </Tabs.Tab>
+</Tabs>
+
+**Variable Details:**
+
+- `DASHBOARD_AUTH_API` - The endpoint the Dashboard uses for **server-side** data fetching and authentication.
 ---
 ##### Map Services
-> The Dashboard uses **MapTiler** as a map service to resolve location names from coordinates and support location-based features.
+<Badge>Optional</Badge>
 
-**How to get a MapTiler API key**
+SpaceDF uses **MapTiler** to provide map visualization and **Reverse Geocoding** (converting GPS coordinates into readable addresses like "123 Main St").
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}>
+    ℹ️ **What happens if I skip this?** The Dashboard will **still work**, but you will **not see street addresses**.<br/>
+    Locations will only be displayed as raw latitude/longitude coordinates (e.g., `10.762`, `106.660`).
+</CardInfo>
+
+**Setup Instructions:**
+
 <NumberWithMdx number={1} className="mt-3">
-    Create a MapTiler account: [MapTiler](https://www.maptiler.com/)
+    **Create Account**<br/>
+    Sign up for a free account at [MapTiler](https://www.maptiler.com/)
 </NumberWithMdx>
 <NumberWithMdx number={2}>
-   Go to your dashboard and create an **API key**.
+    **Get API Key**<br/>
+   Go to the **Keys** section in your **MapTiler dashboard** and copy your **Default Key**.
 </NumberWithMdx>
 <NumberWithMdx number={3}>
-   Copy the key and set it as `MAPTILER_API_KEY`.
+   **Update `.env`**<br/>
+   Paste the key into your `.env` file.
+   ```bash copy
+    # Replace with your API Key.
+    MAPTILER_API_KEY=__MAPTILER_API_KEY__
+    ```
 </NumberWithMdx>
 
-```bash copy
-# Replace with your API Key.
-MAPTILER_API_KEY=__MAPTILER_API_KEY__
-```
+[MapTiler Documentation](https://docs.maptiler.com/)
+
 ---
 ##### MQTT (Real-time Data)
-> The Dashboard connects to MQTT to receive real-time device data.
+<Badge variant="destructive">Required</Badge>
 
-**Recommended values**<br/>
-**Development**
-```bash copy
-DASHBOARD_MQTT_PROTOCOL=ws
-DASHBOARD_MQTT_PORT=8883
-DASHBOARD_MQTT_BROKER=emqx.localhost:8000
-```
+The Dashboard connects directly to the MQTT Broker via **WebSockets** to display real-time charts and device status updates. Without this, the dashboard will not update live.
 
-**Production**
-```bash copy
-# Use wss (secure WebSocket) in production.
-DASHBOARD_MQTT_PROTOCOL=wss
-DASHBOARD_MQTT_PORT=443
-DASHBOARD_MQTT_BROKER=emqx.example.com
-```
+**Configuration by Environment:**
 
-- `DASHBOARD_MQTT_USERNAME` / `DASHBOARD_MQTT_PASSWORD` - Credentials used by the Dashboard to connect to the MQTT broker.
-- `DASHBOARD_MQTT_PROTOCOL` - Protocol used for MQTT connections. <br/>
-Use ws (WebSocket) for browser-based clients.
-- `DASHBOARD_MQTT_PORT` - Port exposed by the MQTT broker for WebSocket connections.
-- `DASHBOARD_MQTT_BROKER` - Host and port of the MQTT broker accessible from the browser.
+<Tabs items={['Development (Local)', 'Production (Live)']}>
+  <Tabs.Tab>
+    For Localhost: Use `ws` (Unencrypted WebSocket) for local development.
+    ```bash copy
+    # 1. Connection Details
+    DASHBOARD_MQTT_PROTOCOL=ws
+    DASHBOARD_MQTT_PORT=8083
+    DASHBOARD_MQTT_BROKER=localhost
 
-<Callout type="info">
-  Use HTTPS and `wss` in production environments <br/>
-  Restrict MQTT permissions to read-only topics for the Dashboard
-</Callout>
+    # 2. Public Auth (Read-Only User recommended)
+    DASHBOARD_MQTT_USERNAME=dashboard_user
+    DASHBOARD_MQTT_PASSWORD=your_password
+    ```
+    > (Note: Ensure Port `8083` is exposed in your EMQX Docker container).
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+    For Production: You **must** use `wss` (Secure WebSocket). Browsers will block insecure `ws` connections if your site is loaded over `https`.
+    ```bash copy
+    # 1. Connection Details
+    DASHBOARD_MQTT_PROTOCOL=wss
+    DASHBOARD_MQTT_PORT=443
+    DASHBOARD_MQTT_BROKER=mqtt.yourdomain.com
+
+    # 2. Public Auth (Read-Only User recommended)
+    DASHBOARD_MQTT_USERNAME=dashboard_user
+    DASHBOARD_MQTT_PASSWORD=your_password
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+**Variable Details:**
+  - `DASHBOARD_MQTT_PROTOCOL`: `ws` for local, `wss` for production (SSL).
+  - `DASHBOARD_MQTT_BROKER`: The domain pointing to your MQTT Broker.
+  - `DASHBOARD_MQTT_PORT`: The WebSocket port (Default EMQX: `8083` for ws, `8084` for wss).
+
+<CardInfo classNames={{
+      container: "!mt-6 !p-3 shadow-none",
+      title: "!text-base",
+      description: "!text-sm"
+    }}>
+      ⚠️ **Browser Security Rule:** If your Dashboard runs on **HTTPS** (Production), you cannot use ws (insecure).<br/>
+      You MUST use `wss`. Failing to do so will cause "Mixed Content" errors, and the connection will fail. 
+</CardInfo>
+
+[MQTT over WebSocket](https://www.emqx.com/en/blog/connect-to-mqtt-broker-with-websocket)
+
 ---
-##### References
-- [NextAuth.js Documentation](https://next-auth.js.org/)
-- [MapTiler Documentation](https://docs.maptiler.com/)
-- [MQTT over WebSocket](https://www.emqx.com/en/blog/connect-to-mqtt-broker-with-websocket)
+
+<div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg mt-8 text-center">
+  <h3 className="text-green-800 dark:text-green-300 font-bold text-lg m-0">
+    🎉 Configuration Fully Complete!
+  </h3>
+  <div className="text-green-700 dark:text-green-400 mt-2">
+    You have successfully configured the Backend APIs, Admin Portal, and User Dashboard. Your SpaceDF environment is ready.
+  </div>
+  <div className="text-green-700 dark:text-green-400 font-medium mt-3" suppressHydrationWarning>
+    👉 <strong>Next Step:</strong> Proceed to the <strong>Starting the Services</strong> section to launch your platform.
+  </div>
+</div>
+
+---
 
 ## Starting and Stopping
-> This section explains how to start, check, and stop SpaceDF services using Docker Compose.
 
-### Starting the services
-From the directory that contains your `./entrypoint.sh` file, run:
+This section explains how to manage the lifecycle of your SpaceDF instance using standard Docker commands.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Prerequisite:** Ensure your `.env` file is fully configured and saved in the root directory before running these commands.
+</CardInfo>
+
+### Starting the Services
+To launch SpaceDF, you will use the provided entrypoint script. This script handles the initialization and orchestrates the Docker containers for you.
+
+**Run the following commands in your terminal:**
 
 ```bash copy 
-# Start all services in the background
+# 1. Grant execution permission (First time only)
 chmod +x entrypoint.sh
+
+# 2. Start the system
 ./entrypoint.sh
 ```
 
-Docker will start all SpaceDF services in detached mode.
+**What happens next?**
+- The script will trigger Docker to download necessary images and start all services in **detached mode** (background).
+- You can close the terminal window without stopping the application.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    🔍 **Troubleshooting:** If you see a `Permission denied` error, ensure you have run the `chmod +x` command successfully.
+</CardInfo>
 
 ### Checking service status
-After starting, you can check the status of all services:
+After running the startup script, verify that all containers are functioning correctly.
+
+**1. Check Status Command** Run the following command to list all active services:
+
 ```bash copy 
 docker compose ps
 ```
+**2. Expected Output** Give the system about **30-60 seconds** to initialize. You should see a list of services where the status column shows `Up (healthy)`.
+
 Within a minute, most services should show a status similar to:
-```scss copy 
-Up (healthy)
+```text 
+NAME                IMAGE               STATUS                  PORTS
+spacedf-backend     spacedf/backend     Up (healthy)            0.0.0.0:8000->8000/tcp
+spacedf-dashboard   spacedf/dashboard   Up (healthy)            0.0.0.0:3000->3000/tcp
+emqx                emqx/emqx           Up (healthy)            1883/tcp, 8083/tcp...
+postgres            postgres:15         Up (healthy)            5432/tcp
 ```
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}>
+    ℹ️ **Note on "starting" status:** If you see `Up (starting)`, it means the service is still initializing (e.g., waiting for the database). Wait a moment and run the command again.
+</CardInfo>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    🔍 **Troubleshooting:** If any service shows `Exited (1) or Unhealthy`, please check the logs using: `docker compose logs -f &lt;service_name&gt;`
+</CardInfo>
 
 ### Troubleshooting startup issues
-If a service shows a status like `created` or does not become Up, check its logs to see what went wrong.
+If a service shows a status like `Exited`, `Restarting`, or remains `Created` for too long, it means the container failed to start correctly.
 
-For example, to view logs for a specific service:
+**1. View Service Logs** To identify the specific error, inspect the logs of the problematic service.
+
 ```bash copy 
-docker compose logs analytics
+# Syntax: docker compose logs -f <service_name>
+docker compose logs -f backend
 ```
-Review the logs for errors such as missing environment variables or connection issues.
+- `-f`: Follows the log output in real-time (press `Ctrl+C` to exit).
+- Replace `backend` with the name of the failing service (e.g., `dashboard`, `emqx`, `postgres`)
+
+**2. Common Error Patterns** When reviewing the logs, look for these common issues:
+
+| Error Type     | Log Message Example                                         | Solution                                                                                           |
+|----------------|--------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| Missing Config | `KeyError: 'DATABASE_URL' or Config validation failed`       | Check your `.env` file. A required variable is missing or empty.                               |
+| Connection     | `Connection refused or PGSQL connection failed`                | The service cannot reach a dependency (like the Database). Wait a moment, or check if it runs. |
+| Permission     | `EACCES: permission denied`                                    | File permission issue (often happens with scripts). Run `chmod +x` on entry scripts.           |
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⭐ **Pro Tip:** If you see `Connection refused` immediately after starting, wait 10-20 seconds. Sometimes services start faster than the Database, causing a temporary error before they automatically retry and succeed.
+</CardInfo>
 
 ### Stopping the services
-To stop all running SpaceDF services, run:
+
+To gracefully shut down the SpaceDF platform and release system resources, run the following command:
+
 ```bash copy 
 docker compose down
 ```
-This stops and removes the containers but keeps your data volumes intact.
 
-<Callout type="info">
-  **Notes**
-  - Starting and stopping services may take a short time
-  - Always check service status after starting
-  - Stop services before making configuration changes
-</Callout>
+**Data Persistence:** Rest assured, this command **only removes the containers**. Your database, user accounts, and device logs are stored in persistent volumes and **will be preserved**.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⭐ Operational Tips:"
+  >
+   - **When to stop:** It is recommended to stop the services before making major changes to the `.env` file or `docker-compose.yml`.
+   - **Restarting:** To apply new configurations or updates, simply run `./entrypoint.sh` (or `docker compose up -d`) again after stopping.
+</CardInfo>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⛔ **Caution:** Do not use the `-v` flag (e.g., `docker compose down -v`) unless you intend to **permanently delete** all your data and start from scratch.
+</CardInfo>
+
 
 ## Accessing SpaceDF Services
-> After all services are running, you can access SpaceDF through the web interfaces and backend APIs using the URLs below.
+
+Once all containers are running successfully, you can access the various components of the SpaceDF platform using the URLs below.
 
 <div className="overflow-x-auto mt-4">
   <table className="w-full border-collapse text-left text-sm">
@@ -1002,31 +1558,71 @@ This stops and removes the containers but keeps your data volumes intact.
   </table>
 </div>
 
-<Callout type="info">
-  **Notes**
-  - Make sure all services show **Up (healthy)** before accessing them
-  - Use HTTPS in production environments
-  - Ensure firewall and reverse proxy settings allow access to the required ports
-</Callout>
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⭐ Login Credentials:"
+  >
+   - **Apps (Dashboard/Admin):** Log in using the `OWNER_EMAIL` and `OWNER_PASSWORD` you defined in the `.env` file. 
+   - **EMQX Console:** Log in using `admin` / `public` (Default) or the credentials defined in `EMQX_PASSWORD`.
+</CardInfo>
+
+**Production URLs**<br/>
+If you have deployed to a live server, replace `localhost` with your configured domains:
+
+- Dashboard: `https://dashboard.yourdomain.com`
+- Admin Portal: `https://admin.yourdomain.com`
+- API: `https://api.yourdomain.com`
 
 ## Updating
-SpaceDF publishes stable updates for the Docker Compose setup on a regular basis.
-To update your self-hosted deployment, pull the latest changes from the repository and restart the services.
+SpaceDF frequently releases stable updates to introduce new features, security patches, and performance improvements. To keep your self-hosted instance running smoothly, we recommend keeping it up to date.
 
-> Updating services requires restarting containers and may cause temporary downtime.
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Downtime Notice:** The update process requires restarting Docker containers. Your services will be temporarily unavailable (usually for a few seconds to a minute) during the restart phase. Plan accordingly.
+</CardInfo>
 
-### General update process
+**Standard Update Procedure**
+
+Run the following commands in your terminal to upgrade your deployment.
+
 <NumberWithMdx number={1} className="mt-6">
-   Pull the latest changes from the SpaceDF repository.
-</NumberWithMdx>
-<NumberWithMdx number={2}>
-    Pull updated Docker images.
-</NumberWithMdx>
-<NumberWithMdx number={3}>
-   Restart the services.
+   **Fetch Latest Configuration**<br/>
+   Update your local repository to get the latest `docker-compose.yml` and script changes.
+   ```bash copy
+   git pull origin main
+   ```
 </NumberWithMdx>
 
-In most cases, this is enough to apply the latest updates.
+<NumberWithMdx number={2}> 
+  **Download Updated Images**<br/>
+  Pull the latest versions of the SpaceDF Docker images. 
+  ```bash copy 
+  docker compose pull 
+  ```
+</NumberWithMdx>
+
+<NumberWithMdx number={3}> 
+  **Apply & Restart**<br/>
+  Recreate the containers with the new images.
+  ```bash copy
+  docker compose up -d
+  ```
+  > (Note: Docker will only restart containers that have updates).
+</NumberWithMdx>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⭐ **Cleanup (Optional):** After a major update, you can remove old, unused images to free up disk space: `docker image prune -f`
+</CardInfo>
 
 ### Updating individual services (advanced)
 You can run a specific version of a service by changing its Docker image tag in the `docker-compose.yml` file.
@@ -1036,87 +1632,129 @@ You can run a specific version of a service by changing its Docker image tag in 
   This approach is recommended only if you know exactly what you are doing.
 </Callout>
 
-#### Update or rollback a single service
+### Advanced: Pinning & Rolling Back Versions
 
-For example, if you want to update or roll back the Dashboard service:
+In specific scenarios—such as rolling back a buggy update or testing a beta feature—you may need to force a specific version of a service instead of using `latest`.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⛔ **Compatibility Risk:** SpaceDF services are designed to work together as a suite. Running mixed versions (e.g., a simplified Dashboard with an advanced Backend) may lead to **API errors**, **database conflicts**, or **data corruption**.
+
+    **Only proceed if you understand the dependencies**.
+</CardInfo>
+
+**Procedure: Update a Single Service**
+
+Follow these steps to update (or downgrade) a specific component, for example, the **Dashboard**.
+
 <NumberWithMdx number={1} className="mt-6">
-   Check available images and tags on the [SpaceDF container registry](https://github.com/orgs/Space-DF/packages).
+  **Find the Version Tag**<br/>
+  Visit the [SpaceDF Container Registry](https://github.com/orgs/Space-DF/packages) to find the exact tag you need (e.g., `v2026.01.21`).
 </NumberWithMdx>
 <NumberWithMdx number={2}>
-    Choose a version tag (for example: `v2026.01.21`).
+    **Edit Configuration**<br/>
+    Open `docker-compose.yml` and locate the service (e.g., `dashboard`). Replace the image tag with your chosen version.
+    ```yml copy
+    services:
+      dashboard:
+        # Change the tag after the colon
+        image: ghcr.io/space-df/spacedf-web-app:v2026.01.21
+    ```
 </NumberWithMdx>
 <NumberWithMdx number={3}>
-   Update the image field in `docker-compose.yml`
-   ```yml copy
-    image: ghcr.io/space-df/spacedf-web-app:v2026.01.21
-    ```
-</NumberWithMdx>
-<NumberWithMdx number={4}>
-   Apply the changes:
+   **Apply Changes (Smart Restart)**<br/>
+   Run the following commands to pull and restart **only** the target service, leaving the rest of the system running.
    ```bash copy
-    docker compose pull
-    docker compose down
-    docker compose up -d
-    ```
+   # 1. Pull the specific image
+    docker compose pull dashboard
+
+  # 2. Recreate only this container
+    docker compose up -d dashboard
+   ```
 </NumberWithMdx>
 
-The service will restart using the specified version.
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}
+>
+  ❓ **Why not use `docker compose down`** Using `down` stops the entire platform. By targeting `up -d dashboard`, you only restart the Dashboard, ensuring that the Backend and MQTT Broker continue to process device data without interruption.
+</CardInfo>
 
-### Notes on downtime
-- Services must be restarted to apply updates
-- Active users may experience brief downtime
-- Consider performing updates during low-traffic periods
+### Maintenance Strategy & Resources
 
-### Staying up to date
-- To track changes, fixes, and new features, refer to:
-    - SpaceDF release notes
-- The self-hosting changelog in the repository
+Managing updates effectively is key to maintaining a stable IoT platform.
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}
+  title="ℹ️ Downtime Considerations:"
+  >
+   - **Restart Required:** Applying updates always requires restarting the Docker containers.
+   - **Service Interruption:** Active users will experience a brief disconnection (typically 10-60 seconds) while the containers re-initialize.
+   - **Best Time to Update:** We strongly recommend scheduling maintenance during **low-traffic periods** (e.g., late night or weekends) to minimize the impact on your operations.
+</CardInfo>
+
+**Staying Up to Date:** To track the latest features, security patches, and bug fixes, please consult our official channels:
+- [SpaceDF Release Notes](https://docs.spacedf.com/blog): High-level overview of new features and major changes.
+- [GitHub Changelog](https://github.com/Space-DF): Detailed technical log of all changes in the self-hosted repository.
 
 ## Uninstalling
 
-<Callout type="warning">
-  **Warning**<br/>
-  The steps below will permanently delete all SpaceDF data, including databases and storage volumes.<br/>
-  Make sure you have backups before continuing.
-</Callout>
+This section guides you through completely removing SpaceDF from your server.
 
-### Stop and remove services
-From the directory that contains your `docker-compose.yml` file, run:
-```bash copy 
-# Stop all services and remove containers and volumes
-docker compose down -v
-```
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⛔ CRITICAL WARNING: The steps below will permanently delete all data, including:"
+  >
+   - User accounts and passwords.
+   - All device data and history.
+   - System configurations.
+   - Uploaded files.
+</CardInfo>
 
-This command stops all SpaceDF services and removes all associated Docker volumes.
-
-### (Optional) Remove remaining data manually
-In some cases, you may want to ensure all data directories are fully removed.
-
-**Remove database data**
-```bash copy 
+<Steps>
+### Wipe Containers & Volumes
+ Run the following command in your project directory to stop services and destroy their internal data volumes.
+ ```bash copy
+  # The '-v' flag ensures volumes are deleted
+  docker compose down -v
+ ```
+### Clean Host Directories (Optional)
+Docker might leave some mounted files on your host machine (usually inside the `volumes/ folder`). To ensure a 100% clean state, remove them manually.
+ 
+```bash copy
+# Remove Database files
 rm -rf volumes/db/data
-```
 
-**Remove storage data**
-```bash copy 
+# Remove File Storage (Uploads/Images)
 rm -rf volumes/storage
 ```
+</Steps>
 
-**What gets removed**
-- All SpaceDF services
-- All databases and stored data
-- All uploaded files and assets
+### Verification
 
-After these steps, SpaceDF is completely removed from your system.
+At this point, SpaceDF is completely removed.
+- Containers: Stopped and deleted.
+- Networks: Removed.
+- Data: Wiped.
 
-<Callout type="info">
-  **Notes**
-  - These actions **cannot be undone**
-  - Use this only if you want a clean uninstall
-  - For reinstallation, follow the setup guide from the beginning
-</Callout>
-
-## Demo
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+  }}>
+    ℹ️ **Reinstallation:** If you want to start fresh, simply run the setup guide from the beginning. The system will treat it as a brand new installation.
+</CardInfo>
 
 ## Need Help?
 
