@@ -2,6 +2,7 @@ import { Steps } from "nextra/components"
 import { Table } from 'nextra/components'
 import { Callout } from 'nextra/components'
 import { CardInfo } from "@/app/_components/CardInfo.jsx"
+import { Tabs } from 'nextra/components'
 
 import {
   NumberOfContent,
@@ -118,10 +119,35 @@ cp .env.example .env
 docker compose pull
 ```
 
-## Configuring and securing SpaceDF
+## Configuration & Security
 
-The `.env.example` file includes sample passwords and keys for reference only.
-You must replace these values before starting SpaceDF in a self-hosted environment.
+Before starting SpaceDF, you need to set up the environment variables.
+
+<Tabs items={['Manual', 'Terminal']}>
+    <Tabs.Tab>
+      <NumberWithMdx number={1} className="mt-6 ml-6">
+          Copy the `.env.example` file in the root directory.
+      </NumberWithMdx>
+      <NumberWithMdx number={2} className="ml-6">
+          Rename the copy to `.env`
+      </NumberWithMdx>
+      <NumberWithMdx number={3} className="ml-6">
+          Update the values in `.env` following the guide below.
+      </NumberWithMdx>
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+    Run the following command in your project root directory:
+
+    ```bash copy
+    # Switch to your project directory
+    cd spacedf-core
+    
+    # Copy the env vars
+    cp .env.example .env
+    ```
+    </Tabs.Tab>
+</Tabs>
 
 <Callout type="warning">
     Review the configuration options below and make sure all secret values are set before starting SpaceDF.
@@ -162,8 +188,8 @@ RABBITMQ_DEFAULT_USER=your_username
 RABBITMQ_DEFAULT_PASS=your_password
 ```
 
-- `RABBITMQ_DEFAULT_USER` - The username SpaceDF uses to connect to RabbitMQ.
-- `RABBITMQ_DEFAULT_PASS` - The password for the RabbitMQ user above.
+`RABBITMQ_DEFAULT_USER` - The username SpaceDF uses to connect to RabbitMQ.<br/>
+`RABBITMQ_DEFAULT_PASS` - The password for the RabbitMQ user above.
 
 <Callout type="warning">
   Do not use simple or common passwords. This account controls access to your message queue. <br/>
@@ -184,15 +210,41 @@ openssl genrsa -out private_key.pem 2048
 openssl rsa -in private_key.pem -pubout -out public_key.pem
 ```
 <NumberWithMdx number={2} href="" className="mt-6">
-    Copy the contents of each file into your `.env` file:
+   Copy the key contents from your local machine<br/>
+   Choose the command based on your operating system:
+  <Tabs items={['macOS', 'Windows', 'Linux']}>
+    <Tabs.Tab>
+    ```bash copy
+    pbcopy < private_key.pem
+    pbcopy < public_key.pem
+    ```
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+    ```powershell copy
+    Get-Content private_key.pem | Set-Clipboard
+    Get-Content public_key.pem | Set-Clipboard
+    ```
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+    ```bash copy
+    cat private_key.pem | xclip -selection clipboard
+    cat public_key.pem | xclip -selection clipboard
+    ```
+    </Tabs.Tab>
+  </Tabs>
+</NumberWithMdx>
+<NumberWithMdx number={3} href="" className="mt-6">
+    Paste the keys into your `.env` file:
 </NumberWithMdx>
 ```bash copy
 JWT_PRIVATE_KEY=-----BEGIN RSA PRIVATE KEY-----...
 JWT_PUBLIC_KEY=-----BEGIN PUBLIC KEY-----...
 ```
-- `JWT_PRIVATE_KEY` - Signs authentication tokens (***Keep this key secret.***).
 
-- `JWT_PUBLIC_KEY` - Verifies authentication tokens. This key can be shared with other services if needed.
+`JWT_PRIVATE_KEY` - Signs authentication tokens (***Keep this key secret.***). <br/>
+`JWT_PUBLIC_KEY` - Verifies authentication tokens. This key can be shared with other services if needed.
 > Make sure the keys are pasted correctly and not broken across lines.
 ---
 ##### Google OAuth
@@ -216,6 +268,8 @@ To enable Google login, you need to create OAuth credentials in the ***Google Cl
 <NumberWithMdx number={5}>
     Create an **OAuth 2.0 Client ID:**<br/>
     Application type: **Web application**<br/>
+    <img src="/screenshots/google-oauth.png" className="w-full mt-2"/>
+    *If you see a warning about **OAuth consent screen** or **branding** not being configured, you must complete the **OAuth consent screen setup** first before creating the Client ID.*
 </NumberWithMdx>
 <NumberWithMdx number={6}>
     Authorized redirect URI: (`GOOGLE_CALLBACK_URL`)<br/>
@@ -234,13 +288,14 @@ To enable Google login, you need to create OAuth credentials in the ***Google Cl
 
 ```bash copy
 # Replace with your own values.
-GOOGLE_CALLBACK_URL=https://spacedf.example.com/auth/google/callback
-GOOGLE_CLIENT_ID=1234567890-abcxyz.apps.googleusercontent.com #(Step 5)
+GOOGLE_CALLBACK_URL=your_google_callback_uri
+GOOGLE_CLIENT_ID=your_google_client_id #(Step 5)
 GOOGLE_CLIENT_SECRET=your_google_client_secret #(Step 5)
 ```
-- `GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.
-- `GOOGLE_CLIENT_ID` - Identifies your application to Google.
-- `GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
+`GOOGLE_CALLBACK_URL` - The URL Google redirects users back to after successful login.<br/>
+`GOOGLE_CLIENT_ID` - Identifies your application to Google.<br/>
+`GOOGLE_CLIENT_SECRET` - A private key used by SpaceDF to securely communicate with Google (***Keep this value secret.***)
+
 <Callout type="info">
 Use HTTPS for the callback URL in production.
 </Callout>
@@ -256,44 +311,55 @@ Apple sign-in support is planned but not yet supported in SpaceDF.
 
 ```bash copy
 # Apple OAuth (reserved for future use)
-APPLE_CLIENT_ID=__APPLE_CLIENT_ID__
-APPLE_CLIENT_SECRET=__APPLE_CLIENT_SECRET__
-APPLE_CLIENT_KEY=__APPLE_CLIENT_KEY__
-APPLE_CERTIFICATE_KEY=__APPLE_CERTIFICATE_KEY__
+APPLE_CLIENT_ID=your_apple_client_id
+APPLE_CLIENT_SECRET=your_apple_client_secrect
+APPLE_CLIENT_KEY=your_apple_client_key
+APPLE_CERTIFICATE_KEY=your_apple_certificate_key
 ```
 ---
 ##### Auth Service
 > The Auth Service is responsible for user authentication, authorization, and tenant management in SpaceDF.
 
-Set the following values in your `.env` file.
-```bash copy
-# Replace with your own values.
-AUTH_POSTGRES_PASSWORD=__AUTH_POSTGRES_PASSWORD__
-AUTH_SECRET_KEY=__AUTH_SECRET_KEY__
-DEFAULT_TENANT_HOST=__DEFAULT_TENANT_HOST__
-ROOT_API_KEY=__ROOT_API_KEY__
-```
-- `AUTH_POSTGRES_PASSWORD` - The password used by the Auth Service to connect to its ***PostgreSQL database***. (***Use a strong and unique password.***)
-- `AUTH_SECRET_KEY` - A secret key used to sign and validate authentication-related data. (***Keep this value private.***)
-- `DEFAULT_TENANT_HOST` - The default domain or host assigned to the initial tenant. This is usually your main application domain.
-- `ROOT_API_KEY` - A master API key with full access to the Auth Service. Used for administrative or internal operations only.
+**`AUTH_POSTGRES_PASSWORD`**
 
-**Secret keys**: Generate secure random values for secret keys:
+The password used by the Auth Service to connect to its *PostgreSQL database*. (*Use a strong and unique password.*)
+
+```bash copy
+AUTH_POSTGRES_PASSWORD=your_auth_postgres_password
+```
+
+**`AUTH_SECRET_KEY`**
+
+A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
+
+Generate secure random values for secret keys:
 ```bash copy
 openssl rand -hex 32
 ```
-Use the generated value for:
+
+Paste the generated Secret Key into your `.env` file:
 ```bash copy
-AUTH_SECRET_KEY=generated_secret_value
-ROOT_API_KEY=generated_root_api_key
+AUTH_SECRET_KEY=your_auth_secret_key
 ```
 
-**Default tenant host**
+**`DEFAULT_TENANT_HOST`**
 
-Set this to the domain or host where SpaceDF will be accessed:
-```bash copy
-DEFAULT_TENANT_HOST=app.spacedf.example
-```
+The default domain or host assigned to the initial tenant. This is usually your main application domain.
+
+<Tabs items={['Development', 'Production']}>
+    <Tabs.Tab>
+    ```bash copy
+    DEFAULT_TENANT_HOST=localhost
+    ```
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+    ```bash copy
+    DEFAULT_TENANT_HOST=your_api_domain
+    ```
+    </Tabs.Tab>
+</Tabs>
+
 ---
 ##### S3 Service
 > The Amazon S3 service is used by SpaceDF to store files such as uploads, assets, and generated data.
@@ -354,16 +420,16 @@ Use IAM policies with **minimum required permissions**.
 
 **Set values in `.env`**
 ```bash copy
-    # Replace with your own values.
-    AWS_ACCESS_KEY_ID=AKIAXXXXXXXX
-    AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXX
+# Replace with your own values.
+AWS_ACCESS_KEY_ID=your_access_key_id #IAM credentials (Step 4)
+AWS_SECRET_ACCESS_KEY=your_secret_access_key #IAM credentials (Step 4)
     
-    AWS_STORAGE_BUCKET_NAME=spacedf-storage
-    AWS_REGION=ap-southeast-1
+AWS_STORAGE_BUCKET_NAME=your_aws_storage_bucket_name #S3 bucket (Step 3)
+AWS_REGION=your_aws_region #S3 bucket (Step 3)
 ```
 
 - `AWS_ACCESS_KEY_ID` - The access key used by SpaceDF to authenticate with S3.
-- `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (***Keep this value private***)
+- `AWS_SECRET_ACCESS_KEY` - The secret key paired with the access key above. (*Keep this value private*)
 - `AWS_STORAGE_BUCKET_NAME` - The name of the S3 bucket where SpaceDF stores files.
 - `AWS_REGION` - The AWS region where the S3 bucket is located. (e.g., `us-east-1`, `ap-southeast-1`).
 ---
@@ -404,55 +470,56 @@ REDIS_HOST="redis://redis:6379/1"
 ##### Dashboard Service
 > The Dashboard Service provides the web interface for managing SpaceDF, including administration and monitoring features.
 
-**Database password**
+**`DASHBOARD_POSTGRES_PASSWORD`**
 
-Choose a strong password for the Dashboard Service database:
+The password used by the Dashboard Service to connect to its PostgreSQL database. (*Use a strong and unique password*.)
+
 ```bash copy
-# Replace with your own values.
-DASHBOARD_POSTGRES_PASSWORD=change_this_to_a_secure_password
+DASHBOARD_POSTGRES_PASSWORD=your_postgres_password
 ```
-`DASHBOARD_POSTGRES_PASSWORD` - The password used by the Dashboard Service to connect to its PostgreSQL database. (***Use a strong and unique password***.)
 
-**Secret key**: Generate a secure random value:
+**`DASHBOARD_SECRET_KEY`**
+
+A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
+
+Generate secure random values for secret keys:
 ```bash
 openssl rand -hex 32
 ```
-Set it in your `.env` file:
 
+Paste the generated Secret Key into your `.env` file:
 ```bash copy
-# Replace with your own values.
-DASHBOARD_SECRET_KEY=generated_secret_value
+DASHBOARD_SECRET_KEY=your_secret_key
 ```
-`DASHBOARD_SECRET_KEY` - A secret key used to sign and protect dashboard-related sessions and data. (***Keep this value private.***)
 
 ---
 ##### Device Service
 > The Device Service manages devices, device data, and communication with telemetry-related services in SpaceDF.
 
-**Database password**
+**`DEVICE_POSTGRES_PASSWORD`**
 
-Choose a strong password for the Device Service database:
+The password used by the Device Service to connect to its PostgreSQL database. (*Use a strong and unique password*.)
+
 ```bash copy
-# Replace with your own values.
-DEVICE_POSTGRES_PASSWORD=change_this_to_a_secure_password
+DEVICE_POSTGRES_PASSWORD=your_postgres_password
 ```
 
-`DEVICE_POSTGRES_PASSWORD` - The password used by the Device Service to connect to its PostgreSQL database. (***Use a strong and unique password***.)
+**`DEVICE_SECRET_KEY`**
 
-**Secret key**: Generate a secure random value:
+A secret key used to sign and validate authentication-related data. (*Keep this value private.*)
+
+Generate secure random values for secret keys:
 ```bash
 openssl rand -hex 32
 ```
 
-Set it in your `.env` file:
-
+Paste the generated Secret Key into your `.env` file:
 ```bash copy
-# Replace with your own values.
-DEVICE_SECRET_KEY=generated_secret_value
+DEVICE_SECRET_KEY=your_secret_key
 ```
-`DEVICE_SECRET_KEY` - A secret key used to sign and protect device-related data and requests. (***Keep this value private.***)
+---
 
-**Telemetry service URL**
+##### Telemetry service
 
 Defines the internal Docker service address that SpaceDF uses to communicate with the Telemetry Service.
 
@@ -460,7 +527,7 @@ When using the **default Docker setup**, the Telemetry Service runs as a Docker 
 
 ```bash copy
 # Default (recommended)
-TELEMETRY_SERVICE_URL=http://telemetry-service:8080
+TELEMETRY_SERVICE_URL=http://telemetry:8080
 ```
 <CardInfo classNames={{
   container: "!mt-6 !p-3 shadow-none",
@@ -482,12 +549,12 @@ Choose a username and a strong password:
 ```bash copy
 # Replace with your own values.
 EMQX_HOST=http://emqx:18083/api/v5
-EMQX_USERNAME=spacedf
-EMQX_PASSWORD=change_this_to_a_secure_password
+EMQX_USERNAME=your_emqx_username
+EMQX_PASSWORD=your_emqx_password
 ```
-- `EMQX_HOST` - The base URL of the EMQX Management API used by SpaceDF. This is typically the EMQX service running inside Docker.
-- `EMQX_USERNAME` - The username SpaceDF uses to authenticate with the EMQX broker.
-- `EMQX_PASSWORD` - The password for the EMQX user above. (***Use a strong and unique password***.)
+`EMQX_HOST` - The base URL of the EMQX Management API used by SpaceDF. This is typically the EMQX service running inside Docker.<br/>
+`EMQX_USERNAME` - The username SpaceDF uses to authenticate with the EMQX broker.<br/>
+`EMQX_PASSWORD` - The password for the EMQX user above. (*Use a strong and unique password*.)
 
 ---
 ##### Broker Bridge Service
@@ -496,18 +563,17 @@ EMQX_PASSWORD=change_this_to_a_secure_password
 **Broker credentials**
 ```bash copy
 # Replace with your own values.
-MQTT_BROKER_BRIDGE_USERNAME=bridge-user
-MQTT_BROKER_BRIDGE_PASSWORD=change_this_to_a_secure_password
+MQTT_BROKER_BRIDGE_USERNAME=your_username
+MQTT_BROKER_BRIDGE_PASSWORD=your_password
 ```
 
-- `MQTT_BROKER_BRIDGE_USERNAME` - The username used to authenticate with the external MQTT broker.
-- `MQTT_BROKER_BRIDGE_PASSWORD` - The password for the broker bridge user. (***Keep this value private***.)
+`MQTT_BROKER_BRIDGE_USERNAME` - The username used to authenticate with the external MQTT broker. <br/>
+`MQTT_BROKER_BRIDGE_PASSWORD` - The password for the broker bridge user. (*Keep this value private*.)
 
 **MQTT topics**
 
 Specify one or more topics, separated by commas.
 ```bash copy
-# Replace with your own values.
 MQTT_TOPICS=device/+/telemetry,device/+/status
 ```
 `MQTT_TOPICS` - A list of MQTT topics that SpaceDF subscribes to or bridges.

@@ -10,7 +10,7 @@ export const NumberOfContent = ({
 }) => {
   return (
     <div className={`flex gap-3 items-start mb-2 ${className}`}>
-      <div className="size-5 text-sm border border-gray-400 rounded-sm text-gray-500 flex items-center justify-center">
+      <div className="size-5 min-w-5 text-sm border border-gray-400 rounded-sm text-gray-500 flex items-center justify-center">
         {number}
       </div>
 
@@ -37,7 +37,7 @@ export const NumberOfContent = ({
 export const NumberWithMdx = ({ number, children, className }) => {
   return (
     <div className={`flex gap-3 items-start mb-2 ${className}`}>
-      <div className="size-5 text-sm border border-gray-400 rounded-sm text-gray-500 flex items-center justify-center">
+      <div className="size-5 min-w-5 text-sm border border-gray-400 rounded-sm text-gray-500 flex items-center justify-center">
         {number}
       </div>
 
