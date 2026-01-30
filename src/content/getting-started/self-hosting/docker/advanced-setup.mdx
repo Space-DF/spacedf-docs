@@ -113,6 +113,9 @@ git clone https://github.com/Space-DF/spacedf-core.git
 # Switch to your project directory
 cd spacedf-core
 
+# Initialize submodules (Important!)
+git submodule update --init --recursive
+
 # Copy the env vars
 cp .env.example .env
 
@@ -542,11 +545,21 @@ Now you need to create a "Service User" that has permission to read/write to tha
 </NumberWithMdx>
 <NumberWithMdx number={3}>
     **Set Permissions**
-    - Select **Attach policies directly**.
-    - In the search bar, type `AmazonS3FullAccess`.
-    - Check the box next to `AmazonS3FullAccess`
+    - Select **Attach policies directly**. You need to search for and check **two** policies:<br/>
+      - **Storage Access:** Search for `S3` and select **`AmazonS3FullAccess`**
+         <img src="/screenshots/iam-s3-permission.png" className="w-full rounded-lg border mt-2 mb-4"/>
+      - **Email Access:** Clear the search and type `SES`. Select **`AmazonSESFullAccess`**.
+         <img src="/screenshots/iam-ses-permission.png" className="w-full rounded-lg border mt-2 mb-4"/>
+
+          <CardInfo classNames={{
+          container: "!mt-2 !p-3 shadow-none",
+          title: "!text-base",
+          description: "!text-sm"
+          }}>
+            ❓ **Why SES:** Although Email Configuration is covered in a later section, we enable `AmazonSESFullAccess` now so you don't have to come back and edit this user later. One user, two capabilities.
+          </CardInfo>
+
     - Click **Next**, then click **Create user**
-    > Note: For advanced security, you can create a custom policy restricted to a single bucket later
 </NumberWithMdx>
 <NumberWithMdx number={4}>
     **Generate Keys**
@@ -675,7 +688,7 @@ Breakdown of the connection string components:
   </table>
 </div>
 ---
-#### Service Credentials
+##### Service Credentials
 <Badge variant="destructive">Required</Badge>
 
 The following services (Dashboard & Device) operate independently. Each requires its own Database Password and unique Secret Key to function securely.
@@ -713,9 +726,9 @@ DEVICE_SECRET_KEY=your_device_secret_key
 ##### Telemetry service
 <Badge variant="destructive">Required</Badge>
 
-This variable points to the internal Docker container that handles device data.
+This section configures the high-performance components responsible for handling real-time device data.
 
-**Configuration** In 99% of cases (Local & Production), you **should keep the default value**.
+**1. Service URL** This variable points to the internal Docker container that processes data.
 
 ```bash copy
 # Default (recommended)
@@ -726,11 +739,26 @@ TELEMETRY_SERVICE_URL=http://telemetry:8080
   container: "!mt-6 !p-3 shadow-none",
   title: "!text-base",
   description: "!text-sm"
-}}
-  title="❓ Why"
->
-  - **No Action Needed:** This service runs automatically inside Docker.
-  - **Internal Access:** SpaceDF uses this URL to talk to the service internally. It does not need a public domain or HTTPS.
+}}>
+  ℹ️ **Configuration Note:** In 99% of cases (Local & Production), you **should keep the default URL**.<br/>
+  SpaceDF uses this to talk to the service internally via the Docker network.
+</CardInfo>
+
+**2. TimescaleDB Password** Define the password for the time-series database where all sensor data is stored.
+
+```bash copy
+# Default: postgres
+# ⚠️ CHANGE THIS for Production!
+TIMESCALEDB_PASSWORD=postgres
+```
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Security Risk:** The default password postgres is publicly known. <br/>
+    If you are deploying to a public server, you **MUST** change this to a strong, random string to protect your device data.
 </CardInfo>
 
 **When to change this?**
@@ -772,29 +800,27 @@ The Bridge Service acts as a listener. It connects to the MQTT Broker to receive
 
 Enter the credentials required to connect to the MQTT Broker (usually the same credentials used for EMQX clients).
 ```bash copy
-MQTT_BROKER_BRIDGE_USERNAME=your_bridge_username
+MQTT_BROKER_BRIDGE_USERNAME=your_bridge_username #Default BrokerBridgeService
 MQTT_BROKER_BRIDGE_PASSWORD=your_bridge_password
 ```
 
-**2. Topic Subscription**
+**2. Topic Subscription** Define which MQTT topics SpaceDF should listen to.
 
-Define which MQTT topics SpaceDF should listen to.
+**This value is pre-configured in your `.env.example` file**. You should simply use the default value provided.
 
 ```bash copy
-MQTT_TOPICS=device/+/telemetry,device/+/status
+# ⚠️ DO NOT EDIT - Use the default value from .env.example
+MQTT_TOPICS="tenant/+/transformed/device/location"
 ```
-
-**Syntax Guide:**
-- Comma (`,`): Use to separate multiple topics.
-- Plus (`+`): Wildcard for a single level (e.g., matching any device ID).
-- Hash (`#`): Wildcard for all remaining levels.
-
 <CardInfo classNames={{
-  container: "!mt-6 !p-3 shadow-none",
-  title: "!text-base",
-  description: "!text-sm"
-}}>
-  📝 **Example:** `device/+/telemetry` will match `device/sensor-01/telemetry` and `device/sensor-02/telemetry`.
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⛔ CRITICAL CAUTION: DO NOT CHANGE"
+  >
+    Please do not modify the `MQTT_TOPICS` structure.<br/>
+    ***Reason:*** The SpaceDF Backend uses specific parsers that rely on this exact topic format to identify the **Device ID** (represented by `+`) and the **Data Type** (Telemetry/Attributes). Changing this pattern will break the data ingestion pipeline, and your devices will fail to update.
 </CardInfo>
 
 ---
@@ -934,12 +960,38 @@ This variable defines the public address where your Backend API is accessible.
     title: "!text-base",
     description: "!text-sm"
   }}>
-    ⚠️ **Requirement:** In production, you should use HTTPS for security. .
+    ⚠️ **Requirement:** In production, you should use HTTPS for security.
   </CardInfo>
   </Tabs.Tab> 
 </Tabs>
 
-**2. Access Control (`CORS`)**
+**2. Database Password** Define the password for the core PostgreSQL database used by the Bootstrap service.
+
+<Tabs items={['Development (Local)', 'Production (Live)']}> 
+  <Tabs.Tab> 
+  Default Password: For quick local setup, you can use the default provided password.
+  ```bash copy
+  BOOTSTRAP_POSTGRES_PASSWORD="Abcd@1234"
+  ```
+  </Tabs.Tab>
+
+  <Tabs.Tab> 
+  Production Security: You MUST change this to a strong, random password for live deployments.
+  ```bash copy
+  BOOTSTRAP_POSTGRES_PASSWORD="YourStrongUniquePassword"
+  ```
+
+  <CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}>
+    ⚠️ **Security Notice:** Using the default password in production makes your database vulnerable to unauthorized access.
+  </CardInfo>
+  </Tabs.Tab> 
+</Tabs>
+
+**3. Access Control (`CORS`)**
 
 This setting controls which websites (frontends) are allowed to talk to your backend. 
 
@@ -983,7 +1035,7 @@ This prevents unauthorized websites from using your API.
   - If you forget, the app will show a `Network Error` or `CORS-ERROR`.
 </CardInfo>
 
-**3. Security Key**
+**4. Security Key**
 
 This key secures the internal operations of the backend.
 
@@ -1330,14 +1382,14 @@ The Dashboard connects directly to the MQTT Broker via **WebSockets** to display
     ```bash copy
     # 1. Connection Details
     DASHBOARD_MQTT_PROTOCOL=ws
-    DASHBOARD_MQTT_PORT=8083
-    DASHBOARD_MQTT_BROKER=localhost
+    DASHBOARD_MQTT_PORT=8883
+    DASHBOARD_MQTT_BROKER=emqx.localhost:8000
 
     # 2. Public Auth (Read-Only User recommended)
     DASHBOARD_MQTT_USERNAME=dashboard_user
     DASHBOARD_MQTT_PASSWORD=your_password
     ```
-    > (Note: Ensure Port `8083` is exposed in your EMQX Docker container).
+    > (Note: Ensure Port `8883` is exposed in your EMQX Docker container).
   </Tabs.Tab>
 
   <Tabs.Tab>
@@ -1358,7 +1410,7 @@ The Dashboard connects directly to the MQTT Broker via **WebSockets** to display
 **Variable Details:**
   - `DASHBOARD_MQTT_PROTOCOL`: `ws` for local, `wss` for production (SSL).
   - `DASHBOARD_MQTT_BROKER`: The domain pointing to your MQTT Broker.
-  - `DASHBOARD_MQTT_PORT`: The WebSocket port (Default EMQX: `8083` for ws, `8084` for wss).
+  - `DASHBOARD_MQTT_PORT`: The WebSocket port (Default EMQX: `8883` for ws, `8883` for wss).
 
 <CardInfo classNames={{
       container: "!mt-6 !p-3 shadow-none",

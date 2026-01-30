@@ -45,6 +45,9 @@ git clone https://github.com/Space-DF/spacedf-core.git
 # Switch to your project directory
 cd spacedf-core
 
+# Initialize submodules (Important!)
+git submodule update --init --recursive
+
 # Copy the env vars
 cp .env.example .env
 ```

@@ -1,0 +1,79 @@
+---
+title: "AWS S3/SES: Access Denied & Permission Errors"
+source: ["AWS", "Storage", "Email"]
+errorCode: ["403", "AccessDenied", "MessageRejected", "User is not authorized"]
+tags: ["Self-hosting", "iam", "permissions", "s3", "ses"]
+---
+
+import { Steps, Callout } from 'nextra/components'
+import { NumberWithMdx } from "@/app/_components/NumberOfContent.jsx"
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+
+# AWS S3/SES: Access Denied
+
+**The Problem:** Your SpaceDF instance connects to AWS successfully (keys are correct), but actions like **Uploading Files** or **Sending Emails** fail because the IAM User lacks the necessary permission policies.
+
+## 1. Symptoms & Diagnosis
+
+You will see specific error messages in your backend logs depending on which service is blocked.
+
+Run `docker compose logs -f backend` to check:
+
+| Service | Feature Impact | Log Error Message Example |
+| :--- | :--- | :--- |
+| **S3 Storage** | Cannot upload avatars, device images. | `Access Denied`, `Status Code: 403`<br/>`User is not authorized to perform: s3:PutObject` |
+| **SES Email** | Registration emails or alerts are not sent. | `MessageRejected`<br/>`User ... is not authorized to perform: ses:SendEmail` |
+
+## 2. The Fix: Add Missing Policies
+You do **not** need to create a new user or generate new keys. You simply need to attach the missing policies to your existing IAM User.
+
+<Steps>
+### Open AWS IAM Console
+<NumberWithMdx number={1} className="mt-3">
+    Log in to your AWS Console.
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Navigate to **[IAM > Users](https://console.aws.amazon.com/iam/home#/users)**.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+    Click on the user name you created for SpaceDF (e.g., `spacedf-user`).
+</NumberWithMdx>
+
+### Attach Permissions
+<NumberWithMdx number={1} className="mt-3">
+    Go to the **Permissions** tab.
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+    Click the **Add permissions** button (Dropdown) > Select **Add permissions**.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+    Select the box: **Attach policies directly**.
+</NumberWithMdx>
+
+### Select & Save
+Search for and check the specific policy matching your error:
+
+* **For S3 Errors:** Search `S3` > Check **`AmazonS3FullAccess`**.
+* **For SES Errors:** Search `SES` > Check **`AmazonSESFullAccess`**.
+
+Click **Next** and then **Add permissions** to confirm.
+</Steps>
+
+## 3. Verification
+Once the policies are attached, the effect is immediate (mostly). You can try the action again without restarting SpaceDF.
+
+<CardInfo title="Still having issues?" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-lg",
+  description: "!text-base"
+}}>
+  If you added the permissions but still get errors, check:
+  - **Wrong Keys:** Did you accidentally use the keys of a *different* IAM user in your `.env`?
+  - **Bucket Name:** For S3, ensure `AWS_S3_BUCKET` in `.env` matches your actual bucket name exactly.
+  - **Sandox Mode:** For SES, if you get `Email address is not verified`, your AWS account might still be in **SES Sandbox mode**. You must verify the "From" address or request a production limit increase.
+</CardInfo>
+
+<Callout type="info">
+  **Original Setup Guide**
+  For the complete setup instructions including screenshots, refer back to the [AWS Configuration Section](/docs/getting-started/self-hosting/docker/advanced-setup#s3-service).
+</Callout>
