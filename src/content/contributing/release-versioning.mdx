@@ -1,0 +1,148 @@
+---
+title: Release & Versioning
+---
+
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+import {
+    NumberOfContent,
+    NumberWithMdx
+} from "@/app/_components/NumberOfContent.jsx"
+
+# SpaceDF Release & Versioning Strategy
+
+This document defines how we manage versions across the **SpaceDF ecosystem**, ensuring that both **core developers** and **self-hosting users** have a reliable, predictable experience.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-base"
+  }}
+  >
+  <>
+    **🔁 Predictability:** Developers should know **exactly** which code is running in any environment.<br/>
+    **🛡️ Safety:** The `stable` alias is a **certified version** that has passed **all integration tests**.<br/>
+    **🧩 Independence:**<br/>
+    <span className="ml-6">- Submodules (services) are **versioned independently**</span><br/>
+    <span className="ml-6">- `spacedf-core` acts as the **orchestrator / umbrella**</span>
+  </>
+</CardInfo>
+
+## Versioning Formats
+
+### 1. Submodules (e.g., `auth-svc`, `spacedf-dashboard`)
+We follow [Semantic Versioning (SemVer)](https://semver.org/) for individual services.
+- Format: `X.Y.Z` (e.g., `1.4.1`)
+- Hotfixes: `X.Y.Z-rcX` (e.g., `1.4.1-rc1`).
+
+### 2. Spacedf-Core (The Umbrella)
+We follow [Calendar Versioning (CalVer)](https://calver.org/) to represent a specific snapshot of the entire system.
+- Format: `YYYY.MM.DD` (e.g., `2026.02.06`)
+- Hotfixes: `YYYY.MM.DD-rcX` (e.g., `2026.02.06-rc1`).
+
+## Promotion Workflow (`latest` → `stable`)
+To avoid breaking local environments when using Docker images, we use a **Promotion** logic.
+
+### 1. Service Development (`latest`)
+When a developer pushes a change to a service (e.g., `auth-svc`):
+
+<NumberWithMdx number={1} className="mt-3">
+   CI builds the image: `auth-svc:1.4.1`.
+</NumberWithMdx>
+
+<NumberWithMdx number={2}>
+  The **alias** `auth-svc:latest` is updated to point to `1.4.1`.
+</NumberWithMdx>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="🔴 Risk: High"
+  >
+  This version is **Bleeding Edge** and might not have been integration-tested with other services.
+</CardInfo>
+
+### 2: Integration Testing
+We update `spacedf-core` (the docker-compose or manifest) to use the new service version.
+- **Action:** Run full suite integration tests.
+- **Environment:** Staging/Test environment using `spacedf-core:2026.02.06-rc1`.
+
+### 3: Certification (`stable`)
+<NumberWithMdx number={1} className="mt-3">
+   Tag the core as stable: `spacedf-core:2026.02.06`.
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+   Update the **alias** `auth-svc:stable` to point to `1.4.1`.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+   Self-hosting users on the `stable` track now receive the update safely.
+</NumberWithMdx>
+
+## Practical Case Studies
+
+### Case 1: Deploying a New Feature
+<NumberWithMdx number={1} className="mt-3">
+   Merge feature to `auth-svc`. CI tags it `1.5.0` and updates `latest`.
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+   Update `spacedf-core` to point to `auth-svc:1.5.0`.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+  Integration tests pass. Tag `spacedf-core:2026.02.07`.
+</NumberWithMdx>
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-base"
+  }}
+  >
+  <>
+    **🏁 Result:** `latest` users got it immediately; `stable` users got it only after the Core release.
+  </>
+</CardInfo>
+
+### Case 2: Emergency Hotfix
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-base"
+  }}
+  >
+  <>
+   **💥 Issue:** Bug found in `auth-svc:1.5.0`.
+  </>
+</CardInfo>
+
+<NumberWithMdx number={1} className="mt-3">
+   Developer fixes and tags `auth-svc:1.5.1-rc1`.
+</NumberWithMdx>
+<NumberWithMdx number={2}>
+   Test the RC image specifically.
+</NumberWithMdx>
+<NumberWithMdx number={3}>
+   If fixed, tag `auth-svc:1.5.1` and release `spacedf-core:2026.02.07-rc1`.
+</NumberWithMdx>
+
+## Docker Image Reference Table
+
+| Tag Alias     | Target Audience             | Stability | Description |
+|---------------|-----------------------------|-----------|-------------|
+| `latest`      | Core Contributors           | 🔴 Low    | Automated build from every merge to `main`. |
+| `stable`      | Self-hosters / Production   | 🟢 High   | Points to the last version that passed all Integration Tests. |
+| `YYYY.MM.DD`  | Enterprise / Fixed          | 🟢 High   | A specific, immutable point-in-time release. |
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="❓ Why this works"
+  >
+  
+    1. **No more broken "latest":** Core developers can still use `latest` to see changes immediately, but they are aware of the risk.<br/>
+    2. **Easy Rollbacks:** If a new stable alias fails, we simply point the alias back to the previous version number (e.g., 1.4.0) without needing to rebuild code.<br/>
+    3. **Clarity:** The distinction between `spacedf-core` (the platform) and `submodules` (the `components`) is clear to anyone reading the docs.
+</CardInfo>

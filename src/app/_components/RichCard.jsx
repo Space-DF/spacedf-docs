@@ -54,9 +54,9 @@ export const RichCardOption = ({ icon, title, description, badge, href }) => {
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
         {description}
-      </p>
+      </div>
     </Link>
   )
 }
