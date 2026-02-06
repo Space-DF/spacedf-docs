@@ -1,0 +1,56 @@
+---
+title: Contributing
+asIndexPage: true
+---
+
+import { RichCardOptions, RichCardOption } from "@/app/_components/RichCard.jsx"
+
+# Contributing to SpaceDF
+
+First off, thank you for considering contributing to SpaceDF! It's people like you who make SpaceDF such a powerful open-source tool for everyone.
+
+Whether you are fixing a bug, improving documentation, or proposing new features, your help is welcome. Use the guide below to find your way around our development process.
+
+## 🛠 How can you help?
+
+<RichCardOptions>
+  <RichCardOption
+    icon={
+      <div
+        className="w-2/3 text-center"
+      >
+        🚀
+      </div>
+    }
+    title="Release Workflow"
+    badge="Policy"
+    description={<p>Learn how we tag versions for <code>spacedf-core</code> and submodules. Understand the promotion flow from <b>latest</b> to <b>stable</b>.</p>}
+    href="/docs/contributing/release-versioning"
+  />
+
+  <RichCardOption
+    icon={
+      <div
+        className="w-2/3 text-center"
+      >
+        💻
+      </div>
+    }
+    title="Technical Setup"
+    description={<p>How to clone <code>spacedf-core</code>, setup your Docker environment, and run services locally for development.</p>}
+    href="/docs/getting-started/self-hosting/docker"
+  />
+</RichCardOptions>
+
+---
+## 🚦 Quick Rules for Contributors
+
+To keep the project healthy, please follow these simple rules:
+
+1.  **Atomic Commits:** Keep your Pull Requests focused. One feature/fix per PR is easier to review.
+2.  **Tagging:** If you are working on a service, ensure your tag follows our `X.Y.Z` SemVer policy.
+3.  **Tests:** Ensure that your changes do not break the integration tests in `spacedf-core`.
+
+---
+
+> **Tip:** If you're new to the project, look for the **"good first issue"** label in our repository!
