@@ -1,0 +1,61 @@
+---
+title: Release v2026.02.13
+date: 2026-02-13
+type: Initial Release
+author: SpaceDF Team
+description: "Welcome to the official first release of SpaceDF - an all-in-one IoT platform designed for advanced asset tracking, monitoring, and management. SpaceDF empowers developers and organizations to build robust IoT solutions with ease, providing multi-protocol support and powerful visualization tools."
+---
+
+# 🚀 SpaceDF Release v0.0.1 (Initial Stable Release)
+
+Welcome to the official first release of **SpaceDF** - an all-in-one IoT platform designed for advanced asset tracking, monitoring, and management. SpaceDF empowers developers and organizations to build robust IoT solutions with ease, providing multi-protocol support and powerful visualization tools.
+
+## ✨ Key Features & Highlights
+
+- **Multi-Protocol Adapter (MPA) Service:** Connect any device using LoRaWAN, MQTT, HTTP/HTTPS, WebSocket, CoAP, LwM2M, or SNMP.
+- **Pre-integrated Network Servers:** Seamless integration with ChirpStack, The Things Network (TTN), and Helium.
+- **Dynamic Dashboards:** - 2D/3D spatial visualization for real-time tracking.
+  - Virtual Replicas (Digital Twins) and interactive widgets.
+- **Enterprise-Grade Multi-Tenancy:** Isolated environments with hierarchical Organization and Space management.
+- **Ready-to-use Templates:** Optimized configurations for Fleet Management, Smart Buildings, and Smart Cities.
+
+## 🐳 Self-Hosting with Docker
+
+SpaceDF is built for flexibility. You can deploy the entire platform on your own infrastructure using Docker Compose for full data ownership.
+
+### Quick Start
+Get SpaceDF running in minutes with default settings:
+```bash
+# Clone the repository
+git clone https://github.com/Space-DF/spacedf-core.git && cd spacedf-core
+
+# Initialize submodules
+git submodule update --init --recursive
+
+# Generate environment keys and start
+chmod +x generate-keys.sh && ./generate-keys.sh
+chmod +x entrypoint.sh && ./entrypoint.sh
+```
+> For detailed instructions, visit our [Quick Start Guide](https://docs.spacedf.com/docs/getting-started/self-hosting/docker/quick-start).
+
+### Advanced Setup
+For production-ready deployments, SpaceDF supports:
+- **Security Hardening:** RSA Key pair generation for JWT Authentication.
+- **External Integrations:** Support for AWS SES (Email), AWS S3 (Storage), and Google/Apple OAuth.
+- **Custom Infrastructure:** Configurable RabbitMQ, PostgreSQL, Redis, and EMQX settings.
+> Check the [Advanced Setup Documentation](https://docs.spacedf.com/docs/getting-started/self-hosting/docker/advanced-setup) for detailed environment variable configurations.
+
+## 📚 Resources & Community
+- Official Documentation: [docs.spacedf.com](https://docs.spacedf.com/docs)
+- GitHub Issues: [Report a bug](https://github.com/Space-DF/spacedf-docs/issues)
+- Community: [Join us on Discord](https://discord.gg/HxCTyMCzuK) | [Community Forum](https://docs.spacedf.com/community)
+
+## 🛠 What's New (Changelog)
+- [Feature] Core SpaceDF microservices architecture initialization.
+- [Feature] Multi-Protocol Adapter (MPA) implementation.
+- [Feature] Docker & Docker Compose support for easy self-hosting.
+- [Feature] Multi-tenant Organization and Staff management system.
+- [Docs] Complete Getting Started and Advanced Configuration guides.
+
+## Next Release
+`v2026.02.27` (planned)

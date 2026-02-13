@@ -31,17 +31,20 @@ Visit the live documentation at: [https://docs.spacedf.com](https://docs.spacedf
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/Space-DF/spacedf-docs.git
 cd spacedf-docs
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -123,7 +126,7 @@ We welcome contributions to improve the documentation! Here's how you can help:
 
 See our [blog section](https://docs.spacedf.com/blog) for the latest release notes and announcements.
 
-**Latest Release**: [v2025.12.19](https://docs.spacedf.com/blog/v2025.12.19) - Initial Release
+**Latest Release**: [v2026.02.13](https://docs.spacedf.com/blog/v2026.02.13) - Initial Release
 
 ## 📄 License
 
