@@ -1,0 +1,86 @@
+---
+asIndexPage: true
+sidebarTitle: Installation
+---
+
+import { Cards, Callout } from "nextra/components"
+import { RichCardOptions, RichCardOption } from "@/app/_components/RichCard.jsx"
+
+# Self-Hosting
+
+Install and run your own SpaceDF platform on your computer, server, or cloud infrastructure.
+
+---
+
+## Get started
+
+The fastest and recommended way to self-host SpaceDF platform is using Docker.
+
+<RichCardOptions>
+  <RichCardOption
+    icon={
+      <img
+        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/docker-mark-blue.png"
+        className="w-2/3"
+      />
+    }
+    title="Docker"
+    badge="Official"
+    description="Deploy SpaceDF within your own infrastructure using Docker Compose."
+    href="/docs/getting-started/self-hosting/docker"
+  />
+</RichCardOptions>
+
+## About self-hosting
+
+Self-hosting SpaceDF is a suitable choice when you want to run the system on your own infrastructure instead of relying on third-party services. This approach gives you full ownership of your data, allows you to meet internal or legal compliance requirements, and lets you operate SpaceDF in a private or isolated environment.
+
+### What Self-Hosted SpaceDF Is (and Is Not)
+
+Running SpaceDF in a self-hosted setup means that you install, run, and manage the platform yourself.
+
+It is not the same as:
+
+- Using a local setup for development or testing purposes only
+- Using a fully managed or hosted version where infrastructure and maintenance are handled for you
+
+### Data and Telemetry
+
+SpaceDF does not automatically send usage data, metrics, or telemetry to external services when running in a self-hosted environment. All data remains within the infrastructure you control.
+
+### Your Responsibilities When Self-Hosting
+
+When you choose to self-host SpaceDF, you take responsibility for operating the system. This includes:
+
+- Setting up and maintaining the server or hosting environment
+- Applying security updates and keeping the operating system and services up to date
+- Managing the database used by SpaceDF
+- Creating and maintaining backups, and planning for recovery in case of failures
+- Monitoring system health, performance, and availability
+
+## Support and Community
+
+Self-hosted SpaceDF is community-supported.
+
+For resolving common issues:
+
+- [GitHub Discussions](https://github.com/Space-DF) - Questions, feature requests, and workarounds
+- [GitHub Issues](https://github.com/Space-DF) - Known issues
+
+Get help and connect with other users:
+
+- [Community Forum](https://docs.spacedf.com/community) - Ask questions and share experiences with the community
+- [Discord Server](https://discord.gg/HxCTyMCzuK) - Real-time chat with developers and other users
+
+Share your self-hosting experience:
+
+- [GitHub Discussions](https://github.com/Space-DF) - "Self-hosting: What's working (and what's not)?"
+
+## Enterprise self-hosting
+
+Organizations using self-hosted SpaceDF are encouraged to [get in touch](https://docs.spacedf.com/community).
+We welcome feedback, real-world use cases, and discussions around potential partnerships.
+
+---
+
+Ready to get started? [Create your account](https://spacedf.com/en/auth/sign-up) or explore our [cloud platform](/docs/getting-started/cloud-setup).

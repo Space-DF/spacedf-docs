@@ -1,0 +1,102 @@
+---
+title: "RabbitMQ: Existing setup with different credentials"
+source: ["RabbitMQ", "Messaging"]
+errorCode: ["ACCESS_REFUSED", "AUTHENTICATION_FAILED"]
+tags: ["Self-hosting", "rabbitmq", "credentials", "volume_conflict", "docker"]
+---
+
+import { Callout } from 'nextra/components'
+import { Steps } from 'nextra/components'
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+
+# RabbitMQ: Existing setup with different credentials
+
+**The Problem:** You changed the RabbitMQ password in your `.env` file, but the service is still trying to use the old password (or default `guest`), resulting in `ACCESS_REFUSED`.
+
+## 1. Understanding the Cause
+RabbitMQ has a specific behavior regarding Docker containers that confuses many users:
+
+1.  **First Run:** On the very first startup, RabbitMQ reads `RABBITMQ_DEFAULT_USER` and `RABBITMQ_DEFAULT_PASS` from your `.env` file and creates the user account in its database.
+2.  **Subsequent Runs:** If a database file already exists (in the Docker Volume), RabbitMQ **IGNORES** the `.env` variables. It uses the user/password already stored in the database.
+
+**Conclusion:** Simply changing the `.env` file and restarting the container (`docker compose restart`) **will not update the password**.
+
+
+## 2. Solution: Reset the Volume
+To force RabbitMQ to accept the new password from your `.env` file, you must delete its old database volume so it re-initializes from scratch.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base",
+    description: "!text-sm"
+  }}
+  title="⛔ Data Loss Warning:"
+  >
+    The steps below will **delete all existing queues and messages** in RabbitMQ.<br/>
+    This is safe for new installations or troubleshooting connectivity, but be careful in Production.
+</CardInfo>
+
+<Steps>
+    ### Stop Services
+    Stop the running containers to release the volume lock.
+    ```bash copy
+    docker compose down
+    ```
+
+    ### Locate & Remove the Volume
+    Find the volume associated with RabbitMQ and remove it.
+
+    **Option A: The Clean/Automatic Way (Recommended)** If you don't mind resetting all volumes (Database, RabbitMQ, Storage):
+    ```bash copy
+    # This removes containers AND all data volumes
+    docker compose down -v
+    ```
+
+    **Option B: The Surgical Way (RabbitMQ Only)** If you want to keep other data (like PostgreSQL) and only reset RabbitMQ:
+    ```bash copy
+    # 1. List volumes to find the exact name (look for 'rabbitmq' or 'mq')
+    docker volume ls
+
+    # 2. Remove the specific volume
+    docker volume rm spacedf_rabbitmq_data
+    ```
+    > (Note: Replace spacedf_rabbitmq_data with your actual volume name found in step 1).
+
+    ### Update `.env` & Restart
+    Ensure your `.env` has the desired credentials, then start fresh.
+
+    ```bash copy
+    # 1. Check config
+    cat .env | grep RABBITMQ
+
+    # 2. Start services
+    docker compose up -d
+    ```
+
+    RabbitMQ will see "no database file" and create a fresh user using your new .env values.
+</Steps>
+
+## 3. Alternative: Change Password via CLI (Advanced)
+If you are in **Production** and cannot delete the volume/messages, you must use the command line to update the user manually.
+
+```bash copy
+# 1. Enter the running container
+docker compose exec rabbitmq bash
+
+# 2. Change the password manually
+rabbitmqctl change_password <username> <new_password>
+```
+> Replace `<username>` and `<new_password>` with the values from your .env file.
+
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}
+title="ℹ️ Key Takeaways"
+>
+* **Stickiness:** Credentials are "sticky". RabbitMQ only reads the `.env` file once during the initial volume creation.
+* **Production Safety:** If you need to change passwords on a live system (Production), **do NOT delete the volume**. Instead, use the `rabbitmqctl` CLI command mentioned in Section 3 to update the password safely without losing data.
+* **Isolation:** Avoid reusing the same RabbitMQ user/password across different projects on the same server to prevent accidental cross-connection or security conflicts.
+</CardInfo>

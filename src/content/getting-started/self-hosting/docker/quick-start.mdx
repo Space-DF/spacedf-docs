@@ -1,0 +1,208 @@
+---
+sidebarTitle: Quick Start
+---
+
+import { Steps } from 'nextra/components'
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+
+
+# Quick Start
+
+This guide helps you get **SpaceDF running quickly** on your own infrastructure using **Docker Compose** and **default settings**.
+
+<CardInfo title="Quick Start Limitations">
+  <ul className='list-none space-y-2'>
+      <li className='mt-3'>❌ Google login is not enabled</li>
+      <li>❌ AWS integrations (S3, SES) are not configured</li>
+      <li>❌ Email sending is disabled</li>
+      <li>❌ Image uploads and asset images are not displayed (cloud storage is not configured)</li>
+  </ul>
+</CardInfo>
+
+If you need advanced configuration, security tuning, or production setup, see [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup) instead.
+
+<CardInfo title="Before You Begin">
+  <ul className='list-disc'>
+    Make sure you have:
+        -   Docker and Docker Compose installed
+        -   Basic Linux command-line knowledge
+        -   An environment with at least the minimum system requirements
+  </ul>
+  If you are unsure about any of the requirements above, see [Prerequisites](/docs/getting-started/self-hosting/docker/advanced-setup#prerequisites) for details.
+</CardInfo>
+
+<Steps>
+### Get the Source Code
+ 
+```bash copy
+# Make your new spacedf project directory
+mkdir spacedf-project
+
+# Clone the SpaceDF repository:
+cd spacedf-project
+git clone https://github.com/Space-DF/spacedf-core.git
+
+# Switch to your project directory
+cd spacedf-core
+
+# Initialize submodules (Important!)
+git submodule update --init --recursive
+
+# Copy the env vars
+cp .env.example .env
+```
+ 
+### Configure Environment Variables
+To generate and apply all secrets at once you can run:
+```sh copy
+chmod +x generate-keys.sh
+./generate-keys.sh
+```
+The default values are sufficient for Quick Start.
+
+### Pull Images and Start SpaceDF
+From the directory that contains your `./entrypoint.sh` file, run:
+
+```bash copy 
+# Start all services in the background
+chmod +x entrypoint.sh
+./entrypoint.sh
+```
+This script pulls the required Docker images and starts all SpaceDF services in the background.
+
+### Verify Services
+Confirm that all containers are running:
+```bash copy 
+docker compose ps
+```
+When all services are healthy, SpaceDF is ready to use.
+</Steps>
+
+### Default Ports
+After startup, SpaceDF services are available on the following default ports:
+
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Service
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Port
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Dashboard</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Admin Portal</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:3001</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Backend API</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8000</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">EMQX (API)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:18083</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">MQTT (WebSocket)</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">localhost:8883</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+Make sure these ports are open on your server and not used by other services.
+
+### Default account (Quick Start only)
+
+Quick Start creates default accounts for initial access
+
+These accounts are for **local testing only**.
+
+#### Frontend Web Apps
+
+<CardInfo title="Dashboard" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Username: `admin@example.com`
+- Password: `changeme@Default123`
+</CardInfo>
+
+<CardInfo title="Admin Portal" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Username: `admin@example.com`
+- Password: `changeme@Default123`
+</CardInfo>
+
+#### Backend Services
+
+<CardInfo title="Auth service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5434`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `auth_service`
+</CardInfo>
+
+<CardInfo title="Bootstrap service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5433`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `bootstrap_service`
+</CardInfo>
+
+<CardInfo title="Dashboard service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5435`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `dashboard_service`
+</CardInfo>
+
+<CardInfo title="Device service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5436`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `device_service`
+</CardInfo>
+
+<CardInfo title="Telemetry service" classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-base"
+}}>
+- Host: `localhost:5437`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `spacedf_telemetry`
+</CardInfo>
+
+To configure authentication, user management, and production security,
+continue with [Advanced Setup](/docs/getting-started/self-hosting/docker/advanced-setup).
+
+🎉 **You’re all set!** SpaceDF is now running on your server. Enjoy building with it.
