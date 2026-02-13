@@ -73,9 +73,9 @@ export default async function RootLayout({ children }) {
           <Layout
             banner={
               <Banner storageKey="SpaceDF Launch">
-                🚀 SpaceDF v2025.12.19 is now live!{" "}
+                🚀 SpaceDF v2026.02.13 is now live!{" "}
                 <a
-                  href="/blog/v2025.12.19"
+                  href="/blog/v2026.02.13"
                   style={{ color: "inherit", textDecoration: "underline" }}
                 >
                   Read the release notes
