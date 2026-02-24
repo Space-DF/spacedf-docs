@@ -40,10 +40,20 @@ jobs:
 
       - name: Generate MDX file
         run: |
-          DIR="src/app/blog/(post)/v${{ github.event.client_payload.release_tag }}"
+          DATE=$(date +%Y-%m-%d)
+          TAG="v${{ github.event.client_payload.release_tag }}"
+          DIR="src/app/blog/(post)/${TAG}"
           mkdir -p "$DIR"
           
           cat <<EOF > "$DIR/page.mdx"
+          ---
+          title: Release ${TAG}
+          date: ${DATE}
+          type: Release
+          author: SpaceDF Team
+          description: "Welcome to the official release of SpaceDF - an all-in-one IoT platform designed for advanced asset tracking, monitoring, and management. SpaceDF empowers developers and organizations to build robust IoT solutions with ease, providing multi-protocol support and powerful visualization tools."
+          ---
+          
           ${{ github.event.client_payload.release_body }}
           EOF
 
