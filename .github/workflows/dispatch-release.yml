@@ -26,29 +26,36 @@ jobs:
           target_commitish: 'main'
 
   generate-doc:
+    needs:  create-release
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Generate MDX file
         run: |
-          DIR="src/app/blog/(post)/v${{ github.event.release.tag_name }}"
+          DIR="src/app/blog/(post)/v${{ github.event.client_payload.release_tag }}"
           mkdir -p "$DIR"
           
           cat <<EOF > "$DIR/page.mdx"
-          ${{ github.event.release.body }}
+          ${{ github.event.client_payload.release_body }}
           EOF
 
-      - name: Commit & Push
-        run: |
-          TAG=v${{ github.event.release.tag_name }}
-          git config user.email "quynh.nguyen@df.technology"
-          git config user.name "Quynh-Nguyen"
-          git checkout -b release/${TAG}
-          git add .
-          git commit--allow-empty -m "docs: add release ${TAG}"
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        env:
+          TAG: "${{ github.event.client_payload.release_tag }}"
+
+        with:
+          commit-message: Added release note for release ${{ env.TAG }} version
+          title: 'Publish the release note for release ${{ env.TAG }} version'
+          body: "Added release note for release ${{ env.TAG }} version"
+          branch: release/v${{ env.TAG }}
+          base: main
+          labels: pending-review
