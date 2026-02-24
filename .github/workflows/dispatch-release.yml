@@ -24,3 +24,38 @@ jobs:
           tag_name: ${{ github.event.client_payload.release_tag }}
           body: ${{ github.event.client_payload.release_body }}
           target_commitish: 'main'
+
+  generate-doc:
+    needs:  create-release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate MDX file
+        run: |
+          DIR="src/app/blog/(post)/v${{ github.event.client_payload.release_tag }}"
+          mkdir -p "$DIR"
+          
+          cat <<EOF > "$DIR/page.mdx"
+          ${{ github.event.client_payload.release_body }}
+          EOF
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        env:
+          TAG: "${{ github.event.client_payload.release_tag }}"
+
+        with:
+          commit-message: Added release note for release ${{ env.TAG }} version
+          title: 'Publish the release note for release ${{ env.TAG }} version'
+          body: "Added release note for release ${{ env.TAG }} version"
+          branch: release/v${{ env.TAG }}
+          base: main
+          labels: pending-review
