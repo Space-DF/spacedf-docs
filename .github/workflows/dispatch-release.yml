@@ -24,3 +24,31 @@ jobs:
           tag_name: ${{ github.event.client_payload.release_tag }}
           body: ${{ github.event.client_payload.release_body }}
           target_commitish: 'main'
+
+  generate-doc:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate MDX file
+        run: |
+          DIR="src/app/blog/(post)/v${{ github.event.release.tag_name }}"
+          mkdir -p "$DIR"
+          
+          cat <<EOF > "$DIR/page.mdx"
+          ${{ github.event.release.body }}
+          EOF
+
+      - name: Commit & Push
+        run: |
+          TAG=v${{ github.event.release.tag_name }}
+          git config user.email "quynh.nguyen@df.technology"
+          git config user.name "Quynh-Nguyen"
+          git checkout -b release/${TAG}
+          git add .
+          git commit--allow-empty -m "docs: add release ${TAG}"
+          git push
