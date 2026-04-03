@@ -1,0 +1,63 @@
+---
+title: Release v2026.04.03
+date: 2026-04-03
+type: Release
+author: SpaceDF Team
+description: "Welcome to the official release of SpaceDF - an all-in-one IoT platform designed for advanced asset tracking, monitoring, and management. SpaceDF empowers developers and organizations to build robust IoT solutions with ease, providing multi-protocol support and powerful visualization tools."
+---
+
+# SpaceDF Release v0.0.3
+
+This release implements **Automation capabilities**, along with GeoFences improvements and internal refactoring to enhance system reliability and scalability.
+
+---
+
+## New Features
+- Integrate with Digital Matter G62 LoRaWAN
+- Integrate with TheThingsNetwork LoRaWAN Network Server
+
+### Geofencing Engine
+- Improved device search not using geometry type
+
+### Automation Engine
+- Implemented automation summary API
+- Implement nested conditions (trigger conditions)  
+- Full automation management (create, update, delete)  
+- Revamped automation UI for better usability  
+- Completed end-to-end automation flow
+
+### Realtime Events
+- Support real-time events from automation and geofence  
+- Instant UI updates based on incoming events  
+
+---
+
+## Improvements
+
+- Improved **GeoFences**
+- Corrected type for state ID
+- Updated MPA service URL
+- Updated submodules for circuit breaker
+- Removed unnecessary comments for MPA service
+- Improved UX for adding space members  
+- Smoother and more intuitive user interactions
+
+---
+
+## Bug Fixes
+
+- Fixed device search not using geometry type
+- Fixed automation event cleanup on delete
+- Fixed automation list retrieval issue
+- Fixed automation update failure
+- Fixed event creation failure
+- Fixed event title field update issue
+- Fixed app crash when disabling geofence mode during focus
+
+---
+
+## Maintenance
+
+- General internal improvements and codebase cleanup
+- Performance optimizations  
+- UI consistency improvements across modules
