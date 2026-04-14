@@ -1,8 +1,14 @@
 ---
-title: Onboarding
+asIndexPage: true
+sidebarTitle: Installation
 ---
 
-import {Cards} from "nextra/components";
+
+import { Cards } from "nextra/components";
+import {
+  RichCardOptions,
+  RichCardOption,
+} from "@/app/_components/RichCard.jsx";
 
 # Onboarding Guide
 
@@ -16,8 +22,8 @@ To get started, create a free account using your email, name, and password. You 
   src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/signup.png"
   alt="Create Account"
 />
-This will be for the **Admin** - this login will have permissions to perform operations
-in the account.
+This will be for the **Admin** - this login will have permissions to perform
+operations in the account.
 
 [**Sign up for SpaceDF →**](https://spacedf.com/en/auth/sign-up)
 
@@ -44,8 +50,9 @@ An organization acts as the main container for your locations, devices, and user
 3. **Choose a Template**: Select from SpaceDF's ready-to-use template library
 4. **Wait for Setup**: Your organization will be created in a few seconds
    <img
-     src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/finish-setup-organization-spacedf-onboarding.gif"
+     src="/images/onboarding/finish-setup-organization-spacedf-onboarding.gif"
      alt="Wait for Setup"
+     style={{ width: "100%", height: "100%" }}
    />
 
 ## 3. Add Devices to Device Hub
@@ -138,7 +145,14 @@ For adding single devices:
      src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/add-device-manual-spacedf-onboarding.gif"
      alt="Add Device"
    />
-2. **Fill Device Information**: Enter required fields:
+2. **Select Device Model**: Select the device model that matches your hardware to ensure correct setup and data handling.
+
+   <img
+     src="/images/onboarding/select_device_model.gif"
+     alt="Select device model"
+   />
+
+3. **Fill Device Information**: Enter required fields:
    - **DevEUI**: Device unique identifier
    - **JoinEUI**: Join server identifier
    - **App Key**: Application key for authentication
@@ -146,29 +160,29 @@ For adding single devices:
        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/fill-require-information-spacedf-onboarding.png"
        alt="Fill Device Information"
      />
-3. **Enable Public State** (optional): Make device visible to all organization users
+4. **Enable Public State** (optional): Make device visible to all organization users
    <img
      src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/public-device.gif"
      alt="Enable Public Device Status"
    />
-4. **Select Network**: Choose TTN, ChirpStack, or Helium
+5. **Select Network**: Choose TTN, ChirpStack, or Helium
    <img
      src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/select-the-network-spacedf-onboarding.png"
      alt="Import Device CSV Network"
    />
-5. **Complete Setup**: Click Next and wait for device to be added to Inventory
+6. **Complete Setup**: Click Next and wait for device to be added to Inventory
 
 ### CSV Import for Multiple Devices
 
 For bulk device registration:
 
-1. **Choose Manual Option**: Select device brand and click Next
-2. **Click Import CSV**: Upload your prepared CSV file
-3. **Download Template** (if needed): Use our pre-formatted CSV template
+1. **Choose CSV Import**: Select device brand and continue
+2. **Download Template** (if needed): Use our pre-formatted CSV template
    <img
      src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/import-CSV.png"
      alt="Import Device CSV"
    />
+3. **Upload CSV**: Click **Import CSV** and upload your prepared file
 4. **Configure Settings**: Enable Public Device Status if desired
 5. **Select Network**: Choose TTN, ChirpStack, or Helium
 6. **Import Devices**: Click Next and wait for all devices to be processed
@@ -178,27 +192,36 @@ For bulk device registration:
 ## 4. Access Your Space
 
 Each organization has its own Space - a dedicated environment for device monitoring and management.
+Before you start accessing your Space, we recommend taking a quick look at what Space and Digital Twin are. This will help you understand and move through the next steps more smoothly.
 
-### Opening Your Space
+👉 **Learn more**: [What is a Space? · What is a Digital Twin?](/docs/spaces)
 
-1. **Open Space URL**: In your workspace, click on your organization's URL slug name
-2. **Access Space Site**: The space site will open automatically
-3. **Sign In**: Choose "Get Started" to sign up or sign in
-   - Select **Sign Up** if you don't have an account
-   - Select **Sign In** if you already have an account
-   - Use the same email/password or Gmail account from the organization site
-     <img
-       src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/signin-signup-your-space.gif"
-       alt="Sign In/Sign Up Your Space"
-     />
+SpaceDF offers multiple ready-to-use templates designed for different use cases. Each template comes with its own Space experience and onboarding flow.
+Select the template below that matches your setup to continue accessing your Space.
 
-### Enable Location Services
+<RichCardOptions>
+  <RichCardOption
+    icon={
+      <div className="w-2/3 text-center">
+        🚚
+      </div>
+    }
+    title="Fleet Tracking"
+    description="Track assets and vehicles with real-time location and status monitoring."
+    href="/docs/onboarding/fleet-tracking"
+  />
 
-4. **Allow Location Access**: When prompted, choose "Allow" to enable location-based features and improve your experience
-   <img
-     src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/onboarding/allow-location-access.gif "
-     alt="Allow Location Access"
-   />
+  <RichCardOption
+    icon={
+      <div className="w-2/3 text-center">
+        🏢
+      </div>
+    }
+    title="Smart Building"
+    description="Monitor buildings, rooms, and sensors with a digital twin experience."
+    href="/docs/onboarding/smart-building"
+  />
+</RichCardOptions>
 
 ## 5. Add Devices to Your Space
 
