@@ -3,12 +3,8 @@ asIndexPage: true
 sidebarTitle: Installation
 ---
 
-
-import { Cards } from "nextra/components";
-import {
-  RichCardOptions,
-  RichCardOption,
-} from "@/app/_components/RichCard.jsx";
+import {Cards} from "nextra/components";
+import {RichCardOptions, RichCardOption} from "@/app/_components/RichCard.jsx";
 
 # Onboarding Guide
 
@@ -52,7 +48,7 @@ An organization acts as the main container for your locations, devices, and user
    <img
      src="/images/onboarding/finish-setup-organization-spacedf-onboarding.gif"
      alt="Wait for Setup"
-     style={{ width: "100%", height: "100%" }}
+     style={{width: "100%", height: "100%"}}
    />
 
 ## 3. Add Devices to Device Hub
@@ -75,7 +71,8 @@ After creating your organization, you can begin adding devices. In Beta stage, S
       </svg>
     }
     title="Manual Entry"
-    href="/devices"
+    href="#"
+    style={{padding: "5px 10px"}}
   >
     Add single devices manually with DevEUI, JoinEUI, and App Key
   </Cards.Card>
@@ -100,7 +97,8 @@ After creating your organization, you can begin adding devices. In Beta stage, S
       </svg>
     }
     title="CSV Import"
-    href="/devices"
+    href="#"
+    style={{padding: "5px 10px"}}
   >
     Bulk import multiple devices using CSV file format
   </Cards.Card>
@@ -130,7 +128,8 @@ After creating your organization, you can begin adding devices. In Beta stage, S
       </svg>
     }
     title="QR Code Scan"
-    href="/devices"
+    href="#"
+    style={{padding: "5px 10px"}}
   >
     Scan device QR codes for quick registration (coming soon)
   </Cards.Card>
