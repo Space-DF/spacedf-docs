@@ -1,0 +1,63 @@
+---
+title: Release v2026.04.17
+date: 2026-04-17
+type: Release
+author: SpaceDF Team
+description: "Welcome to the official release of SpaceDF - an all-in-one IoT platform designed for advanced asset tracking, monitoring, and management. SpaceDF empowers developers and organizations to build robust IoT solutions with ease, providing multi-protocol support and powerful visualization tools."
+---
+
+# 🚀 SpaceDF Release v0.0.4
+
+This release introduces the initial **Smart Building Onboarding flow** and expands device integration capabilities, along with system optimizations and stability improvements.
+
+---
+
+## New Features
+
+### Smart Building Onboarding
+- Added **Smart Building template option** when creating a new Organization
+- Support **uploading 3D model files** for Digital Twin setup
+- Allow users to **update/replace 3D model files** after initial upload
+
+### Device Integrations
+#### 1. **Milesight**
+- CT101 _(Temperature Sensor)_
+- AM307 _(Indoor Air Quality Sensor)_
+
+#### 2. **MClimate**
+- HT _(Temperature & Humidity Sensor)_
+
+#### 3. **Quandify**
+- CubicMeter _(Water Meter)_
+
+#### 4. **Dragino**
+- LSN50v2-S31B _(Multi-sensor / Environmental Sensor)_
+- LCC01LB _(Leak Detection Sensor)_
+
+#### 5. **Netvox**
+- R809AG _(Vibration Sensor)_
+- R718N17 _(Temperature Sensor)_
+
+---
+
+## Improvements
+
+- Optimized **device profile structure** for better performance and maintainability
+- Improved **TTN gateway data handling format**
+- Enhanced **device reconnection flow**, including automatic listener restart after reconnect
+- Added **build_artifact field** for Space to support future enhancements
+
+---
+
+## Bug Fixes
+
+- Fixed issue with retrieving automations by status
+- Improved stability for device reconnection scenarios
+
+---
+
+## Maintenance
+
+- Updated API response for organization validation
+- Removed unused metadata extraction logic
+- General internal refactoring and cleanup
