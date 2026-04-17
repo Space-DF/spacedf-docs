@@ -4,6 +4,7 @@ import { Banner, Head } from "nextra/components"
 import { getPageMap } from "nextra/page-map"
 import VersionLabel from "./_components/VersionLabel"
 import ImageZoomProvider from "../components/ImageZoomProvider"
+import { getLatestVersion } from "@/lib/version";
 import "nextra-theme-docs/style.css"
 import "./globals.css"
 
@@ -33,6 +34,12 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }) {
+ 
+  const [pageMap, latestVersion] = await Promise.all([
+    getPageMap(),
+    getLatestVersion(),
+  ]);
+
   const navbar = (
     <Navbar
       logo={
@@ -46,7 +53,7 @@ export default async function RootLayout({ children }) {
             }}
             className="spacedf-logo"
           />
-          <VersionLabel />
+          <VersionLabel latestVersion={latestVersion} />
         </div>
       }
       // SpaceDF discord server
@@ -54,7 +61,7 @@ export default async function RootLayout({ children }) {
       projectLink="https://github.com/Space-DF/spacedf-docs"
     />
   )
-  const pageMap = await getPageMap()
+
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head
@@ -73,9 +80,9 @@ export default async function RootLayout({ children }) {
           <Layout
             banner={
               <Banner storageKey="SpaceDF Launch">
-                🚀 SpaceDF v2026.02.13 is now live!{" "}
+                🚀 SpaceDF {latestVersion?.version} is now live!{" "}
                 <a
-                  href="/blog/v2026.02.13"
+                  href={`/blog/${latestVersion?.version}`}
                   style={{ color: "inherit", textDecoration: "underline" }}
                 >
                   Read the release notes
