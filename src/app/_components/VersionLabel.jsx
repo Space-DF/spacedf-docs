@@ -1,8 +1,8 @@
 "use client"
 
-export default function VersionLabel() {
+export default function VersionLabel({ latestVersion }) {
   const handleClick = () => {
-    window.location.href = "/blog/v2026.02.13"
+    window.location.href = `/blog/${latestVersion?.version}`
   }
 
   return (
@@ -20,7 +20,7 @@ export default function VersionLabel() {
       }}
       title="View release notes"
     >
-      v2026.02.13
+      {latestVersion?.version}
     </span>
   )
 }
