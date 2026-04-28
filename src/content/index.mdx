@@ -1,4 +1,170 @@
-import {Cards} from "nextra/components";
+import { Cards } from "nextra/components";
+
+export const styles = {
+  containerNoneEvents: {
+    padding: "5px 10px",
+    pointerEvents: "none"
+  },
+}
+
+export const protocols = [
+  {
+    title: "LoRaWAN",
+    desc: "Long Range Wide Area Network",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lora-logo.png",
+    imgStyle: { width: "104px" }
+  },
+  {
+    title: "HTTP/HTTPS",
+    desc: "REST API",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/http.png",
+    imgStyle: { width: "74px" }
+  },
+  {
+    title: "MQTT",
+    desc: "Pub/Sub Messaging",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png",
+    imgStyle: { width: "74px" }
+  },
+  {
+    title: "WebSocket",
+    desc: "Real-time Data",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/websocket.png",
+    imgStyle: { width: "44px" }
+  },
+  {
+    title: "Socket.IO",
+    desc: "Real-time Engine",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/socket-io.png",
+    imgStyle: { width: "44px" }
+  },
+  {
+    title: "CoAP",
+    desc: "Constrained Application",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/constrained-app.png",
+    imgStyle: { width: "44px" },
+    className: "svg-icon"
+  },
+  {
+    title: "LwM2M",
+    desc: "Device Management",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lwm2m.png",
+    imgStyle: { height: "64px" }
+  },
+  {
+    title: "SNMP",
+    desc: "Network Management",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/snmp.png",
+    imgStyle: { width: "44px" },
+    className: "svg-icon",
+  }
+]
+
+export const platforms = [
+  {
+    title: "ChirpStack",
+    desc: "LoRaWAN Network Server",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/chirpstack.png",
+    imgStyle: { height: "54px" },
+    className: "svg-icon"
+  },
+  {
+    title: "The Things Network",
+    desc: "Community LoRaWAN",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/ttn.webp",
+    imgStyle: { width: "54px" }
+  },
+  {
+    title: "Helium",
+    desc: "People's Network",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/helium.png",
+    imgStyle: { height: "54px" }
+  },
+  {
+    title: "Your Platform",
+    desc: "Custom Integration",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/platform.jpg",
+    imgStyle: { height: "54px" }
+  },
+  {
+    title: "Your MQTT Platform",
+    desc: "MQTT Broker Integration",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png",
+    imgStyle: { height: "24px" }
+  }
+]
+
+export const useCases = [
+  {
+    title: "Fleet Tracking",
+    desc: "Vehicle & Asset Tracking",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/location.png",
+    href: "/docs/onboarding/fleet-tracking", 
+  },
+  {
+    title: "Smart Buildings",
+    desc: "Building Management",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/building.png",
+    href: "/docs/onboarding/smart-building", 
+  },
+]
+
+export const dashboardFeatures = [
+  {
+    title: "Digital Twins",
+    desc: "Virtual Replicas",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/digital-twin.png",
+    imgStyle: { height: "54px" }
+  },
+  {
+    title: "Views",
+    desc: "Custom Layouts",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/grid.png",
+    imgStyle: { height: "44px" }
+  },
+  {
+    title: "Cards",
+    desc: "Data Components",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/real-time-strategy.png",
+    imgStyle: { height: "44px" }
+  },
+  {
+    title: "Widgets",
+    desc: "Interactive Elements",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/window.png",
+    imgStyle: { height: "44px" }
+  },
+  {
+    title: "Badges",
+    desc: "Status Indicators",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/status-update.png",
+    imgStyle: { height: "44px" }
+  },
+  {
+    title: "2D/3D Views",
+    desc: "Spatial Visualization",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/3d.png",
+    imgStyle: { height: "44px" }
+  }
+]
+
+export const org = [
+  {
+    title: "Multi-Tenant",
+    desc: "Isolated Environments",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/organization-chart.png"
+  },
+  {
+    title: "Multi-Spaces",
+    desc: "Hierarchical Structure",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/space.png"
+  },
+  {
+    title: "Group Your Assets",
+    desc: "Asset Organization",
+    img: "https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/assets.png"
+  }
+]
 
 # Introduction
 
@@ -9,120 +175,24 @@ SpaceDF is a comprehensive **IoT platform** that supports multiple protocols and
 Connect your devices using any of these protocols through our **Multi-Protocol Adapter (MPA) Service**:
 
 <Cards>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="LoRaWAN"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lora-logo.png"
-        style={{width: "104px"}}
-        alt="LoRaWAN"
-      />
-    }
-  >
-    **Long Range Wide Area Network**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="HTTP/HTTPS"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/http.png"
-        style={{width: "74px"}}
-        alt="HTTP/HTTPS"
-      />
-    }
-  >
-    **REST API**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="MQTT"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png"
-        style={{width: "74px"}}
-        alt="MQTT"
-      />
-    }
-  >
-    **Pub/Sub Messaging**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="WebSocket"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/websocket.png"
-        style={{width: "44px"}}
-        alt="WebSocket"
-      />
-    }
-  >
-    **Real-time Data**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Socket.IO"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/socket-io.png"
-        style={{width: "44px"}}
-        alt="Socket.IO"
-      />
-    }
-  >
-    **Real-time Engine**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="CoAP"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/constrained-app.png"
-        className="svg-icon"
-        style={{width: "44px"}}
-        alt="CoAP"
-      />
-    }
-  >
-    **Constrained Application**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="LwM2M"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/lwm2m.png"
-        style={{height: "64px"}}
-        alt="LwM2M"
-      />
-    }
-  >
-    **Device Management**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="SNMP"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/snmp.png"
-        className="svg-icon"
-        style={{width: "44px"}}
-        alt="SNMP"
-      />
-    }
-  >
-    **Network Management**
-  </Cards.Card>
+  {protocols.map((item, index) => (
+    <Cards.Card
+      key={index}
+      style={styles.containerNoneEvents}
+      title={item.title}
+      href="#"
+      icon={
+        <img
+          src={item.img}
+          style={item.imgStyle}
+          className={item.className}
+          alt={item.title}
+        />
+      }
+    >
+      <strong>{item.desc}</strong>
+    </Cards.Card>
+  ))}
 </Cards>
 
 ## Supported Platforms
@@ -130,291 +200,101 @@ Connect your devices using any of these protocols through our **Multi-Protocol A
 SpaceDF integrates seamlessly with popular IoT platforms and network servers:
 
 <Cards>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="ChirpStack"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/chirpstack.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="ChirpStack"
-      />
-    }
-  >
-    **LoRaWAN Network Server**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="The Things Network"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/ttn.webp"
-        style={{width: "54px"}}
-        alt="The Things Network"
-      />
-    }
-  >
-    **Community LoRaWAN**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Helium"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/helium.png"
-        style={{height: "54px"}}
-        alt="Helium"
-      />
-    }
-  >
-    **People's Network**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Your Platform"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/platform.jpg"
-        style={{height: "54px"}}
-        alt="Your Platform"
-      />
-    }
-  >
-    **Custom Integration**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Your MQTT Platform"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/mqtt.png"
-        style={{height: "24px"}}
-        alt="MQTT Platform"
-      />
-    }
-  >
-    **MQTT Broker Integration**
-  </Cards.Card>
+  {platforms.map((item, index) => (
+    <Cards.Card
+      key={index}
+      style={styles.containerNoneEvents}
+      title={item.title}
+      href="#"
+      icon={
+        <img
+          src={item.img}
+          style={item.imgStyle}
+          className={item.className}
+          alt={item.title}
+        />
+      }
+    >
+      <strong>{item.desc}</strong>
+    </Cards.Card>
+  ))}
 </Cards>
 
 ## Use Case Templates
 
 <Cards>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Fleet Tracking"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/location.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Fleet Tracking"
-      />
-    }
-  >
-    **Vehicle & Asset Tracking**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Smart Buildings"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/building.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Smart Buildings"
-      />
-    }
-  >
-    **Building Management**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Smart City"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/smart-city.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Smart City"
-      />
-    }
-  >
-    **Urban IoT Solutions**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Industrial IoT"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/iot.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Industrial IoT"
-      />
-    }
-  >
-    **Manufacturing & Logistics**
-  </Cards.Card>
+  {useCases.map((item, index) => (
+    <Cards.Card
+      key={index}
+      style={{ padding: "5px 10px" }}
+      title={item.title}
+      href={item.href}
+      icon={
+        <img
+          src={item.img}
+          className="svg-icon"
+          style={{ height: "54px" }}
+          alt={item.title}
+        />
+      }
+    >
+      <strong>{item.desc}</strong>
+    </Cards.Card>
+  ))}
 </Cards>
 
 ## Dashboards
 
 Visualize and interact with your IoT data through powerful dashboard components and views:
 
+
 <Cards>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Digital Twins"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/digital-twin.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Digital Twins"
-      />
-    }
-  >
-    **Virtual Replicas**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Views"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/grid.png"
-        className="svg-icon"
-        style={{height: "44px"}}
-        alt="Views"
-      />
-    }
-  >
-    **Custom Layouts**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Cards"
-    href="#"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/real-time-strategy.png"
-        className="svg-icon"
-        style={{height: "44px"}}
-        alt="Cards"
-      />
-    }
-  >
-    **Data Components**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Widgets"
-    href="/spaces"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/window.png"
-        className="svg-icon"
-        style={{height: "44px"}}
-        alt="Widgets"
-      />
-    }
-  >
-    **Interactive Elements**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Badges"
-    href="/spaces"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/status-update.png"
-        className="svg-icon"
-        style={{height: "44px"}}
-        alt="Badges"
-      />
-    }
-  >
-    **Status Indicators**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="2D/3D Views"
-    href="/spaces"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/3d.png"
-        className="svg-icon"
-        style={{height: "44px"}}
-        alt="2D/3D Views"
-      />
-    }
-  >
-    **Spatial Visualization**
-  </Cards.Card>
+  {dashboardFeatures.map((item, index) => {
+    return (
+      <Cards.Card
+        key={index}
+        style={styles.containerNoneEvents}
+        title={item.title}
+        href="#"
+        icon={
+          <img
+            src={item.img}
+            className="svg-icon"
+            style={item.imgStyle}
+            alt={item.title}
+          />
+        }
+      >
+        <strong>{item.desc}</strong>
+      </Cards.Card>
+    )
+  })}
 </Cards>
 
 ## Organizations
 
 Organize and manage your IoT deployments with flexible multi-tenant architecture:
 
+
 <Cards>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Multi-Tenant"
-    href="/organizations"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/organization-chart.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Multi-Tenant"
-      />
-    }
-  >
-    **Isolated Environments**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Multi-Spaces"
-    href="/organizations"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/space.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Multi-Spaces"
-      />
-    }
-  >
-    **Hierarchical Structure**
-  </Cards.Card>
-  <Cards.Card
-    style={{padding: "5px 10px"}}
-    title="Group Your Assets"
-    href="/organizations"
-    icon={
-      <img
-        src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/assets.png"
-        className="svg-icon"
-        style={{height: "54px"}}
-        alt="Group Your Assets"
-      />
-    }
-  >
-    **Asset Organization**
-  </Cards.Card>
+  {org.map((item, index) => (
+    <Cards.Card
+      key={index}
+      style={styles.containerNoneEvents}
+      title={item.title}
+      href=""
+      icon={
+        <img
+          src={item.img}
+          className="svg-icon"
+          style={{ height: "54px" }}
+          alt={item.title}
+        />
+      }
+    >
+      <strong>{item.desc}</strong>
+    </Cards.Card>
+  ))}
 </Cards>
 
 ## Next Steps
@@ -422,20 +302,18 @@ Organize and manage your IoT deployments with flexible multi-tenant architecture
 Ready to get started with SpaceDF? Follow these steps to begin your IoT journey:
 
 <Cards>
-  <Cards.Card title="Installation" href="/getting-started" arrow />
-  <Cards.Card title="Connect Devices" href="/devices" arrow />
-  <Cards.Card title="Configure Spaces" href="/spaces" arrow />
-  <Cards.Card title="API Integration" href="/api-reference" arrow />
+  <Cards.Card title="Installation" href="/docs/getting-started" arrow />
+  <Cards.Card title="Connect Devices" href="/docs/devices" arrow />
+  <Cards.Card title="Configure Spaces" href="/docs/spaces" arrow />
 </Cards>
 
 ## Popular Topics
 
-- [Quick Start Guide](/getting-started) - Get up and running in minutes
-- [Multi-Protocol Setup](/devices) - Connect devices via LoRaWAN, MQTT, API, and WebSocket
-- [Use Case Templates](/spaces) - Fleet tracking, smart buildings, and smart city solutions
-- [Location Services](/spaces) - Real-time positioning and analytics
-- [API Integration](/api-reference) - RESTful APIs, SDKs, and webhook integration
-- [Multi-Tenancy](/organizations) - Organization setup and user management
+- [Quick Start Guide](/docs/getting-started) - Get up and running in minutes
+- [Multi-Protocol Setup](/docs/devices) - Connect devices via LoRaWAN, MQTT, API, and WebSocket
+- [Use Case Templates](/docs/onboarding) - Fleet tracking, smart buildings, and smart city solutions
+- [Location Services](/docs/spaces) - Real-time positioning and analytics
+- [Multi-Tenancy](/docs/organizations) - Organization setup and user management
 - [Troubleshooting](/troubleshooting) - Common issues and solutions
 
 ## Support & Community
@@ -444,14 +322,14 @@ Need help? We're here to support you:
 
 <Cards>
   <Cards.Card
-    style={{padding: "5px 10px"}}
+    style={{ padding: "5px 10px" }}
     title="Community Forum"
     href="https://docs.spacedf.com/community"
     icon={
       <img
         src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/meeting.png"
         className="svg-icon"
-        style={{height: "54px"}}
+        style={{ height: "54px" }}
         alt="Community Forum"
       />
     }
@@ -460,14 +338,14 @@ Need help? We're here to support you:
     developers in our active community forum.
   </Cards.Card>
   <Cards.Card
-    style={{padding: "5px 10px"}}
+    style={{ padding: "5px 10px" }}
     title="GitHub"
     href="https://github.com/space-df"
     icon={
       <img
         src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/github.png"
         className="svg-icon"
-        style={{height: "44px"}}
+        style={{ height: "44px" }}
         alt="GitHub"
       />
     }
@@ -476,14 +354,14 @@ Need help? We're here to support you:
     and report issues on our GitHub repositories.
   </Cards.Card>
   <Cards.Card
-    style={{padding: "5px 10px"}}
+    style={styles.containerNoneEvents}
     title="Professional Support"
-    href="/support"
+    href=""
     icon={
       <img
         src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/support.png"
         className="svg-icon"
-        style={{height: "54px"}}
+        style={{ height: "54px" }}
         alt="Professional Support"
       />
     }
@@ -492,14 +370,14 @@ Need help? We're here to support you:
     mission-critical deployments.
   </Cards.Card>
   <Cards.Card
-    style={{padding: "5px 10px"}}
+    style={styles.containerNoneEvents}
     title="Training"
-    href="/support"
+    href=""
     icon={
       <img
         className="svg-icon"
         src="https://d33et8skld5wvq.cloudfront.net/images/spacedf-docs/training.png"
-        style={{height: "54px"}}
+        style={{ height: "54px" }}
         alt="Training"
       />
     }
@@ -511,4 +389,4 @@ Need help? We're here to support you:
 
 ---
 
-Ready to get started? [Choose your deployment method](/docs/getting-started), explore our [use case templates](/docs/organizations), or [integrate with our API](/docs/api-reference).
+Ready to get started? [Choose your deployment method](/docs/getting-started), explore our [use case templates](/docs/organizations).
