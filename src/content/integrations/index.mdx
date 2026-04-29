@@ -1,0 +1,66 @@
+---
+title: Integrations
+asIndexPage: true
+---
+
+import { RichCardOptions, RichCardOption } from "@/app/_components/RichCard.jsx"
+import SupportCommunity from "@/app/_components/SupportCommunity.mdx"
+import ReadyToGetStarted from "@/app/_components/ReadyToGetStarted.mdx"
+
+
+# Integrations
+
+Expand the capabilities of SpaceDF by connecting it to your favorite tools, services, and external platforms.
+
+---
+
+## Available Integrations
+
+Choose a method to start streaming your IoT data or automating your workflows.
+
+<RichCardOptions>
+  <RichCardOption
+    icon={
+      <img
+        src="/logo/webhook.png"
+        className="w-2/3"
+      />
+    }
+    badgeClassName="border-yellow-600 text-yellow-600 dark:text-yellow-400 bg-yellow-50"
+    className="pointer-events-none"
+    title="Webhook"
+    badge="Coming Soon"
+    description="Send real-time event data from SpaceDF to any third-party application via HTTP POST requests."
+    href="/docs/integrations/webhooks"
+  />
+</RichCardOptions>
+
+*More integrations coming soon. Have a request? [Let us know.](https://forum.df.technology/)*
+
+## Overview
+
+Integrations act as the bridge between SpaceDF and the rest of your technology stack. 
+By connecting SpaceDF to external services, you can transform raw IoT data into actionable insights, automated alerts, or custom business logic.
+
+## About Integrations
+
+#### Why use Integrations?
+Connecting your digital environment to external tools allows you to:
+
+- **Automate Workflows:** Trigger actions in other apps based on device events.
+- **Centralize Data:** Push telemetry to external databases or analytics engines.
+- **Instant Notifications:** Receive alerts on the platforms your team already uses.
+
+#### Integration Security
+We prioritize the security of your data during transit. Every integration supports modern security standards—such as API keys, secret tokens, or encrypted headers—to ensure that your data remains private and is only delivered to authorized destinations.
+
+#### Your Responsibilities
+When managing integrations, you are responsible for:
+- **Endpoint Stability:** Ensuring that the receiving service is online and capable of handling the data volume.
+- **Credential Management:** Keeping your integration secrets, tokens, and keys secure.
+- **Data Privacy:** Managing how third-party services store or process the data sent from SpaceDF.
+
+<SupportCommunity/>
+---
+
+<ReadyToGetStarted />
