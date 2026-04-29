@@ -1,0 +1,199 @@
+---
+title: Webhooks
+---
+
+import { CardInfo } from "@/app/_components/CardInfo.jsx"
+import {
+  NumberOfContent,
+  NumberWithMdx
+} from "@/app/_components/NumberOfContent.jsx"
+
+# Webhooks Setup Guide – Structure
+Learn how to configure outgoing webhooks to stream real-time data from **SpaceDF** to your external applications.
+
+## Overview
+
+A **Webhook** is an automated "push" mechanism that triggers a data transfer between applications whenever a specific event occurs. Unlike traditional APIs that require polling, webhooks deliver data instantly, making them the gold standard for event-driven architectures.
+
+<CardInfo classNames={{
+    container: "!mt-6 !p-3 shadow-none",
+    title: "!text-base mb-3",
+    description: "!text-sm"
+  }}
+  title="❓ Why Webhooks?"
+  >
+
+  In the SpaceDF ecosystem, webhooks act as the critical real-time bridge between your **LoRaWAN Network Servers** (such as **The Things Network** or **ChirpStack**) and the SpaceDF platform.
+    - **Zero-Latency:** Data is pushed the moment a gateway receives an uplink.
+    - **Efficiency:** Eliminates the need for constant API requests, saving server resources.
+    - **Seamless Integration:** Effortlessly syncs device telemetry from external network layers into your SpaceDF dashboard.
+</CardInfo>
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ℹ️ **Note:** Webhooks are the recommended method for integrating **TTN** and **ChirpStack** to ensure your device data is always up-to-the-second.
+</CardInfo>
+
+## Prerequisites
+Before configuring your webhook, ensure you have the following components ready:
+
+- **SpaceDF Account:** An active account with administrative privileges to manage integrations.
+- **Active LoRaWAN Devices:** Your devices must be provisioned and successfully sending uplink data to your Network Server.
+- **Console Access:** Full access to your **The Things Network (TTN)** or **ChirpStack** console to configure the outgoing integration.
+- **Endpoint URL:** A target destination URL (provided by SpaceDF) to receive the incoming data stream.
+
+### Get Webhook Endpoint from SpaceDF
+To link your Network Server with our platform, you first need to retrieve your unique integration endpoint from the SpaceDF dashboard.
+
+**How to locate your URL**
+
+<NumberWithMdx number={1} className="mt-6"> 
+  Navigate to the SpaceDF Console.
+</NumberWithMdx>
+<NumberWithMdx number={2}> 
+  Select your Organization or Space from the sidebar.
+</NumberWithMdx>
+<NumberWithMdx number={3}> 
+  Go to Integrations > Webhooks.
+</NumberWithMdx>
+<NumberWithMdx number={4}> 
+  Click on Create New Webhook (or select an existing one).
+</NumberWithMdx>
+<NumberWithMdx number={5}> 
+  Copy the Endpoint URL displayed in the configuration panel.
+</NumberWithMdx>
+
+**Endpoint Format**
+
+Your unique endpoint will follow this structure:
+```bash copy
+https://api.spacedf.com/v1/integrations/webhooks/receive/{YOUR_UNIQUE_TOKEN}
+```
+
+<CardInfo classNames={{
+  container: "!mt-6 !p-3 shadow-none",
+  title: "!text-base",
+  description: "!text-sm"
+}}>
+  ℹ️ **Note:** Keep your `{YOUR_UNIQUE_TOKEN}` secure. Anyone with this URL can send data to your SpaceDF environment.
+</CardInfo>
+
+### Configure Webhook on your Network Server
+After obtaining your endpoint from SpaceDF, you must link it to your Network Server. This allows your server to "push" data to SpaceDF the moment a device transmits a message.
+
+#### Technical Requirements
+
+Configure your integration with the following mandatory parameters:
+
+| Parameter       | Configuration                                            |
+|-----------------|----------------------------------------------------------|
+| Method          | `POST`                                                   | 
+| Payload Format  | `JSON`                                                   |
+| Webhook URL     | Paste your unique SpaceDF Endpoint URL                   |
+| Enabled Events  | `Uplink message` (Mandatory), `Join accept` (Optional)   |
+
+#### Step-by-Step Instructions
+
+<NumberWithMdx number={1} className="mt-6"> 
+  **Access your Application**<br/>
+  Log in to your **TTN (The Things Stack)** or **ChirpStack** console. <br/>
+  Select the specific **Application** that contains the devices you wish to integrate with SpaceDF.
+</NumberWithMdx>
+<NumberWithMdx number={2}> 
+  **Navigate to Integrations**<br/>
+  **On TTN:** Use the side menu to go to ***Integrations > Webhooks***.<br/>
+  **On ChirpStack:** Select the ***Integrations*** tab from the top or side navigation bar.
+</NumberWithMdx>
+<NumberWithMdx number={3}> 
+  **Navigate to Integrations**<br/>
+  **On TTN:** Click ***+ Add Webhook*** and select the ***Custom Webhook*** template.<br/>
+  **On ChirpStack:** Click ***Create*** and select ***HTTP*** from the available integration types.
+</NumberWithMdx>
+<NumberWithMdx number={4}> 
+  **Fill in the Connection Details**<br/>
+  Enter the **Webhook URL** you copied in `Step 3`. Ensure the **Method** is set to `POST`.
+</NumberWithMdx>
+<NumberWithMdx number={5}> 
+  **Authentication & Headers (If Required)**<br/>
+  If you have enabled security headers in your SpaceDF environment, add them here:<br/>
+  **Header Name:** `X-SpaceDF-Token` <br/>
+  **Header Value:** Your unique secret token
+</NumberWithMdx>
+<NumberWithMdx number={6}> 
+  **Save and Activate**<br/>
+  Ensure the **Uplink message** checkbox is enabled. This is the trigger that sends your sensor data to SpaceDF. Click Save changes or **Add webhook** to finalize.
+</NumberWithMdx>
+
+#### Verify Connection
+Once you have configured the webhook on your Network Server, follow these steps to ensure that the data pipeline is active and SpaceDF is correctly receiving your device telemetry.
+
+##### Step 1: Trigger a Test Uplink
+The most reliable way to verify the connection is to generate real traffic from your hardware.
+
+- **Physical Device:** Trigger a transmission (e.g., press a "Send" or "Reset" button on your sensor).
+- **Virtual Simulator:** If you are away from your hardware, use the **Simulated Uplink** feature in the TTN or ChirpStack console to send a sample JSON payload.
+
+##### Step 2: Check the Live Inspector
+Navigate to your **SpaceDF Console** to monitor incoming traffic in real-time:
+<NumberWithMdx number={1} className="mt-6"> 
+  Go to the Devices section and select your target device.
+</NumberWithMdx>
+<NumberWithMdx number={2}> 
+ Open the Live Data or Activity Log tab.
+</NumberWithMdx>
+<NumberWithMdx number={3}> 
+  Look for a new entry with the Success status.
+</NumberWithMdx>
+
+**Connection Status Indicators**
+In the SpaceDF Activity Log, you may see the following status codes:
+
+- `200 OK`: Data received and processed successfully.
+- `401 Unauthorized`: The integration token is missing or incorrect.
+- `422 Unprocessable Entity`: Data was received, but the JSON format or `devEUI` does not match your device settings.
+
+## Troubleshooting
+If you encounter issues during the integration process, refer to the table below for common symptoms and their solutions.
+
+<div className="overflow-x-auto mt-4">
+  <table className="w-full border-collapse text-left text-sm">
+    <thead>
+      <tr className="border-b border-gray-300 dark:border-gray-700">
+        <th className="py-3 font-semibold min-w-50 text-gray-900 dark:text-gray-100">
+          Issue
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Potential Cause
+        </th>
+        <th className="py-3 font-semibold text-gray-900 dark:text-gray-100">
+          Recommended Action
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">No Data Received</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Incorrect Webhook URL or missing event triggers.</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Verify the **Endpoint URL** in your Network Server and ensure **Uplink message** is enabled.</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Authentication Error</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Missing or invalid `X-SpaceDF-Token` header.</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Double-check the **Header Name** and **Secret Token** in your integration settings.</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Device Not Appearing</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">DevEUI mismatch between platforms.</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Ensure the `devEUI` in TTN/ChirpStack matches the one registered in **SpaceDF** exactly</td>
+        </tr>
+        <tr className="border-b border-gray-100 dark:border-gray-800">
+            <td className="py-3 text-gray-700 dark:text-gray-300">Payload Parsing Failed</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Unsupported JSON structure or missing required fields.</td>
+            <td className="py-3 text-gray-700 dark:text-gray-300">Compare your server's payload with the **SpaceDF Payload Schema**.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>

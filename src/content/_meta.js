@@ -5,6 +5,7 @@ export default {
   organizations: 'Organizations & Staff',
   devices: 'Device Management',
   spaces: 'Spaces & Members',
+  "integrations": "Integrations",
   '---': {
     type: 'separator'
   },

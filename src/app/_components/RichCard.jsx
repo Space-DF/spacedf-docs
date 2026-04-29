@@ -10,17 +10,20 @@ export const RichCardOptions = ({ children, className = "" }) => {
   )
 }
 
-export const RichCardOption = ({ icon, title, description, badge, href }) => {
+export const RichCardOption = ({ icon, title, description, badge, href, className, badgeClassName }) => {
   return (
     <Link
       href={href}
-      className="
+      className={
+        `
         group block rounded-xl border border-gray-300
         bg-white p-4 transition
         hover:-translate-y-0.5 hover:shadow-md
         dark:border-gray-700 dark:bg-zinc-900
         hover:border-[#818cf8]
-      "
+        ${className}
+      `
+      }
     >
       <div className="flex items-center gap-3">
         <div
@@ -40,13 +43,14 @@ export const RichCardOption = ({ icon, title, description, badge, href }) => {
 
           {badge && (
             <span
-              className="
-                rounded-full border border-emerald-500
+              className={`
+              rounded-full border border-emerald-500
                 bg-emerald-50 px-2 py-0.5
                 text-[10px] font-semibold uppercase tracking-wide
                 text-emerald-600
                 dark:bg-emerald-500/10 dark:text-emerald-400
-              "
+                ${badgeClassName}  
+              `}
             >
               {badge}
             </span>
