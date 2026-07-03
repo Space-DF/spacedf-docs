@@ -92,7 +92,7 @@ export default async function BlogPage() {
             </p>
 
             <Link
-              href={`/blog/${post.slug}`}
+              href={post.slug}
               style={{
                 color: "#B7A1F7",
                 textDecoration: "none",
