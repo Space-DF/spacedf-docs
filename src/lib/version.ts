@@ -21,7 +21,7 @@ export const getLatestVersion = async (): Promise<LatestVersion | null> => {
   const folders = fs.readdirSync(POSTS_DIR)
 
   for (const folder of folders) {
-    const fullPath = path.join(POSTS_DIR, folder, "page.mdx")
+    const fullPath = path.join(POSTS_DIR, folder, "content.mdx")
     if (!fs.existsSync(fullPath)) continue
 
     const raw = fs.readFileSync(fullPath, "utf-8")

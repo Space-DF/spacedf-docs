@@ -20,7 +20,7 @@ const getTroubleshootingFiles = async () => {
   const walk = (dir) => {
     const files = fs.readdirSync(dir)
     for (const file of files) {
-      const fullPath = path.join(dir, file, "page.mdx")
+      const fullPath = path.join(dir, file, "content.mdx")
 
       const raw = fs.readFileSync(fullPath, "utf-8")
       const stats = fs.statSync(fullPath)
