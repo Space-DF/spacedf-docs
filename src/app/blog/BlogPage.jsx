@@ -11,7 +11,7 @@ const getBlogs = async () => {
   const files = fs.readdirSync(DOCS_DIR)
 
   for (const file of files) {
-    const fullPath = path.join(DOCS_DIR, file, "page.mdx")
+    const fullPath = path.join(DOCS_DIR, file, "content.mdx")
     const raw = fs.readFileSync(fullPath, "utf-8")
 
     if (!raw) continue
